@@ -14,6 +14,9 @@ class AttendanceHomeScreen extends StatefulWidget {
 
 class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
   int selectedCenter = 0;
+  DateTime? _selectedDay;
+  DateTime _focusedDay = DateTime.now();
+  final DateTime _today = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -38,245 +41,713 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
           ),
         ],
       ),
-      body: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 1350,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Stack(
+      body: Stack(
+        children: [
+          // Fixed background with two colored/shadowed circles
+          Positioned.fill(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -40,
+                  left: -60,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF00C797).withOpacity(0.7),
+                          blurRadius: 100,
+                          spreadRadius: 50,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  right: -40,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1B81A4).withOpacity(0.6),
+                          blurRadius: 80,
+                          spreadRadius: 40,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Scrollable content
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  color: Colors.white,
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 1350,
+                              child: Stack(
+                                clipBehavior: Clip.none,
                                 children: [
-                                  Positioned(
-                                    top: -40,
-                                    left: -60,
-                                    child: Container(
-                                      width: 150,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        //   gradient: const LinearGradient(
-                                        //     colors: [Color(0xFF00C797)],
-                                        //     begin: Alignment.topLeft,
-                                        //     end: Alignment.bottomRight,
-                                        //   ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(
-                                              0xFF00C797,
-                                            ).withOpacity(0.7),
-                                            blurRadius: 100,
-                                            spreadRadius: 50,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 40,
-                                    right: -40,
-                                    child: Container(
-                                      width: 150,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        // gradient: const LinearGradient(
-                                        //   colors: [Color(0xFF1B81A4)],
-                                        //   begin: Alignment.topRight,
-                                        //   end: Alignment.bottomLeft,
-                                        // ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(
-                                              0xFF1B81A4,
-                                            ).withOpacity(0.6),
-                                            blurRadius: 80,
-                                            spreadRadius: 40,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                top: 20,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Stack(
                                     children: [
-                                      SizedBox(height: 10),
-                                      // Center Selection Tabs
-                                      Container(
-                                        padding: const EdgeInsets.all(4),
-                                        height: 55,
-                                        decoration: BoxDecoration(
-                                          color: Colors
-                                              .white, // Background color for the unselected part
-                                          borderRadius: BorderRadius.circular(
-                                            24,
+                                      Positioned(
+                                        top: -40,
+                                        left: -60,
+                                        child: Container(
+                                          width: 150,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            //   gradient: const LinearGradient(
+                                            //     colors: [Color(0xFF00C797)],
+                                            //     begin: Alignment.topLeft,
+                                            //     end: Alignment.bottomRight,
+                                            //   ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: const Color(
+                                                  0xFF00C797,
+                                                ).withOpacity(0.7),
+                                                blurRadius: 100,
+                                                spreadRadius: 50,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: GestureDetector(
-                                                onTap: () => setState(
-                                                  () => selectedCenter = 0,
-                                                ),
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        vertical: 12,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: selectedCenter == 0
-                                                        ? Color(0xFF1B81A4)
-                                                        : Colors
-                                                              .transparent, // Changed to transparent for unselected
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          24,
-                                                        ),
-                                                    // boxShadow: selectedCenter == 0
-                                                    //     ? [
-                                                    //         BoxShadow(
-                                                    //           color: Colors.grey.withOpacity(0.3),
-                                                    //           spreadRadius: 2,
-                                                    //           blurRadius: 5,
-                                                    //           offset: const Offset(0, 3),
-                                                    //         )
-                                                    //   ]
-                                                    // : [],
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Dashboard",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            selectedCenter == 0
-                                                            ? Colors.white
-                                                            : Color(
-                                                                0xFF1B81A4,
-                                                              ), // Darker grey for unselected
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                      ),
+                                      Positioned(
+                                        top: 40,
+                                        right: -40,
+                                        child: Container(
+                                          width: 150,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            // gradient: const LinearGradient(
+                                            //   colors: [Color(0xFF1B81A4)],
+                                            //   begin: Alignment.topRight,
+                                            //   end: Alignment.bottomLeft,
+                                            // ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: const Color(
+                                                  0xFF1B81A4,
+                                                ).withOpacity(0.6),
+                                                blurRadius: 80,
+                                                spreadRadius: 40,
                                               ),
-                                            ),
-                                            // No SizedBox here, as the background container handles spacing
-                                            Expanded(
-                                              child: GestureDetector(
-                                                onTap: () => setState(
-                                                  () => selectedCenter = 1,
-                                                ),
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        vertical: 12,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: selectedCenter == 1
-                                                        ? Color(0xFF1B81A4)
-                                                        : Colors
-                                                              .transparent, // Changed to transparent for unselected
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          24,
-                                                        ),
-                                                    // boxShadow: selectedCenter == 1
-                                                    //     ? [
-                                                    //         BoxShadow(
-                                                    //           color: Colors.grey.withOpacity(0.3),
-                                                    //           spreadRadius: 2,
-                                                    //           blurRadius: 5,
-                                                    //           offset: const Offset(0, 3),
-                                                    //         )
-                                                    //   ]
-                                                    // : [],
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Calendar",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            selectedCenter == 1
-                                                            ? Colors.white
-                                                            : Color(
-                                                                0xFF1B81A4,
-                                                              ), // Darker grey for unselected
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              if (selectedCenter == 0)
-                                Positioned(
-                                  top: 100,
-                                  left: 0,
-                                  right: 0,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            _buildStatCard(
-                                              "15",
-                                              "Days\nPresent",
-                                            ),
-                                            _buildStatCard("1", "Days\nAbsent"),
-                                            _buildStatCard(
-                                              "1",
-                                              "Leaves\nTaken",
-                                            ),
-                                          ],
-                                        ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: 20,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0,
                                       ),
-                                      const SizedBox(height: 16),
-
-                                      Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          SizedBox(height: 10),
+                                          // Center Selection Tabs
+                                          Container(
+                                            padding: const EdgeInsets.all(4),
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              color: Colors
+                                                  .white, // Background color for the unselected part
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () => setState(
+                                                      () => selectedCenter = 0,
+                                                    ),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            selectedCenter == 0
+                                                            ? Color(0xFF1B81A4)
+                                                            : Colors
+                                                                  .transparent, // Changed to transparent for unselected
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              24,
+                                                            ),
+                                                        // boxShadow: selectedCenter == 0
+                                                        //     ? [
+                                                        //         BoxShadow(
+                                                        //           color: Colors.grey.withOpacity(0.3),
+                                                        //           spreadRadius: 2,
+                                                        //           blurRadius: 5,
+                                                        //           offset: const Offset(0, 3),
+                                                        //         )
+                                                        //   ]
+                                                        // : [],
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Dashboard",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                selectedCenter ==
+                                                                    0
+                                                                ? Colors.white
+                                                                : Color(
+                                                                    0xFF1B81A4,
+                                                                  ), // Darker grey for unselected
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // No SizedBox here, as the background container handles spacing
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () => setState(
+                                                      () => selectedCenter = 1,
+                                                    ),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            selectedCenter == 1
+                                                            ? Color(0xFF1B81A4)
+                                                            : Colors
+                                                                  .transparent, // Changed to transparent for unselected
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              24,
+                                                            ),
+                                                        // boxShadow: selectedCenter == 1
+                                                        //     ? [
+                                                        //         BoxShadow(
+                                                        //           color: Colors.grey.withOpacity(0.3),
+                                                        //           spreadRadius: 2,
+                                                        //           blurRadius: 5,
+                                                        //           offset: const Offset(0, 3),
+                                                        //         )
+                                                        //   ]
+                                                        // : [],
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Calendar",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                selectedCenter ==
+                                                                    1
+                                                                ? Colors.white
+                                                                : Color(
+                                                                    0xFF1B81A4,
+                                                                  ), // Darker grey for unselected
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  if (selectedCenter == 0)
+                                    Positioned(
+                                      top: 100,
+                                      left: 0,
+                                      right: 0,
+                                      child: Column(
+                                        children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 18,
-                                              right: 18,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                _buildStatCard(
+                                                  "15",
+                                                  "Days\nPresent",
+                                                ),
+                                                _buildStatCard(
+                                                  "1",
+                                                  "Days\nAbsent",
+                                                ),
+                                                _buildStatCard(
+                                                  "1",
+                                                  "Leaves\nTaken",
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 18,
+                                                  right: 18,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Today',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 26,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+
+                                                        // SizedBox(height: 2),
+                                                        Text(
+                                                          '19 Sept 2023',
+                                                          style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 16),
+                                                    Container(
+                                                      width: 150,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color:
+                                                                Colors.black26,
+                                                            blurRadius: 10,
+                                                          ),
+                                                        ],
+                                                        gradient:
+                                                            LinearGradient(
+                                                              colors: [
+                                                                Color(
+                                                                  0xFF00C797,
+                                                                ),
+                                                                Color(
+                                                                  0xFF1B81A4,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                      ),
+                                                      child: TextButton(
+                                                        onPressed: () {},
+                                                        style: ElevatedButton.styleFrom(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 20,
+                                                                vertical: 12,
+                                                              ),
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.play_arrow,
+                                                              size: 24,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(width: 4),
+                                                            const Text(
+                                                              "Check Out",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                // fontWeight:
+                                                                //     FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 24),
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                    ),
+                                                padding: const EdgeInsets.all(
+                                                  16,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black12,
+                                                      blurRadius: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child:
+                                                    _buildTrackedTimeSection(),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              buildPastRecordSection(),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  if (selectedCenter == 1)
+                                    Positioned(
+                                      top: 100,
+                                      left: 0,
+                                      right: 0,
+
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0,
+                                            ),
+                                            child: TableCalendar(
+                                              firstDay: DateTime.utc(
+                                                2020,
+                                                1,
+                                                1,
+                                              ),
+                                              lastDay: DateTime.utc(
+                                                2030,
+                                                12,
+                                                31,
+                                              ),
+                                              focusedDay: _focusedDay,
+                                              calendarFormat:
+                                                  CalendarFormat.month,
+                                              calendarStyle: CalendarStyle(
+                                                todayDecoration: BoxDecoration(
+                                                  color: Color(0xFF304C9F),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                selectedDecoration:
+                                                    BoxDecoration(
+                                                      color: Color(0xFF00C797),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                markerDecoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                weekendTextStyle: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              headerStyle: HeaderStyle(
+                                                titleTextStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                                formatButtonVisible: false,
+                                                titleCentered: true,
+                                                leftChevronIcon: Icon(
+                                                  Icons.arrow_back_ios,
+                                                ),
+                                                rightChevronIcon: Icon(
+                                                  Icons.arrow_forward_ios,
+                                                ),
+                                              ),
+                                              eventLoader: (day) =>
+                                                  _getEventsForDay(day),
+                                              selectedDayPredicate: (day) {
+                                                return isSameDay(
+                                                  day,
+                                                  _selectedDay,
+                                                );
+                                              },
+                                              onDaySelected:
+                                                  (selectedDay, focusedDay) {
+                                                    setState(() {
+                                                      _selectedDay =
+                                                          selectedDay;
+                                                      _focusedDay = focusedDay;
+                                                    });
+                                                  },
+                                              calendarBuilders: CalendarBuilders(
+                                                selectedBuilder:
+                                                    (context, day, focusedDay) {
+                                                      final events =
+                                                          _getEventsForDay(day);
+                                                      if (events.isNotEmpty) {
+                                                        // Map event to color and abbreviation
+                                                        String event =
+                                                            events.first;
+                                                        Color color;
+                                                        String abbr;
+                                                        if (event ==
+                                                            "Present") {
+                                                          color = Colors.green;
+                                                          abbr = "PR";
+                                                        } else if (event ==
+                                                            "Absent") {
+                                                          color = Colors.red;
+                                                          abbr = "AB";
+                                                        } else if (event ==
+                                                            "Week Off") {
+                                                          color = Colors.indigo;
+                                                          abbr = "WO";
+                                                        } else if (event ==
+                                                            "Public Holiday") {
+                                                          color = Color(
+                                                            0xFF2B7B8A,
+                                                          );
+                                                          abbr = "PH";
+                                                        } else if (event ==
+                                                            "Paid Leave") {
+                                                          color = Colors.indigo;
+                                                          abbr = "PL";
+                                                        } else if (event ==
+                                                            "Leave w/o Pay") {
+                                                          color = Colors.orange;
+                                                          abbr = "LW";
+                                                        } else if (event ==
+                                                            "Half Day Absent") {
+                                                          color = Color(
+                                                            0xFFFF0000,
+                                                          );
+                                                          abbr = "HD";
+                                                        } else {
+                                                          color = Color(
+                                                            0xFF1B81A4,
+                                                          );
+                                                          abbr = event
+                                                              .substring(0, 2)
+                                                              .toUpperCase();
+                                                        }
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              color,
+                                                          radius: 18,
+                                                          child: Text(
+                                                            abbr,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        // No event: filled blue circle with date number
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              Color(0xFF1B81A4),
+                                                          radius: 18,
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                todayBuilder:
+                                                    (context, day, focusedDay) {
+                                                      // If today is not selected
+                                                      if (!isSameDay(
+                                                        day,
+                                                        _selectedDay,
+                                                      )) {
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              Color(0xFF304C9F),
+                                                          radius: 18,
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        // Let selectedBuilder handle it
+                                                        return null;
+                                                      }
+                                                    },
+                                                defaultBuilder:
+                                                    (context, day, focusedDay) {
+                                                      final events =
+                                                          _getEventsForDay(day);
+                                                      if (events.isNotEmpty) {
+                                                        // Map event to color
+                                                        String event =
+                                                            events.first;
+                                                        Color color;
+                                                        if (event == "Present")
+                                                          color = Colors.green;
+                                                        else if (event ==
+                                                            "Absent")
+                                                          color = Colors.red;
+                                                        else if (event ==
+                                                            "Week Off")
+                                                          color = Colors.indigo;
+                                                        else if (event ==
+                                                            "Public Holiday")
+                                                          color = Color(
+                                                            0xFF2B7B8A,
+                                                          );
+                                                        else if (event ==
+                                                            "Paid Leave")
+                                                          color = Colors.indigo;
+                                                        else if (event ==
+                                                            "Leave w/o Pay")
+                                                          color = Colors.orange;
+                                                        else if (event ==
+                                                            "Half Day Absent")
+                                                          color = Color(
+                                                            0xFFFF0000,
+                                                          );
+                                                        else
+                                                          color = Color(
+                                                            0xFF1B81A4,
+                                                          );
+                                                        return Center(
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style: TextStyle(
+                                                              color: color,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      // Default day
+                                                      return Center(
+                                                        child: Text(
+                                                          '${day.day}',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                dowBuilder: (context, day) {
+                                                  final text = [
+                                                    'S',
+                                                    'M',
+                                                    'T',
+                                                    'W',
+                                                    'T',
+                                                    'F',
+                                                    'S',
+                                                  ][day.weekday % 7];
+                                                  return Center(
+                                                    child: Text(
+                                                      text,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+
+                                          // Legends
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -286,328 +757,146 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Today',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 26,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
 
-                                                    // SizedBox(height: 2),
-                                                    Text(
-                                                      '19 Sept 2023',
-                                                      style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                      ),
+                                                  children: [
+                                                    _legend(
+                                                      "Today",
+                                                      Color(0xFF304C9F),
+                                                      "T",
+                                                    ),
+                                                    _legend(
+                                                      "Present",
+                                                      Color(0xFF1D963A),
+                                                      "PR",
+                                                    ),
+                                                    _legend(
+                                                      "Public Holiday",
+                                                      Color(0xFF2B7B8A),
+                                                      "PH",
+                                                    ),
+                                                    _legend(
+                                                      "Week Off",
+                                                      Color(0xFF5C5959),
+                                                      "WO",
                                                     ),
                                                   ],
                                                 ),
-                                                const SizedBox(height: 16),
-                                                Container(
-                                                  width: 150,
-                                                  decoration: BoxDecoration(
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    _legend(
+                                                      "Paid Leave",
+                                                      Colors.indigo,
+                                                      "PL",
+                                                    ),
+                                                    _legend(
+                                                      "Leave w/o Pay",
+                                                      Colors.orange,
+                                                      "LW",
+                                                    ),
+                                                    _legend(
+                                                      "Half Day Absent",
+                                                      Color(0xFFFF0000),
+                                                      "HD",
+                                                    ),
+                                                    _legend(
+                                                      "Absent",
+                                                      Colors.red,
+                                                      "AB",
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          // Filter Buttons
+                                          Padding(
+                                            padding: EdgeInsetsGeometry.all(0),
+                                            child: Wrap(
+                                              spacing: 7,
+                                              children: [
+                                                _filterButton("Today"),
+                                                _filterButton("Yesterday"),
+                                                _filterButton("This Month"),
+                                                _filterButton("Last Month"),
+                                                _filterButton("Last 3 Month"),
+                                                _filterButton("Last 6 Month"),
+                                                _filterButton("Last Year"),
+                                              ],
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          // View Details Button
+                                          Center(
+                                            child: Container(
+                                              width: 350,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black26,
+                                                    blurRadius: 10,
+                                                  ),
+                                                ],
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color(0xFF00C797),
+                                                    Color(0xFF1B81A4),
+                                                  ],
+                                                ),
+                                              ),
+                                              child: TextButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 40,
+                                                        vertical: 12,
+                                                      ),
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                          10,
+                                                          12,
                                                         ),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.black26,
-                                                        blurRadius: 10,
-                                                      ),
-                                                    ],
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        Color(0xFF00C797),
-                                                        Color(0xFF1B81A4),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  child: TextButton(
-                                                    onPressed: () {},
-                                                    style: ElevatedButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 20,
-                                                            vertical: 12,
-                                                          ),
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              12,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.play_arrow,
-                                                          size: 24,
-                                                          color: Colors.white,
-                                                        ),
-                                                        SizedBox(width: 4),
-                                                        const Text(
-                                                          "Check Out",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            // fontWeight:
-                                                            //     FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 24),
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                            ),
-                                            padding: const EdgeInsets.all(16),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black12,
-                                                  blurRadius: 10,
+                                                child: const Text(
+                                                  "View Details",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                            child: _buildTrackedTimeSection(),
                                           ),
-                                          const SizedBox(height: 16),
-                                          buildPastRecordSection(),
+                                          const SizedBox(height: 30),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              if (selectedCenter == 1)
-                                Positioned(
-                                  top: 100,
-                                  left: 0,
-                                  right: 0,
-
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0,
-                                        ),
-                                        child: TableCalendar(
-                                          firstDay: DateTime.utc(2020, 1, 1),
-                                          lastDay: DateTime.utc(2030, 12, 31),
-                                          focusedDay: DateTime.now(),
-                                          calendarFormat: CalendarFormat.month,
-                                          calendarStyle: CalendarStyle(
-                                            todayDecoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            selectedDecoration: BoxDecoration(
-                                              color: Color(0xFF00C797),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            markerDecoration: BoxDecoration(
-                                              color: Colors.red,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            weekendTextStyle: TextStyle(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          headerStyle: HeaderStyle(
-                                            formatButtonVisible: false,
-                                            titleCentered: true,
-                                            leftChevronIcon: Icon(
-                                              Icons.arrow_back_ios,
-                                            ),
-                                            rightChevronIcon: Icon(
-                                              Icons.arrow_forward_ios,
-                                            ),
-                                          ),
-                                          eventLoader: (day) =>
-                                              _getEventsForDay(day),
-                                          selectedDayPredicate: (day) {
-                                            return isSameDay(
-                                              day,
-                                              DateTime.now(),
-                                            );
-                                          },
-                                          onDaySelected:
-                                              (selectedDay, focusedDay) {
-                                                setState(() {});
-                                              },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-
-                                      // Legends
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-
-                                              children: [
-                                                _legend(
-                                                  "Today",
-                                                  Color(0xFF304C9F),
-                                                  "T",
-                                                ),
-                                                _legend(
-                                                  "Present",
-                                                  Color(0xFF1D963A),
-                                                  "PR",
-                                                ),
-                                                _legend(
-                                                  "Public Holiday",
-                                                  Color(0xFF2B7B8A),
-                                                  "PH",
-                                                ),
-                                                _legend(
-                                                  "Week Off",
-                                                  Color(0xFF5C5959),
-                                                  "WO",
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                _legend(
-                                                  "Paid Leave",
-                                                  Colors.indigo,
-                                                  "PL",
-                                                ),
-                                                _legend(
-                                                  "Leave w/o Pay",
-                                                  Colors.orange,
-                                                  "LW",
-                                                ),
-                                                _legend(
-                                                  "Half Day Absent",
-                                                  Color(0xFFFF0000),
-                                                  "HD",
-                                                ),
-                                                _legend(
-                                                  "Absent",
-                                                  Colors.red,
-                                                  "AB",
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 16),
-
-                                      // Filter Buttons
-                                      // Padding(
-                                      //   padding: EdgeInsetsGeometry.all(0),
-                                      //   child: Wrap(
-                                      //     spacing: 7,
-                                      //     children: [
-                                      //       _filterButton("Today"),
-                                      //       _filterButton("Yesterday"),
-                                      //       _filterButton("This Month"),
-                                      //       _filterButton("Last Month"),
-                                      //       _filterButton("Last 3 Month"),
-                                      //       _filterButton("Last 6 Month"),
-                                      //       _filterButton("Last Year"),
-                                      //     ],
-                                      //   ),
-                                      // ),
-
-                                      // const SizedBox(height: 16),
-
-                                      // View Details Button
-                                      Center(
-                                        child: Container(
-                                          width: 350,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                blurRadius: 10,
-                                              ),
-                                            ],
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Color(0xFF00C797),
-                                                Color(0xFF1B81A4),
-                                              ],
-                                            ),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: () {},
-                                            style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 40,
-                                                    vertical: 12,
-                                                  ),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              "View Details",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 30),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -781,16 +1070,25 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.timer_outlined, color: Color(0xFF00C797)),
-              SizedBox(width: 8),
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE6FAF6),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Image.asset('assets/timer.png', width: 28, height: 28),
+              ),
+              SizedBox(width: 10),
               Text(
                 'Past Record',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           SizedBox(height: 16),
+          _divider(),
+          SizedBox(height: 6),
           ...records.map((record) {
             return Container(
               margin: EdgeInsets.only(bottom: 16),
@@ -822,7 +1120,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                     value: record['time'] == "-" ? 0.1 : 1,
                     minHeight: 6,
                     backgroundColor: Colors.blue.shade100,
-                    color: Colors.blue,
+                    color: Color(0xFF1B81A4),
                   ),
                   SizedBox(height: 12),
 
@@ -861,13 +1159,20 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
             );
           }).toList(),
           SizedBox(height: 8),
+
+          _divider(),
+          SizedBox(height: 8),
+
           Center(
-            child: Text(
-              "See More",
-              style: TextStyle(
-                color: Color(0xFF1B81A4),
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "See More",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF1B81A4),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -878,7 +1183,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
 
   Widget _statusColumn(String label, String status, Color color) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(label, style: TextStyle(color: Colors.grey[600])),
         Text(
@@ -1013,12 +1318,16 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
       onPressed: () {},
       style: OutlinedButton.styleFrom(
         backgroundColor: Colors.blue.shade50,
-        side: BorderSide.none,
+        side: BorderSide(color: Colors.blue.shade800, width: 1.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Text(
         label,
-        style: TextStyle(color: Colors.blue.shade800, fontSize: 12),
+        style: TextStyle(
+          color: Colors.blue.shade800,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
