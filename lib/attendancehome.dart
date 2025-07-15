@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:glueplenew/attendancedetail.dart';
+import 'package:glueplenew/leave%20management/leave_management_screen.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -33,7 +34,14 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
               size: 30,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LeaveManagementScreen(),
+                ),
+              );
+            },
           ),
           const IconButton(
             icon: Icon(Icons.category, size: 30, color: Colors.white),
@@ -43,7 +51,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
       ),
       body: Stack(
         children: [
-          // Fixed background with two colored/shadowed circles
           Positioned.fill(
             child: Stack(
               children: [
@@ -86,7 +93,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
               ],
             ),
           ),
-          // Scrollable content
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -173,13 +179,11 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(height: 10),
-                                          // Center Selection Tabs
                                           Container(
                                             padding: const EdgeInsets.all(4),
                                             height: 55,
                                             decoration: BoxDecoration(
-                                              color: Colors
-                                                  .white, // Background color for the unselected part
+                                              color: Colors.white,
                                               borderRadius:
                                                   BorderRadius.circular(24),
                                             ),
@@ -200,7 +204,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                             selectedCenter == 0
                                                             ? Color(0xFF1B81A4)
                                                             : Colors
-                                                                  .transparent, // Changed to transparent for unselected
+                                                                  .transparent,
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                               24,
@@ -228,14 +232,13 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                                 ? Colors.white
                                                                 : Color(
                                                                     0xFF1B81A4,
-                                                                  ), // Darker grey for unselected
+                                                                  ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                                // No SizedBox here, as the background container handles spacing
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () => setState(
@@ -251,7 +254,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                             selectedCenter == 1
                                                             ? Color(0xFF1B81A4)
                                                             : Colors
-                                                                  .transparent, // Changed to transparent for unselected
+                                                                  .transparent,
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                               24,
@@ -279,7 +282,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                                 ? Colors.white
                                                                 : Color(
                                                                     0xFF1B81A4,
-                                                                  ), // Darker grey for unselected
+                                                                  ),
                                                           ),
                                                         ),
                                                       ),
@@ -553,7 +556,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                       final events =
                                                           _getEventsForDay(day);
                                                       if (events.isNotEmpty) {
-                                                        // Map event to color and abbreviation
                                                         String event =
                                                             events.first;
                                                         Color color;
@@ -615,7 +617,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           ),
                                                         );
                                                       } else {
-                                                        // No event: filled blue circle with date number
                                                         return CircleAvatar(
                                                           backgroundColor:
                                                               Color(0xFF1B81A4),
@@ -635,7 +636,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                     },
                                                 todayBuilder:
                                                     (context, day, focusedDay) {
-                                                      // If today is not selected
                                                       if (!isSameDay(
                                                         day,
                                                         _selectedDay,
@@ -656,7 +656,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           ),
                                                         );
                                                       } else {
-                                                        // Let selectedBuilder handle it
                                                         return null;
                                                       }
                                                     },
@@ -665,7 +664,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                       final events =
                                                           _getEventsForDay(day);
                                                       if (events.isNotEmpty) {
-                                                        // Map event to color
                                                         String event =
                                                             events.first;
                                                         Color color;
@@ -709,7 +707,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           ),
                                                         );
                                                       }
-                                                      // Default day
                                                       return Center(
                                                         child: Text(
                                                           '${day.day}',
@@ -744,7 +741,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                           ),
                                           const SizedBox(height: 10),
 
-                                          // Legends
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 16.0,
@@ -813,7 +809,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
 
                                           const SizedBox(height: 16),
 
-                                          // Filter Buttons
                                           Padding(
                                             padding: EdgeInsetsGeometry.all(0),
                                             child: Wrap(
@@ -832,7 +827,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
 
                                           const SizedBox(height: 16),
 
-                                          // View Details Button
                                           Center(
                                             child: Container(
                                               width: 350,
@@ -942,7 +936,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top row: Icon, "Tracked Time", value
         Row(
           children: [
             Container(
@@ -974,9 +967,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
           minHeight: 6,
         ),
 
-        // Progress bar
         const SizedBox(height: 16),
-        // Key-value rows with dividers
         _divider(),
         _buildKeyValueRow("Full Time", "09:00:00"),
         _divider(),
@@ -993,7 +984,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
         _buildKeyValueRow("Device IP Address", "122486896326", isLink: true),
         _divider(),
         const SizedBox(height: 8),
-        // View Activity button
         Center(
           child: GestureDetector(
             onTap: () {
@@ -1003,7 +993,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                   builder: (context) => AttendanceDetailScreen(),
                 ),
               );
-            }, // Add your action here
+            },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
@@ -1094,7 +1084,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
               margin: EdgeInsets.only(bottom: 16),
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                //#
                 color: Color(0xFFE6F7FF),
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -1314,7 +1303,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
   }
 
   Widget _filterButton(String label) {
-    return OutlinedButton(
+    return TextButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
         backgroundColor: Colors.blue.shade50,
