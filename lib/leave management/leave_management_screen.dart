@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:glueplenew/leave%20management/my_leave_screen.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:toast/toast.dart';
 
 class LeaveManagementScreen extends StatefulWidget {
   const LeaveManagementScreen({super.key});
@@ -182,7 +185,6 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
 
                   const SizedBox(height: 24),
                   if (selectedCenter == 0)
-                    // Sample content block — add your widgets below
                     Column(
                       children: [
                         Padding(
@@ -225,13 +227,370 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   _buildStatCard("05", "Paid\nLeaves"),
-                                  _buildStatCard(
-                                    "1.5",
-                                    "Comp\nOff Balance",
-                                    Image.asset(
-                                      'assets/arrow_right.png',
-                                      width: 20,
-                                      height: 20,
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        backgroundColor: Colors.transparent,
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: (ctx) => StatefulBuilder(
+                                          builder:
+                                              (
+                                                BuildContext context,
+                                                StateSetter setModalState,
+                                              ) {
+                                                return Container(
+                                                  padding: EdgeInsets.all(14),
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                        ),
+                                                    color: Colors.white,
+                                                  ),
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 20,
+                                                      ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: 100,
+                                                        height: 7,
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.grey,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                15,
+                                                              ),
+                                                        ),
+                                                      ),
+
+                                                      SizedBox(height: 20),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "Team Leaves",
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w900,
+                                                            ),
+                                                          ),
+                                                          Spacer(),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                ctx,
+                                                              ).pop();
+                                                            },
+                                                            child: Icon(
+                                                              Icons.close,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Divider(),
+                                                      SizedBox(height: 8),
+
+                                                      Expanded(
+                                                        child: ListView.builder(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                16,
+                                                              ),
+                                                          itemCount:
+                                                              5, // Number of cards
+                                                          itemBuilder: (context, index) {
+                                                            return Container(
+                                                              margin:
+                                                                  const EdgeInsets.only(
+                                                                    bottom: 16,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      8,
+                                                                    ),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    blurRadius:
+                                                                        4,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                          0.1,
+                                                                        ),
+                                                                    offset:
+                                                                        const Offset(
+                                                                          0,
+                                                                          2,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    decoration: const BoxDecoration(
+                                                                      color: Color(
+                                                                        0xFF02C7A5,
+                                                                      ),
+                                                                      borderRadius: BorderRadius.only(
+                                                                        topLeft:
+                                                                            Radius.circular(
+                                                                              8,
+                                                                            ),
+                                                                        topRight:
+                                                                            Radius.circular(
+                                                                              8,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          16,
+                                                                      vertical:
+                                                                          10,
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        const Text(
+                                                                          '12-06-2023',
+                                                                          style: TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          children: const [
+                                                                            Icon(
+                                                                              Icons.access_time,
+                                                                              color: Colors.white,
+                                                                              size: 16,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 4,
+                                                                            ),
+                                                                            Text(
+                                                                              'Expire in 10 days',
+                                                                              style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 13,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                    color: const Color(
+                                                                      0xFFF1FBFF,
+                                                                    ),
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          16,
+                                                                      vertical:
+                                                                          12,
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: const [
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              'Manual credit',
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 4,
+                                                                            ),
+                                                                            Text(
+                                                                              '08 Hrs',
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 16,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              'Availd Hrs',
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 4,
+                                                                            ),
+                                                                            Text(
+                                                                              '00 Hrs',
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 16,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              'Available',
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 4,
+                                                                            ),
+                                                                            Text(
+                                                                              '08 Hrs',
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 16,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 25,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Column(
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+
+                                                          SizedBox(height: 18),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 15),
+                                                      Container(
+                                                        width: double.maxFinite,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black26,
+                                                              blurRadius: 10,
+                                                            ),
+                                                          ],
+                                                          gradient:
+                                                              LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                    0xFF00C797,
+                                                                  ),
+                                                                  Color(
+                                                                    0xFF1B81A4,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                        ),
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                              context,
+                                                            );
+                                                          },
+                                                          style: ElevatedButton.styleFrom(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      20,
+                                                                  vertical: 12,
+                                                                ),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            "Back",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 16,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                        ),
+                                      );
+                                    },
+                                    child: _buildStatCard(
+                                      "1.5",
+                                      "Comp\nOff Balance",
+                                      Image.asset(
+                                        'assets/arrow_right.png',
+                                        width: 20,
+                                        height: 20,
+                                      ),
                                     ),
                                   ),
                                   _buildStatCard("00", "Sick\nLeave"),
@@ -293,11 +652,16 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                         color: Color(0xFF00C797),
                                       ),
                                       Spacer(),
-                                      const Text(
-                                        'Apply',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF00C797),
+                                      InkWell(
+                                        onTap: () {
+                                          selectedCenter = 1;
+                                        },
+                                        child: const Text(
+                                          'Apply',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF00C797),
+                                          ),
                                         ),
                                       ),
                                       Spacer(),
@@ -382,7 +746,301 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                         ),
                                       ),
                                       child: TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (ctx) => StatefulBuilder(
+                                              builder:
+                                                  (
+                                                    BuildContext context,
+                                                    StateSetter setModalState,
+                                                  ) {
+                                                    return Container(
+                                                      padding: EdgeInsets.all(
+                                                        14,
+                                                      ),
+                                                      decoration: const BoxDecoration(
+                                                        borderRadius: BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                15,
+                                                              ),
+                                                        ),
+                                                        color: Colors.white,
+                                                      ),
+                                                      margin:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 20,
+                                                          ),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            width: 100,
+                                                            height: 7,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        15,
+                                                                      ),
+                                                                ),
+                                                          ),
+
+                                                          SizedBox(height: 20),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                "Team Leaves",
+                                                                style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                ),
+                                                              ),
+                                                              Spacer(),
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.of(
+                                                                    ctx,
+                                                                  ).pop();
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.close,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 8),
+                                                          Divider(),
+                                                          SizedBox(height: 8),
+
+                                                          SizedBox(
+                                                            height: 300,
+                                                            child: ListView.builder(
+                                                              shrinkWrap: true,
+                                                              physics:
+                                                                  NeverScrollableScrollPhysics(),
+                                                              itemCount: 7,
+                                                              itemBuilder: (context, index) {
+                                                                final isNatasha =
+                                                                    index % 2 ==
+                                                                    0;
+                                                                final name =
+                                                                    isNatasha
+                                                                    ? 'Natasha Jain'
+                                                                    : 'Sagar Sharma';
+                                                                final image =
+                                                                    isNatasha
+                                                                    ? 'assets/natasha.png'
+                                                                    : 'assets/sagar.png';
+                                                                final date =
+                                                                    '23.07.2023 - 26.07.2023';
+                                                                final status =
+                                                                    isNatasha
+                                                                    ? 'on leave'
+                                                                    : 'Planned';
+                                                                final statusColor =
+                                                                    isNatasha
+                                                                    ? Colors
+                                                                          .purple
+                                                                    : Colors
+                                                                          .blue;
+                                                                final daysLeft =
+                                                                    isNatasha
+                                                                    ? '3 days left'
+                                                                    : '5 days left';
+
+                                                                return Padding(
+                                                                  padding:
+                                                                      const EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            6.0,
+                                                                      ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      CircleAvatar(
+                                                                        radius:
+                                                                            24,
+                                                                        backgroundImage:
+                                                                            AssetImage(
+                                                                              image,
+                                                                            ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            12,
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              name,
+                                                                              style: const TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 2,
+                                                                            ),
+                                                                            Text(
+                                                                              date,
+                                                                              style: TextStyle(
+                                                                                fontSize: 12,
+                                                                                color: Colors.black54,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.end,
+                                                                        children: [
+                                                                          Text(
+                                                                            status,
+                                                                            style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.w600,
+                                                                              color: statusColor,
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            height:
+                                                                                2,
+                                                                          ),
+                                                                          Text(
+                                                                            daysLeft,
+                                                                            style: const TextStyle(
+                                                                              fontSize: 12,
+                                                                              color: Colors.black54,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 25,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Column(
+                                                            children: [
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+
+                                                              SizedBox(
+                                                                height: 18,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 15),
+                                                          Container(
+                                                            width: double
+                                                                .maxFinite,
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    10,
+                                                                  ),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .black26,
+                                                                  blurRadius:
+                                                                      10,
+                                                                ),
+                                                              ],
+                                                              gradient: LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                    0xFF00C797,
+                                                                  ),
+                                                                  Color(
+                                                                    0xFF1B81A4,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                  context,
+                                                                );
+                                                              },
+                                                              style: ElevatedButton.styleFrom(
+                                                                padding:
+                                                                    const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          12,
+                                                                    ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        12,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "Back",
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                            ),
+                                          );
+                                        },
+
                                         style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 20,
@@ -816,7 +1474,12 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
           Divider(color: Colors.grey.shade300),
           Center(
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyLeaveScreen()),
+                );
+              },
               child: Text(
                 'View All',
 
