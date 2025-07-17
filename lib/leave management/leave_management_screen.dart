@@ -1,4 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/dialog%20scr19-30/activity_correction.dart';
+import 'package:glueplenew/dialog%20scr19-30/c_off_application.dart';
+import 'package:glueplenew/dialog%20scr19-30/short_leave.dart';
+import 'package:glueplenew/dialog%20scr19-30/successful_dialog.dart';
 import 'package:glueplenew/leave%20management/my_leave_screen.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 import 'package:lottie/lottie.dart';
@@ -19,6 +24,12 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   final DateTime _today = DateTime.now();
+
+  DateTimeRange? selectedRange;
+  final startCtl = TextEditingController(text: '22-04-2023');
+  final endCtl = TextEditingController(text: '23-04-2023');
+  final reasonCtl = TextEditingController(text: 'Lorem Ipsum is a dummy text');
+  late int charCount;
 
   List TeamImages = [
     'assets/natasha.png',
@@ -419,7 +430,7 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                                                   ),
                                                                   Container(
                                                                     color: const Color(
-                                                                      0xFFF1FBFF,
+                                                                      0xFFE6F7FF,
                                                                     ),
                                                                     padding: const EdgeInsets.symmetric(
                                                                       horizontal:
@@ -630,7 +641,15 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                   maxWidth: double.maxFinite,
                                 ),
                                 child: OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) =>
+                                          CorrectionActivityBottomSheet(),
+                                    );
+                                  },
                                   style: OutlinedButton.styleFrom(
                                     fixedSize: Size(double.maxFinite, 50),
                                     side: const BorderSide(
@@ -653,9 +672,7 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                       ),
                                       Spacer(),
                                       InkWell(
-                                        onTap: () {
-                                          selectedCenter = 1;
-                                        },
+                                        onTap: () {},
                                         child: const Text(
                                           'Apply',
                                           style: TextStyle(
@@ -1040,7 +1057,6 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                             ),
                                           );
                                         },
-
                                         style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 20,
@@ -1793,6 +1809,39 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
           color: Colors.blue.shade800,
           fontSize: 12,
           fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) => Text(
+    text,
+    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+  );
+
+  Widget _buildLabelRow(String left, String right) => Row(
+    children: [
+      _buildLabel(left),
+      const Spacer(),
+      Text(right, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+    ],
+  );
+
+  Widget _dateField(
+    TextEditingController ctl,
+    BuildContext ctx,
+    ValueChanged<String> onChanged,
+  ) {
+    return GestureDetector(
+      onTap: () async {},
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: ctl,
+          decoration: const InputDecoration(
+            isDense: true,
+            suffixIcon: Icon(Icons.calendar_today, size: 18),
+            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          ),
         ),
       ),
     );

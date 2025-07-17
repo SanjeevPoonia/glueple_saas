@@ -15,7 +15,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white, // White background
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: 'Leave Management',
         leading: IconButton(
