@@ -5,6 +5,7 @@ import 'package:glueplenew/dialog%20scr19-30/c_off_application.dart';
 import 'package:glueplenew/dialog%20scr19-30/short_leave.dart';
 import 'package:glueplenew/dialog%20scr19-30/successful_dialog.dart';
 import 'package:glueplenew/leave%20management/my_leave_screen.dart';
+import 'package:glueplenew/pending_scr/clock_in.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -642,13 +643,19 @@ class _LeaveManagementScreen extends State<LeaveManagementScreen> {
                                 ),
                                 child: OutlinedButton(
                                   onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) =>
-                                          CorrectionActivityBottomSheet(),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ClockInScreen(),
+                                      ),
                                     );
+                                    // showModalBottomSheet(
+                                    //   context: context,
+                                    //   isScrollControlled: true,
+                                    //   backgroundColor: Colors.transparent,
+                                    //   builder: (context) =>
+                                    //       CorrectionActivityBottomSheet(),
+                                    // );
                                   },
                                   style: OutlinedButton.styleFrom(
                                     fixedSize: Size(double.maxFinite, 50),
