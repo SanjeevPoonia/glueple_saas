@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glueplenew/attendancehome.dart';
+import 'package:glueplenew/attendance_screens/attendance_14.dart';
+import 'package:glueplenew/attendance_screens/attendancehome.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const AttendanceHomeScreen(),
+      home: const Attendance14(),
     );
   }
 }

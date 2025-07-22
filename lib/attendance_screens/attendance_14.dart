@@ -1,19 +1,21 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:glueplenew/attendancedetail.dart';
+import 'package:glueplenew/attendance_screens/attendancedetail.dart';
 import 'package:glueplenew/leave%20management/leave_management_screen.dart';
+import 'package:glueplenew/pending_scr/attendence_detail_dialog.dart';
+import 'package:glueplenew/pending_scr/leave_management_dialog.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AttendanceHomeScreen extends StatefulWidget {
-  const AttendanceHomeScreen({super.key});
+class Attendance14 extends StatefulWidget {
+  const Attendance14({super.key});
 
   @override
-  State<AttendanceHomeScreen> createState() => _AttendanceHomeScreenState();
+  State<Attendance14> createState() => _Attendance14State();
 }
 
-class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
+class _Attendance14State extends State<Attendance14> {
   int selectedCenter = 0;
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
@@ -21,6 +23,18 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final records = [
+      {
+        "date": "18 Sept 2023",
+        "time": "09:05:00",
+        "firstHalf": "PR",
+        "secondHalf": "PR",
+        "break": "00:59:00",
+        "color1": Colors.green,
+        "color2": Colors.green,
+      },
+    ];
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
@@ -304,32 +318,6 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                       right: 0,
                                       child: Column(
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 20.0,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                _buildStatCard(
-                                                  "15",
-                                                  "Days\nPresent",
-                                                ),
-                                                _buildStatCard(
-                                                  "1",
-                                                  "Days\nAbsent",
-                                                ),
-                                                _buildStatCard(
-                                                  "1",
-                                                  "Leaves\nTaken",
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -339,112 +327,109 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                   left: 18,
                                                   right: 18,
                                                 ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Today',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 26,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-
-                                                        // SizedBox(height: 2),
-                                                        Text(
-                                                          '19 Sept 2023',
-                                                          style: TextStyle(
-                                                            color:
-                                                                Colors.black54,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    Container(
-                                                      width: 150,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              10,
-                                                            ),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color:
-                                                                Colors.black26,
-                                                            blurRadius: 10,
-                                                          ),
-                                                        ],
-                                                        gradient:
-                                                            LinearGradient(
-                                                              colors: [
-                                                                Color(
-                                                                  0xFF00C797,
-                                                                ),
-                                                                Color(
-                                                                  0xFF1B81A4,
-                                                                ),
-                                                              ],
-                                                            ),
+                                                    Text(
+                                                      'Today',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 26,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
-                                                      child: TextButton(
-                                                        onPressed: () {},
-                                                        style: ElevatedButton.styleFrom(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal: 20,
-                                                                vertical: 12,
-                                                              ),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  12,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Icon(
-                                                              Icons.play_arrow,
-                                                              size: 24,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(width: 4),
-                                                            const Text(
-                                                              "Check Out",
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16,
-                                                                // fontWeight:
-                                                                //     FontWeight.bold,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                    ),
+
+                                                    // SizedBox(height: 2),
+                                                    Text(
+                                                      '19 Sept 2023',
+                                                      style: TextStyle(
+                                                        color: Colors.black54,
+                                                        fontSize: 14,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(height: 24),
+                                              SizedBox(height: 16),
+                                              ...records.map((record) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(
+                                                    16.0,
+                                                  ),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        width: 1,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade400,
+                                                      ),
+                                                      color: Colors.white60,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            16,
+                                                          ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            12.0,
+                                                          ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          _statusColumn(
+                                                            "First Half",
+                                                            record['firstHalf']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            record['color1']
+                                                                as Color,
+                                                          ),
+                                                          _statusColumn(
+                                                            "Second Half",
+                                                            record['secondHalf']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            record['color2']
+                                                                as Color,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                "Total Break",
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                record['break']
+                                                                        ?.toString() ??
+                                                                    '',
+                                                                style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+
+                                              const SizedBox(height: 16),
                                               Container(
                                                 margin:
                                                     const EdgeInsets.symmetric(
@@ -467,8 +452,134 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                 child:
                                                     _buildTrackedTimeSection(),
                                               ),
-                                              const SizedBox(height: 16),
-                                              buildPastRecordSection(),
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                  18.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black26,
+                                                              blurRadius: 10,
+                                                            ),
+                                                          ],
+                                                          color: Color(
+                                                            0xFF00C797,
+                                                          ),
+                                                        ),
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            showModalBottomSheet(
+                                                              context: context,
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              builder: (context) =>
+                                                                  LeaveManagementDialog(),
+                                                            );
+                                                          },
+                                                          style: ElevatedButton.styleFrom(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      20,
+                                                                  vertical: 16,
+                                                                ),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            "Leave Management",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 12),
+                                                    Expanded(
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black26,
+                                                              blurRadius: 10,
+                                                            ),
+                                                          ],
+                                                          color: Color(
+                                                            0xFF1B81A4,
+                                                          ),
+                                                        ),
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            showModalBottomSheet(
+                                                              context: context,
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              builder: (context) =>
+                                                                  AttendanceDetailDialog(),
+                                                            );
+                                                          },
+                                                          style: ElevatedButton.styleFrom(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      20,
+                                                                  vertical: 16,
+                                                                ),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            "Apply Correction",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ],
@@ -1174,7 +1285,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey[600])),
+        Text(label, style: TextStyle(color: Colors.black)),
         Text(
           status,
           style: TextStyle(fontWeight: FontWeight.bold, color: color),

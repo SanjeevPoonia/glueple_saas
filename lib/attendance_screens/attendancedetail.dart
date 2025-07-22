@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glueplenew/attendancehome.dart';
+import 'package:glueplenew/attendance_screens/attendancehome.dart';
 import 'package:glueplenew/widgets/appbar.dart';
 
 class AttendanceDetailScreen extends StatelessWidget {
