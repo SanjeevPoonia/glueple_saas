@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:saas_glueple/dashboard/clock_out.dart';
 
-class ClockInScreen extends StatefulWidget {
-  const ClockInScreen({super.key});
+class ClockOutScreen extends StatefulWidget {
+  const ClockOutScreen({super.key});
 
   @override
-  State<ClockInScreen> createState() => _ClockInScreenState();
+  State<ClockOutScreen> createState() => _ClockOutScreenState();
 }
 
-class _ClockInScreenState extends State<ClockInScreen> {
+class _ClockOutScreenState extends State<ClockOutScreen> {
   bool animationCompleted = false;
 
   @override
@@ -22,7 +21,7 @@ class _ClockInScreenState extends State<ClockInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Clock In',
+                'Clock Out',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 30),
@@ -35,7 +34,7 @@ class _ClockInScreenState extends State<ClockInScreen> {
                     height: 450,
                     width: 450,
                     child: Lottie.asset(
-                      'assets/loadinggreen.json',
+                      'assets/loadingred.json',
                       repeat: false,
                       onLoaded: (composition) {
                         Future.delayed(composition.duration, () {
@@ -70,10 +69,10 @@ class _ClockInScreenState extends State<ClockInScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     )
-                  : const Column(
+                  : Column(
                       children: [
-                        Text(
-                          'Verify to clock in',
+                        const Text(
+                          'Verify to clock out',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -88,16 +87,13 @@ class _ClockInScreenState extends State<ClockInScreen> {
                         ),
                       ],
                     ),
+
               const SizedBox(height: 100),
 
               // Done button after animation completes
               if (animationCompleted)
                 InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ClockOutScreen()),
-                  ),
+                  onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 40,
@@ -105,7 +101,7 @@ class _ClockInScreenState extends State<ClockInScreen> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xFF4BB469),
+                      color: Color(0xFFD51616),
                     ),
                     child: const Text(
                       'Done',

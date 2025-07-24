@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glueplenew/pending_scr/add_event_dialog.dart';
+import 'package:saas_glueple/pending_scr/add_event_dialog.dart';
 
 class EditDetailsDialog extends StatefulWidget {
   @override

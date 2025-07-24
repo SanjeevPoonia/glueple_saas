@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:saas_glueple/dashboard/clock_out.dart';
 
 class ClockInScreen extends StatefulWidget {
   const ClockInScreen({super.key});
@@ -70,9 +69,9 @@ class _ClockInScreenState extends State<ClockInScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     )
-                  : const Column(
+                  : Column(
                       children: [
-                        Text(
+                        const Text(
                           'Verify to clock in',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -93,11 +92,7 @@ class _ClockInScreenState extends State<ClockInScreen> {
               // Done button after animation completes
               if (animationCompleted)
                 InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ClockOutScreen()),
-                  ),
+                  onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 40,
@@ -105,7 +100,7 @@ class _ClockInScreenState extends State<ClockInScreen> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xFF4BB469),
+                      color: Color(0xFF4BB469),
                     ),
                     child: const Text(
                       'Done',

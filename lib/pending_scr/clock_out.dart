@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glueplenew/pending_scr/edit_details_dialog.dart';
+import 'package:saas_glueple/pending_scr/edit_details_dialog.dart';
 import 'package:lottie/lottie.dart';
 
 class ClockOutScreen extends StatefulWidget {
@@ -107,7 +107,6 @@ class _ClockOutScreenState extends State<ClockOutScreen> {
                       horizontal: 40,
                       vertical: 12,
                     ),
-
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: Color(0xFFD51616),
