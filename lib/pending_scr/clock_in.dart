@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glueplenew/dashboard/clock_out.dart';
 import 'package:lottie/lottie.dart';
-import 'package:saas_glueple/dashboard/clock_out.dart';
 
 class ClockInScreen extends StatefulWidget {
   const ClockInScreen({super.key});
@@ -96,7 +96,8 @@ class _ClockInScreenState extends State<ClockInScreen> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ClockOutScreen()),
+                      builder: (context) => const ClockOutScreen(),
+                    ),
                   ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(

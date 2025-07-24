@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:saas_glueple/attendance/attendance_14.dart';
-import 'package:saas_glueple/network/api_dialog.dart';
-import 'package:saas_glueple/network/loader.dart';
+import 'package:glueplenew/attendance/attendance_14.dart';
+import 'package:glueplenew/network/loader.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:toast/toast.dart';
 import '../authentication/logout_functionality.dart';
@@ -56,7 +54,10 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
       backgroundColor: Colors.transparent,
       appBar: CustomAppBar(
         title: 'Attendance',
-        leading: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(
@@ -226,22 +227,22 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                       });
                                                     },
                                                     child: Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 12,
-                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                          ),
                                                       decoration: BoxDecoration(
-                                                        color: selectedCenter ==
-                                                                0
+                                                        color:
+                                                            selectedCenter == 0
                                                             ? const Color(
-                                                                0xFF1B81A4)
+                                                                0xFF1B81A4,
+                                                              )
                                                             : Colors
-                                                                .transparent, // Changed to transparent for unselected
+                                                                  .transparent, // Changed to transparent for unselected
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          24,
-                                                        ),
+                                                            BorderRadius.circular(
+                                                              24,
+                                                            ),
                                                         // boxShadow: selectedCenter == 0
                                                         //     ? [
                                                         //         BoxShadow(
@@ -259,7 +260,8 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: selectedCenter ==
+                                                            color:
+                                                                selectedCenter ==
                                                                     0
                                                                 ? Colors.white
                                                                 : const Color(
@@ -280,22 +282,22 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                       });
                                                     },
                                                     child: Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 12,
-                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                          ),
                                                       decoration: BoxDecoration(
-                                                        color: selectedCenter ==
-                                                                1
+                                                        color:
+                                                            selectedCenter == 1
                                                             ? const Color(
-                                                                0xFF1B81A4)
+                                                                0xFF1B81A4,
+                                                              )
                                                             : Colors
-                                                                .transparent, // Changed to transparent for unselected
+                                                                  .transparent, // Changed to transparent for unselected
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          24,
-                                                        ),
+                                                            BorderRadius.circular(
+                                                              24,
+                                                            ),
                                                         // boxShadow: selectedCenter == 1
                                                         //     ? [
                                                         //         BoxShadow(
@@ -313,7 +315,8 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: selectedCenter ==
+                                                            color:
+                                                                selectedCenter ==
                                                                     1
                                                                 ? Colors.white
                                                                 : const Color(
@@ -345,9 +348,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                               horizontal: 20.0,
                                             ),
                                             child: attDashboardLoading
-                                                ? Center(
-                                                    child: Loader(),
-                                                  )
+                                                ? Center(child: Loader())
                                                 : Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -403,10 +404,10 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                           todayDateStr,
                                                           style:
                                                               const TextStyle(
-                                                            color:
-                                                                Colors.black54,
-                                                            fontSize: 14,
-                                                          ),
+                                                                color: Colors
+                                                                    .black54,
+                                                                fontSize: 14,
+                                                              ),
                                                         ),
                                                       ],
                                                     ),
@@ -415,13 +416,11 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                         ? Loader()
                                                         : Container(
                                                             width: 150,
-                                                            decoration:
-                                                                BoxDecoration(
+                                                            decoration: BoxDecoration(
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                10,
-                                                              ),
+                                                                  BorderRadius.circular(
+                                                                    10,
+                                                                  ),
                                                               boxShadow: const [
                                                                 BoxShadow(
                                                                   color: Colors
@@ -430,8 +429,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                                       10,
                                                                 ),
                                                               ],
-                                                              gradient:
-                                                                  const LinearGradient(
+                                                              gradient: const LinearGradient(
                                                                 colors: [
                                                                   Color(
                                                                     0xFF00C797,
@@ -444,26 +442,22 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                             ),
                                                             child: TextButton(
                                                               onPressed: () {},
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
+                                                              style: ElevatedButton.styleFrom(
                                                                 padding:
-                                                                    const EdgeInsets
-                                                                        .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 12,
-                                                                ),
+                                                                    const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          12,
+                                                                    ),
                                                                 backgroundColor:
                                                                     Colors
                                                                         .transparent,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
+                                                                shape: RoundedRectangleBorder(
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                    12,
-                                                                  ),
+                                                                      BorderRadius.circular(
+                                                                        12,
+                                                                      ),
                                                                 ),
                                                               ),
                                                               child: const Row(
@@ -479,11 +473,11 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                                         .white,
                                                                   ),
                                                                   SizedBox(
-                                                                      width: 4),
+                                                                    width: 4,
+                                                                  ),
                                                                   Text(
                                                                     "Check Out",
-                                                                    style:
-                                                                        TextStyle(
+                                                                    style: TextStyle(
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
@@ -503,8 +497,8 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                               Container(
                                                 margin:
                                                     const EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                ),
+                                                      horizontal: 16,
+                                                    ),
                                                 padding: const EdgeInsets.all(
                                                   16,
                                                 ),
@@ -558,23 +552,32 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                                   CalendarFormat.month,
                                               calendarStyle:
                                                   const CalendarStyle(
-                                                todayDecoration: BoxDecoration(
-                                                  color: Color(0xFF304C9F),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                selectedDecoration:
-                                                    BoxDecoration(
-                                                  color: Color(0xFF00C797),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                markerDecoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                weekendTextStyle: TextStyle(
-                                                  color: Colors.red,
-                                                ),
-                                              ),
+                                                    todayDecoration:
+                                                        BoxDecoration(
+                                                          color: Color(
+                                                            0xFF304C9F,
+                                                          ),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                    selectedDecoration:
+                                                        BoxDecoration(
+                                                          color: Color(
+                                                            0xFF00C797,
+                                                          ),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                    markerDecoration:
+                                                        BoxDecoration(
+                                                          color: Colors.red,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                    weekendTextStyle: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
                                               headerStyle: const HeaderStyle(
                                                 titleTextStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -599,174 +602,193 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                               },
                                               onDaySelected:
                                                   (selectedDay, focusedDay) {
-                                                setState(() {
-                                                  _selectedDay = selectedDay;
-                                                  _focusedDay = focusedDay;
-                                                });
-                                              },
-                                              calendarBuilders:
-                                                  CalendarBuilders(
+                                                    setState(() {
+                                                      _selectedDay =
+                                                          selectedDay;
+                                                      _focusedDay = focusedDay;
+                                                    });
+                                                  },
+                                              calendarBuilders: CalendarBuilders(
                                                 selectedBuilder:
                                                     (context, day, focusedDay) {
-                                                  final events =
-                                                      _getEventsForDay(day);
-                                                  if (events.isNotEmpty) {
-                                                    // Map event to color and abbreviation
-                                                    String event = events.first;
-                                                    Color color;
-                                                    String abbr;
-                                                    if (event == "Present") {
-                                                      color = Colors.green;
-                                                      abbr = "PR";
-                                                    } else if (event ==
-                                                        "Absent") {
-                                                      color = Colors.red;
-                                                      abbr = "AB";
-                                                    } else if (event ==
-                                                        "Week Off") {
-                                                      color = Colors.indigo;
-                                                      abbr = "WO";
-                                                    } else if (event ==
-                                                        "Public Holiday") {
-                                                      color = const Color(
-                                                        0xFF2B7B8A,
-                                                      );
-                                                      abbr = "PH";
-                                                    } else if (event ==
-                                                        "Paid Leave") {
-                                                      color = Colors.indigo;
-                                                      abbr = "PL";
-                                                    } else if (event ==
-                                                        "Leave w/o Pay") {
-                                                      color = Colors.orange;
-                                                      abbr = "LW";
-                                                    } else if (event ==
-                                                        "Half Day Absent") {
-                                                      color = const Color(
-                                                        0xFFFF0000,
-                                                      );
-                                                      abbr = "HD";
-                                                    } else {
-                                                      color = const Color(
-                                                        0xFF1B81A4,
-                                                      );
-                                                      abbr = event
-                                                          .substring(0, 2)
-                                                          .toUpperCase();
-                                                    }
-                                                    return CircleAvatar(
-                                                      backgroundColor: color,
-                                                      radius: 18,
-                                                      child: Text(
-                                                        abbr,
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    // No event: filled blue circle with date number
-                                                    return CircleAvatar(
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFF1B81A4),
-                                                      radius: 18,
-                                                      child: Text(
-                                                        '${day.day}',
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
+                                                      final events =
+                                                          _getEventsForDay(day);
+                                                      if (events.isNotEmpty) {
+                                                        // Map event to color and abbreviation
+                                                        String event =
+                                                            events.first;
+                                                        Color color;
+                                                        String abbr;
+                                                        if (event ==
+                                                            "Present") {
+                                                          color = Colors.green;
+                                                          abbr = "PR";
+                                                        } else if (event ==
+                                                            "Absent") {
+                                                          color = Colors.red;
+                                                          abbr = "AB";
+                                                        } else if (event ==
+                                                            "Week Off") {
+                                                          color = Colors.indigo;
+                                                          abbr = "WO";
+                                                        } else if (event ==
+                                                            "Public Holiday") {
+                                                          color = const Color(
+                                                            0xFF2B7B8A,
+                                                          );
+                                                          abbr = "PH";
+                                                        } else if (event ==
+                                                            "Paid Leave") {
+                                                          color = Colors.indigo;
+                                                          abbr = "PL";
+                                                        } else if (event ==
+                                                            "Leave w/o Pay") {
+                                                          color = Colors.orange;
+                                                          abbr = "LW";
+                                                        } else if (event ==
+                                                            "Half Day Absent") {
+                                                          color = const Color(
+                                                            0xFFFF0000,
+                                                          );
+                                                          abbr = "HD";
+                                                        } else {
+                                                          color = const Color(
+                                                            0xFF1B81A4,
+                                                          );
+                                                          abbr = event
+                                                              .substring(0, 2)
+                                                              .toUpperCase();
+                                                        }
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              color,
+                                                          radius: 18,
+                                                          child: Text(
+                                                            abbr,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 12,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        // No event: filled blue circle with date number
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF1B81A4,
+                                                              ),
+                                                          radius: 18,
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
                                                 todayBuilder:
                                                     (context, day, focusedDay) {
-                                                  // If today is not selected
-                                                  if (!isSameDay(
-                                                    day,
-                                                    _selectedDay,
-                                                  )) {
-                                                    return CircleAvatar(
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFF304C9F),
-                                                      radius: 18,
-                                                      child: Text(
-                                                        '${day.day}',
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    // Let selectedBuilder handle it
-                                                    return null;
-                                                  }
-                                                },
+                                                      // If today is not selected
+                                                      if (!isSameDay(
+                                                        day,
+                                                        _selectedDay,
+                                                      )) {
+                                                        return CircleAvatar(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF304C9F,
+                                                              ),
+                                                          radius: 18,
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        // Let selectedBuilder handle it
+                                                        return null;
+                                                      }
+                                                    },
                                                 defaultBuilder:
                                                     (context, day, focusedDay) {
-                                                  final events =
-                                                      _getEventsForDay(day);
-                                                  if (events.isNotEmpty) {
-                                                    // Map event to color
-                                                    String event = events.first;
-                                                    Color color;
-                                                    if (event == "Present")
-                                                      color = Colors.green;
-                                                    else if (event == "Absent")
-                                                      color = Colors.red;
-                                                    else if (event ==
-                                                        "Week Off")
-                                                      color = Colors.indigo;
-                                                    else if (event ==
-                                                        "Public Holiday")
-                                                      color = const Color(
-                                                        0xFF2B7B8A,
-                                                      );
-                                                    else if (event ==
-                                                        "Paid Leave")
-                                                      color = Colors.indigo;
-                                                    else if (event ==
-                                                        "Leave w/o Pay")
-                                                      color = Colors.orange;
-                                                    else if (event ==
-                                                        "Half Day Absent")
-                                                      color = const Color(
-                                                        0xFFFF0000,
-                                                      );
-                                                    else
-                                                      color = const Color(
-                                                        0xFF1B81A4,
-                                                      );
-                                                    return Center(
-                                                      child: Text(
-                                                        '${day.day}',
-                                                        style: TextStyle(
-                                                          color: color,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                      final events =
+                                                          _getEventsForDay(day);
+                                                      if (events.isNotEmpty) {
+                                                        // Map event to color
+                                                        String event =
+                                                            events.first;
+                                                        Color color;
+                                                        if (event == "Present")
+                                                          color = Colors.green;
+                                                        else if (event ==
+                                                            "Absent")
+                                                          color = Colors.red;
+                                                        else if (event ==
+                                                            "Week Off")
+                                                          color = Colors.indigo;
+                                                        else if (event ==
+                                                            "Public Holiday")
+                                                          color = const Color(
+                                                            0xFF2B7B8A,
+                                                          );
+                                                        else if (event ==
+                                                            "Paid Leave")
+                                                          color = Colors.indigo;
+                                                        else if (event ==
+                                                            "Leave w/o Pay")
+                                                          color = Colors.orange;
+                                                        else if (event ==
+                                                            "Half Day Absent")
+                                                          color = const Color(
+                                                            0xFFFF0000,
+                                                          );
+                                                        else
+                                                          color = const Color(
+                                                            0xFF1B81A4,
+                                                          );
+                                                        return Center(
+                                                          child: Text(
+                                                            '${day.day}',
+                                                            style: TextStyle(
+                                                              color: color,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      // Default day
+                                                      return Center(
+                                                        child: Text(
+                                                          '${day.day}',
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  // Default day
-                                                  return Center(
-                                                    child: Text(
-                                                      '${day.day}',
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
+                                                      );
+                                                    },
                                                 dowBuilder: (context, day) {
                                                   final text = [
                                                     'S',
@@ -902,18 +924,18 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                                               child: TextButton(
                                                 onPressed: () {},
                                                 style: ElevatedButton.styleFrom(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 40,
-                                                    vertical: 12,
-                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 40,
+                                                        vertical: 12,
+                                                      ),
                                                   backgroundColor:
                                                       Colors.transparent,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                      12,
-                                                    ),
+                                                          12,
+                                                        ),
                                                   ),
                                                 ),
                                                 child: const Text(
@@ -957,7 +979,10 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           const BoxShadow(
-              color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -1142,9 +1167,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const Attendance14(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const Attendance14()),
                 );
               },
               child: Container(
@@ -1203,8 +1226,9 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                             ),
                             Text(
                               record['break']?.toString() ?? '',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -1458,17 +1482,22 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-attendance-dashboard', token, clientCode, context);
+      baseUrl,
+      'get-attendance-dashboard',
+      token,
+      clientCode,
+      context,
+    );
     var responseJSON = json.decode(response.body);
     print(responseJSON);
     if (responseJSON['success'] == true) {
       if (responseJSON['data']['attendanceCount'] != null) {
         presendDayCount =
             responseJSON['data']['attendanceCount']['present_count'].toString();
-        absentDayCount =
-            responseJSON['data']['attendanceCount']['absent_count'].toString();
-        leaveDayCount =
-            responseJSON['data']['attendanceCount']['paid_count'].toString();
+        absentDayCount = responseJSON['data']['attendanceCount']['absent_count']
+            .toString();
+        leaveDayCount = responseJSON['data']['attendanceCount']['paid_count']
+            .toString();
       }
 
       setState(() {
@@ -1476,24 +1505,29 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         attDashboardLoading = false;
       });
       LogoutUserFromApp.logOut(context);
     } else {
-      Toast.show(responseJSON['message'],
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         attDashboardLoading = false;
       });
     }
   }
+
   /* getCheckInStatus() async {
     setState(() {
       attLoading=true;

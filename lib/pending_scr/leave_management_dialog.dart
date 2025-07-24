@@ -24,17 +24,17 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       child: DraggableScrollableSheet(
         initialChildSize: 0.58,
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(15)),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
           child: SingleChildScrollView(
             controller: scrollController,
             child: Column(
@@ -43,7 +43,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                 // Header
                 Row(
                   children: [
-                    const Spacer(),
+                    Spacer(),
                     Container(
                       width: 100,
                       height: 7,
@@ -52,33 +52,33 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    const Spacer(),
+                    Spacer(),
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back),
+                      child: Icon(Icons.arrow_back),
                     ),
                     const SizedBox(width: 20),
-                    const Text(
+                    Text(
                       "Leave Management",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    const Spacer(),
-                    const Icon(Icons.search),
+                    Spacer(),
+                    Icon(Icons.search),
                     const SizedBox(width: 20),
                   ],
                 ),
-                const SizedBox(height: 8),
-                const Divider(),
-                const SizedBox(height: 6),
+                SizedBox(height: 8),
+                Divider(),
+                SizedBox(height: 6),
                 Column(
                   children: [
                     //  Padding(
@@ -156,8 +156,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           ApplyLeaveBottomSheet(),
                                     );
@@ -175,7 +173,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Apply Leaves",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -194,8 +192,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           COFFApplicationBottomSheet(),
                                     );
@@ -213,7 +209,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Apply C-OFF",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -240,8 +236,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           TourApplicationBottomSheet(),
                                     );
@@ -259,7 +253,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Apply Tour",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -278,8 +272,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           CorrectionActivityBottomSheet(),
                                     );
@@ -297,7 +289,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Attendence\nCorrection",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -324,8 +316,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           ShortLeaveBottomSheet(),
                                     );
@@ -343,7 +333,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Short Leave/\nOfficial In-Out",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -362,8 +352,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           WFHApplicationBottomSheet(),
                                     );
@@ -381,7 +369,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "WFH\nAttendance",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -408,8 +396,6 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           CorrectionActivityBottomSheet(),
                                     );
@@ -427,7 +413,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Activity\nCorrection",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -444,15 +430,16 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Container(
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
-                      const BoxShadow(color: Colors.black26, blurRadius: 10),
+                      BoxShadow(color: Colors.black26, blurRadius: 10),
                     ],
-                    color: const Color(0xFF00C797),
+
+                    color: Color(0xFF00C797),
                   ),
                   child: TextButton(
                     onPressed: () {},
@@ -466,7 +453,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Back",
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),

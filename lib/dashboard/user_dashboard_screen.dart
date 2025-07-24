@@ -12,6 +12,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:glueplenew/attendance/attendancehome.dart';
+import 'package:glueplenew/authentication/logout_functionality.dart';
+import 'package:glueplenew/dashboard/holiday_screen.dart';
+import 'package:glueplenew/dashboard/profile_screen.dart';
+import 'package:glueplenew/leave_management/leave_management_screen.dart';
 
 //import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 // import 'package:geolocator/geolocator.dart';
@@ -20,9 +25,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:saas_glueple/attendance/attendancehome.dart';
-import 'package:saas_glueple/authentication/logout_functionality.dart';
-import 'package:saas_glueple/leave_management/leave_management_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -89,14 +91,14 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     "Anniversary\nToday",
     "New\nJoinee",
     "Kudos",
-    "Write a Post"
+    "Write a Post",
   ];
   List<String> descriptionList = [
     "No One have birthday today",
     "No One have anniversary today",
     "No One have Joined today",
     "No One received KUDOS today",
-    "Share your thoughts, give wishes and know about your colleagues"
+    "Share your thoughts, give wishes and know about your colleagues",
   ];
 
   late PageController _pageController;
@@ -192,151 +194,167 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
         body: Column(
           children: [
             Expanded(
-                child: Stack(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 0),
-                  decoration:
-                      const BoxDecoration(color: AppTheme.dashboard_back_pink),
-                ),
-                ListView(
-                  padding: EdgeInsets.only(top: 0),
-                  children: [
-                    Container(
-                      color: Colors.black,
-                      height: 50,
+              child: Stack(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 0),
+                    decoration: const BoxDecoration(
+                      color: AppTheme.dashboard_back_pink,
                     ),
+                  ),
+                  ListView(
+                    padding: EdgeInsets.only(top: 0),
+                    children: [
+                      Container(color: Colors.black, height: 50),
 
-                    //Correction Notification
-                    isNotiLoading
-                        ? Center(
-                            child: Loader(),
-                          )
-                        : notiStr.isNotEmpty
-                            ? Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: AppTheme.qdNotiBack,
-                                  boxShadow: const <BoxShadow>[
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      right: 5, left: 5, top: 8),
-                                  child: Marquee(
-                                    text: notiStr,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                    scrollAxis: Axis.horizontal,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    blankSpace: 20,
-                                    velocity: 60,
-                                    pauseAfterRound: Duration(seconds: 1),
-                                    startPadding: 10,
-                                    accelerationDuration: Duration(seconds: 1),
-                                    accelerationCurve: Curves.linear,
-                                    decelerationDuration:
-                                        Duration(milliseconds: 500),
-                                    decelerationCurve: Curves.easeOut,
+                      //Correction Notification
+                      isNotiLoading
+                          ? Center(child: Loader())
+                          : notiStr.isNotEmpty
+                          ? Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: AppTheme.qdNotiBack,
+                                boxShadow: const <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 6.0,
                                   ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  right: 5,
+                                  left: 5,
+                                  top: 8,
                                 ),
-                              )
-                            : Container(),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 40),
-                      height: 450,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
+                                child: Marquee(
+                                  text: notiStr,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  scrollAxis: Axis.horizontal,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  blankSpace: 20,
+                                  velocity: 60,
+                                  pauseAfterRound: Duration(seconds: 1),
+                                  startPadding: 10,
+                                  accelerationDuration: Duration(seconds: 1),
+                                  accelerationCurve: Curves.linear,
+                                  decelerationDuration: Duration(
+                                    milliseconds: 500,
+                                  ),
+                                  decelerationCurve: Curves.easeOut,
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 40),
+                        height: 450,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
                           gradient: LinearGradient(
-                        colors: const [
-                          AppTheme.themeGreenColor,
-                          AppTheme.themeBlueColor
-                        ],
-                        begin: alignmentFromAngle(137),
-                        end: alignmentFromAngle(317),
-                      )),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                userShowProfile == ""
-                                    ? const CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage("assets/profile.png"),
-                                        radius: 30,
-                                      )
-                                    : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(60.0),
-                                        child: CachedNetworkImage(
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                          imageUrl: userShowProfile,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              CircularProgressIndicator(
-                                                  value: downloadProgress
-                                                      .progress),
-                                          errorWidget: (context, url, error) =>
-                                              Image.asset("assets/profile.png"),
+                            colors: const [
+                              AppTheme.themeGreenColor,
+                              AppTheme.themeBlueColor,
+                            ],
+                            begin: alignmentFromAngle(137),
+                            end: alignmentFromAngle(317),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  userShowProfile == ""
+                                      ? const CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                            "assets/profile.png",
+                                          ),
+                                          radius: 30,
+                                        )
+                                      : ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            60.0,
+                                          ),
+                                          child: CachedNetworkImage(
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                            imageUrl: userShowProfile,
+                                            progressIndicatorBuilder:
+                                                (
+                                                  context,
+                                                  url,
+                                                  downloadProgress,
+                                                ) => CircularProgressIndicator(
+                                                  value:
+                                                      downloadProgress.progress,
+                                                ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                                      "assets/profile.png",
+                                                    ),
+                                          ),
+                                          //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
                                         ),
-                                        //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    flex: 1,
+                                    child: InkWell(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              QDProfileScreen(),
+                                        ),
                                       ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                            text: 'Hi,',
-                                            style: const TextStyle(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(
+                                              text: 'Hi,',
+                                              style: const TextStyle(
                                                 fontSize: 17.5,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.white),
-                                            children: [
-                                              TextSpan(
-                                                text: firstName,
-                                                style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text: firstName,
+                                                  style: const TextStyle(
                                                     fontSize: 17.5,
                                                     fontWeight: FontWeight.w900,
-                                                    color: Colors.white),
-                                              ),
-                                            ]),
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            empId,
+                                            style: const TextStyle(
+                                              fontSize: 15.5,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        empId,
-                                        style: const TextStyle(
-                                            fontSize: 15.5,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
+                                  const SizedBox(width: 10),
 
-                                /* InkWell(
+                                  /* InkWell(
                                       onTap: (){
                                         // Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatListingScreen()));
                                       },
@@ -347,82 +365,81 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
 
                                     ),
                                     const SizedBox(width: 7,),*/
-                                InkWell(
-                                  onTap: () {
-                                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()),);
-                                  },
-                                  child: SvgPicture.asset(
-                                    "assets/ic_noti.svg",
-                                    width: 30,
-                                    height: 30,
+                                  InkWell(
+                                    onTap: () {
+                                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()),);
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/ic_noti.svg",
+                                      width: 30,
+                                      height: 30,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()),);
-                                  },
-                                  child: SvgPicture.asset(
-                                    "assets/ic_menu.svg",
-                                    width: 30,
-                                    height: 30,
+                                  const SizedBox(width: 7),
+                                  InkWell(
+                                    onTap: () {
+                                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()),);
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/ic_menu.svg",
+                                      width: 30,
+                                      height: 30,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
+                                  const SizedBox(width: 10),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(15),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            height: 270,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 60,
-                                      decoration: const BoxDecoration(
+                            Container(
+                              padding: EdgeInsets.all(15),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              height: 270,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: const BoxDecoration(
                                           color: Colors.white,
-                                          shape: BoxShape.circle),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            dayStr,
-                                            style: const TextStyle(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              dayStr,
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          Text(
-                                            mnthStr,
-                                            style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              mnthStr,
+                                              style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.black),
-                                          ),
-                                        ],
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
+                                      const SizedBox(width: 5),
+                                      Expanded(
                                         flex: 1,
                                         child: Column(
                                           crossAxisAlignment:
@@ -431,620 +448,665 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                             Text(
                                               "Date and Time",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 14,
-                                                  color:
-                                                      AppTheme.dashborad_gray),
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 14,
+                                                color: AppTheme.dashborad_gray,
+                                              ),
                                             ),
                                             Text(
                                               timeStr,
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 20,
-                                                  color: Colors.black),
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 20,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ],
-                                        )),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    SvgPicture.asset(
-                                      getImageForTime(),
-                                      width: 50,
-                                      height: 50,
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 53,
-                                      height: 53,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        //border: Border.all(color: Colors.grey,),
-                                        color: AppTheme.themeBlueColor
-                                            .withOpacity(0.20),
+                                        ),
                                       ),
-                                      child: Center(
-                                        child: Text(logedInHour,
+                                      const SizedBox(width: 5),
+                                      SvgPicture.asset(
+                                        getImageForTime(),
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 53,
+                                        height: 53,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                          //border: Border.all(color: Colors.grey,),
+                                          color: AppTheme.themeBlueColor
+                                              .withOpacity(0.20),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            logedInHour,
                                             style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 28,
-                                                color: Colors.black)),
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 28,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Container(
-                                      width: 53,
-                                      height: 53,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        //border: Border.all(color: Colors.grey,),
-                                        color: AppTheme.themeBlueColor
-                                            .withOpacity(0.20),
-                                      ),
-                                      child: Center(
-                                        child: Text(logedInMinute,
+                                      const SizedBox(width: 10),
+                                      Container(
+                                        width: 53,
+                                        height: 53,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                          //border: Border.all(color: Colors.grey,),
+                                          color: AppTheme.themeBlueColor
+                                              .withOpacity(0.20),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            logedInMinute,
                                             style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 28,
-                                                color: Colors.black)),
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 28,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Container(
-                                      width: 53,
-                                      height: 53,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        //border: Border.all(color: Colors.grey,),
-                                        color: AppTheme.themeBlueColor
-                                            .withOpacity(0.20),
-                                      ),
-                                      child: Center(
-                                        child: Text(logedInSec,
+                                      const SizedBox(width: 10),
+                                      Container(
+                                        width: 53,
+                                        height: 53,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                          //border: Border.all(color: Colors.grey,),
+                                          color: AppTheme.themeBlueColor
+                                              .withOpacity(0.20),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            logedInSec,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 28,
-                                                color: Colors.black)),
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 28,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      "HRS",
-                                      style: TextStyle(
+                                      const SizedBox(width: 10),
+                                      const Text(
+                                        "HRS",
+                                        style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w900,
-                                          color: AppTheme.dashborad_gray_hours),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                isAttendanceAccess == "1"
-                                    ? InkWell(
-                                        onTap: () {
-                                          //  _checkDeveloperOption();
-                                        },
-                                        child: Container(
-                                          width: 180,
-                                          height: 49,
-                                          decoration: BoxDecoration(
+                                          color: AppTheme.dashborad_gray_hours,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  isAttendanceAccess == "1"
+                                      ? InkWell(
+                                          onTap: () {
+                                            //  _checkDeveloperOption();
+                                          },
+                                          child: Container(
+                                            width: 180,
+                                            height: 49,
+                                            decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: const [
                                                   AppTheme.themeGreenColor,
-                                                  AppTheme.themeBlueColor
+                                                  AppTheme.themeBlueColor,
                                                 ],
                                                 begin: alignmentFromAngle(137),
                                                 end: alignmentFromAngle(317),
                                               ),
                                               borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.play_arrow,
-                                                  color: Colors.white),
-                                              SizedBox(width: 9),
-                                              Text(
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.play_arrow,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(width: 9),
+                                                Text(
                                                   showCheckIn == true
                                                       ? "Punch In"
                                                       : "Punch Out",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 16,
-                                                      color: Colors.white)),
-                                            ],
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    : Container(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Center(
-                                  child: RichText(
-                                    text: TextSpan(
+                                        )
+                                      : Container(),
+                                  const SizedBox(height: 20),
+                                  Center(
+                                    child: RichText(
+                                      text: TextSpan(
                                         text: 'Your Shift Time ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12.5,
-                                            color:
-                                                AppTheme.dashborad_gray_hours),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.5,
+                                          color: AppTheme.dashborad_gray_hours,
+                                        ),
                                         children: [
                                           TextSpan(
                                             text: shiftStartTime,
                                             style: const TextStyle(
-                                                fontSize: 14.5,
-                                                fontWeight: FontWeight.w900,
-                                                color: AppTheme.themeBlueColor),
+                                              fontSize: 14.5,
+                                              fontWeight: FontWeight.w900,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
                                           ),
                                           TextSpan(
                                             text: " to ",
                                             style: const TextStyle(
-                                                fontSize: 12.5,
-                                                fontWeight: FontWeight.w300,
-                                                color: AppTheme.themeBlueColor),
+                                              fontSize: 12.5,
+                                              fontWeight: FontWeight.w300,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
                                           ),
                                           TextSpan(
                                             text: shiftEndTime,
                                             style: const TextStyle(
-                                                fontSize: 14.5,
-                                                fontWeight: FontWeight.w900,
-                                                color: AppTheme.themeBlueColor),
+                                              fontSize: 14.5,
+                                              fontWeight: FontWeight.w900,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
                                           ),
-                                        ]),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Transform.translate(
+                              offset: const Offset(0, 40),
+                              child: Container(
+                                height: 90,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                  boxShadow: const <BoxShadow>[
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 1.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "In Time",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                              color:
+                                                  AppTheme.dashborad_gray_hours,
+                                            ),
+                                          ),
+                                          Text(
+                                            inTime,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 16,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Out Time",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                              color:
+                                                  AppTheme.dashborad_gray_hours,
+                                            ),
+                                          ),
+                                          Text(
+                                            outTime,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 16,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Break",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                              color:
+                                                  AppTheme.dashborad_gray_hours,
+                                            ),
+                                          ),
+                                          Text(
+                                            breakTime,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 16,
+                                              color: AppTheme.themeBlueColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Attendance Analysis Card
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    "Attendance Analysis",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 14.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  flex: 1,
+                                ),
+                                Text(
+                                  monthStr,
+                                  style: const TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(0, 40),
-                            child: Container(
-                              height: 90,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.white,
-                                boxShadow: const <BoxShadow>[
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 1.0,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "In Time",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color:
-                                                AppTheme.dashborad_gray_hours),
-                                      ),
-                                      Text(
-                                        inTime,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                            color: AppTheme.themeBlueColor),
-                                      ),
-                                    ],
-                                  )),
-                                  Expanded(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "Out Time",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color:
-                                                AppTheme.dashborad_gray_hours),
-                                      ),
-                                      Text(
-                                        outTime,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                            color: AppTheme.themeBlueColor),
-                                      ),
-                                    ],
-                                  )),
-                                  Expanded(
-                                      child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "Break",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color:
-                                                AppTheme.dashborad_gray_hours),
-                                      ),
-                                      Text(
-                                        breakTime,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                            color: AppTheme.themeBlueColor),
-                                      ),
-                                    ],
-                                  ))
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    // Attendance Analysis Card
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Text(
-                                  "Attendance Analysis",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 14.5,
-                                      color: Colors.black),
-                                ),
-                                flex: 1,
-                              ),
-                              Text(
-                                monthStr,
-                                style: const TextStyle(
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          analysisLoading
-                              ? Center(
-                                  child: Loader(),
-                                )
-                              : InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
+                            SizedBox(height: 20),
+                            analysisLoading
+                                ? Center(child: Loader())
+                                : InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
                                           builder: (context) =>
-                                              const AttendanceHomeScreen()),
-                                    );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
+                                              const AttendanceHomeScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Expanded(
                                           child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: AppTheme.themeGreenColor
-                                                .withOpacity(0.10),
-                                            shape: BoxShape.rectangle),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFF1F56AE)
-                                                      .withOpacity(0.19),
-                                                  shape: BoxShape.circle),
-                                              height: 65,
-                                              width: 65,
-                                              child: Center(
-                                                child: Text(presentDaysCount,
-                                                    style: TextStyle(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: AppTheme.themeGreenColor
+                                                  .withOpacity(0.10),
+                                              shape: BoxShape.rectangle,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(
+                                                      0xFF1F56AE,
+                                                    ).withOpacity(0.19),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  height: 65,
+                                                  width: 65,
+                                                  child: Center(
+                                                    child: Text(
+                                                      presentDaysCount,
+                                                      style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 19.5,
-                                                        color:
-                                                            Color(0xFF1F56AE))),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              "Present",
-                                              style: TextStyle(
-                                                  fontSize: 11.5,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black),
-                                            )
-                                          ],
-                                        ),
-                                      )),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Expanded(
-                                          child: Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  color: AppTheme
-                                                      .themeGreenColor
-                                                      .withOpacity(0.10),
-                                                  shape: BoxShape.rectangle),
-                                              child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xFFAE1F1F)
-                                                                  .withOpacity(
-                                                                      0.19),
-                                                          shape:
-                                                              BoxShape.circle),
-                                                      height: 65,
-                                                      width: 65,
-                                                      child: Center(
-                                                        child: Text(
-                                                            absentDaysCount,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 19.5,
-                                                                color: Color(
-                                                                    0xFFFB1F1F))),
+                                                        color: Color(
+                                                          0xFF1F56AE,
+                                                        ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                      "Absent",
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  "Present",
+                                                  style: TextStyle(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: AppTheme.themeGreenColor
+                                                  .withOpacity(0.10),
+                                              shape: BoxShape.rectangle,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(
+                                                      0xFFAE1F1F,
+                                                    ).withOpacity(0.19),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  height: 65,
+                                                  width: 65,
+                                                  child: Center(
+                                                    child: Text(
+                                                      absentDaysCount,
                                                       style: TextStyle(
-                                                          fontSize: 11.5,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Colors.black),
-                                                    )
-                                                  ]))),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Expanded(
-                                          child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: AppTheme.themeGreenColor
-                                                .withOpacity(0.10),
-                                            shape: BoxShape.rectangle),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFFF2A20B)
-                                                      .withOpacity(0.19),
-                                                  shape: BoxShape.circle),
-                                              height: 65,
-                                              width: 65,
-                                              child: Center(
-                                                child: Text(correctionDaysCount,
-                                                    style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 19.5,
-                                                        color:
-                                                            Color(0xFFF2A20B))),
-                                              ),
+                                                        color: Color(
+                                                          0xFFFB1F1F,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  "Absent",
+                                                  style: TextStyle(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              "Correction",
-                                              style: TextStyle(
-                                                  fontSize: 11.5,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      )),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Expanded(
+                                        SizedBox(width: 5),
+                                        Expanded(
                                           child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: AppTheme.themeGreenColor
-                                                .withOpacity(0.10),
-                                            shape: BoxShape.rectangle),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFF13E0B0)
-                                                      .withOpacity(0.19),
-                                                  shape: BoxShape.circle),
-                                              height: 65,
-                                              width: 65,
-                                              child: Center(
-                                                child: Text(leaveDaysCount,
-                                                    style: TextStyle(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: AppTheme.themeGreenColor
+                                                  .withOpacity(0.10),
+                                              shape: BoxShape.rectangle,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(
+                                                      0xFFF2A20B,
+                                                    ).withOpacity(0.19),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  height: 65,
+                                                  width: 65,
+                                                  child: Center(
+                                                    child: Text(
+                                                      correctionDaysCount,
+                                                      style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 19.5,
-                                                        color:
-                                                            Color(0xFF13E0B0))),
-                                              ),
+                                                        color: Color(
+                                                          0xFFF2A20B,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  "Correction",
+                                                  style: TextStyle(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              "Leave",
-                                              style: TextStyle(
-                                                  fontSize: 11.5,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ))
-                                    ],
+                                        SizedBox(width: 5),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: AppTheme.themeGreenColor
+                                                  .withOpacity(0.10),
+                                              shape: BoxShape.rectangle,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(
+                                                      0xFF13E0B0,
+                                                    ).withOpacity(0.19),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  height: 65,
+                                                  width: 65,
+                                                  child: Center(
+                                                    child: Text(
+                                                      leaveDaysCount,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 19.5,
+                                                        color: Color(
+                                                          0xFF13E0B0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  "Leave",
+                                                  style: TextStyle(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                )
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                      const SizedBox(height: 20),
 
-                    //Apply for Leaves card
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
+                      //Apply for Leaves card
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
                                     builder: (context) =>
-                                        LeaveManagementScreen()),
-                              );
-                              /*clientCode=="MH100"?
+                                        LeaveManagementScreen(),
+                                  ),
+                                );
+                                /*clientCode=="MH100"?
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => MhApplyLeaveScreen()),):
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => ApplyLeave_Screen_UB()),);*/
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Apply for leaves",
-                                      style: TextStyle(
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Apply for leaves",
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w900,
                                           fontSize: 14.5,
-                                          color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    leaveBalanceStatus
-                                        ? Center(
-                                            child: Loader(),
-                                          )
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Text("Available Leaves",
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      leaveBalanceStatus
+                                          ? Center(child: Loader())
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Text(
+                                                      "Available Leaves",
                                                       style: TextStyle(
-                                                          fontSize: 13,
-                                                          height: 1,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.black)),
-                                                  const SizedBox(width: 10),
-                                                  Text(totalLeaveBalance,
+                                                        fontSize: 13,
+                                                        height: 1,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Text(
+                                                      totalLeaveBalance,
                                                       style: const TextStyle(
-                                                          fontSize: 26,
-                                                          color: AppTheme
-                                                              .themeBlueColor)),
-                                                  const SizedBox(width: 5),
-                                                  const Text("Days",
+                                                        fontSize: 26,
+                                                        color: AppTheme
+                                                            .themeBlueColor,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    const Text(
+                                                      "Days",
                                                       style: TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Color(
-                                                              0xFF707070))),
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Color(
+                                                          0xFF707070,
+                                                        ),
+                                                      ),
+                                                    ),
 
-                                                  /*SizedBox(width: 25),
+                                                    /*SizedBox(width: 25),
                                                 Text(compBalance,
                                                     style: TextStyle(
                                                         fontSize: 26, color: Colors.black)),
@@ -1066,12 +1128,10 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                             color: Color(0xFF707070))),
                                                   ],
                                                 ),*/
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              /* Row(
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10),
+                                                /* Row(
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Text(clBalance,
@@ -1097,11 +1157,11 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                 },
                                               ],
                                             ),*/
-                                            ],
-                                          ),
-                                  ],
-                                ),
-                                /*Spacer(),
+                                              ],
+                                            ),
+                                    ],
+                                  ),
+                                  /*Spacer(),
                                     SizedBox(
                                       height: 135,
                                       width: 100,
@@ -1111,356 +1171,391 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                         child: Lottie.asset("assets/nxt_btn_anim.json"),
                                       ),
                                     ),*/
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color:
-                                    AppTheme.themeBlueColor.withOpacity(0.20),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(4))),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Today Team Leaves",
+                            SizedBox(height: 10),
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: AppTheme.themeBlueColor.withOpacity(
+                                  0.20,
+                                ),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(4),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Today Team Leaves",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 14.5,
-                                        color: Colors.black)),
-                                SizedBox(height: 5),
-                                Container(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
                                     height: 66,
                                     padding: EdgeInsets.all(8),
                                     child: teamLeaveStatus
-                                        ? Center(
-                                            child: Loader(),
-                                          )
+                                        ? Center(child: Loader())
                                         : isTeamOnLeave
-                                            ? Row(
-                                                children: [
-                                                  totalTeamLeangth == 1
-                                                      ? Container(
+                                        ? Row(
+                                            children: [
+                                              totalTeamLeangth == 1
+                                                  ? Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          team1ImageLeave == ""
+                                                          ? const CircleAvatar(
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                    "assets/profile.png",
+                                                                  ),
+                                                              radius: 15,
+                                                            )
+                                                          : ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    50.0,
+                                                                  ),
+                                                              child: CachedNetworkImage(
+                                                                width: 40,
+                                                                height: 40,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                imageUrl:
+                                                                    team1ImageLeave,
+                                                                progressIndicatorBuilder:
+                                                                    (
+                                                                      context,
+                                                                      url,
+                                                                      downloadProgress,
+                                                                    ) => CircularProgressIndicator(
+                                                                      value: downloadProgress
+                                                                          .progress,
+                                                                    ),
+                                                                errorWidget:
+                                                                    (
+                                                                      context,
+                                                                      url,
+                                                                      error,
+                                                                    ) => const Icon(
+                                                                      Icons
+                                                                          .error,
+                                                                    ),
+                                                              ),
+                                                              //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                                            ),
+                                                    )
+                                                  : Row(
+                                                      children: [
+                                                        Container(
                                                           width: 40,
                                                           height: 40,
                                                           decoration:
                                                               BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            border: Border.all(
-                                                                width: 1,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          child: team1ImageLeave ==
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                border: Border.all(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                          child:
+                                                              team1ImageLeave ==
                                                                   ""
                                                               ? const CircleAvatar(
                                                                   backgroundImage:
                                                                       AssetImage(
-                                                                          "assets/profile.png"),
+                                                                        "assets/profile.png",
+                                                                      ),
                                                                   radius: 15,
                                                                 )
                                                               : ClipRRect(
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              50.0),
-                                                                  child:
-                                                                      CachedNetworkImage(
+                                                                      BorderRadius.circular(
+                                                                        50.0,
+                                                                      ),
+                                                                  child: CachedNetworkImage(
                                                                     width: 40,
                                                                     height: 40,
                                                                     fit: BoxFit
                                                                         .cover,
                                                                     imageUrl:
                                                                         team1ImageLeave,
-                                                                    progressIndicatorBuilder: (context,
-                                                                            url,
-                                                                            downloadProgress) =>
-                                                                        CircularProgressIndicator(
-                                                                            value:
-                                                                                downloadProgress.progress),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        const Icon(
-                                                                            Icons.error),
+                                                                    progressIndicatorBuilder:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                          downloadProgress,
+                                                                        ) => CircularProgressIndicator(
+                                                                          value:
+                                                                              downloadProgress.progress,
+                                                                        ),
+                                                                    errorWidget:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                          error,
+                                                                        ) => const Icon(
+                                                                          Icons
+                                                                              .error,
+                                                                        ),
                                                                   ),
                                                                   //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
                                                                 ),
-                                                        )
-                                                      : Row(
-                                                          children: [
-                                                            Container(
-                                                              width: 40,
-                                                              height: 40,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                border: Border.all(
-                                                                    width: 1,
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                              child: team1ImageLeave ==
-                                                                      ""
-                                                                  ? const CircleAvatar(
-                                                                      backgroundImage:
-                                                                          AssetImage(
-                                                                              "assets/profile.png"),
-                                                                      radius:
-                                                                          15,
-                                                                    )
-                                                                  : ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              50.0),
-                                                                      child:
-                                                                          CachedNetworkImage(
-                                                                        width:
-                                                                            40,
-                                                                        height:
-                                                                            40,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        imageUrl:
-                                                                            team1ImageLeave,
-                                                                        progressIndicatorBuilder: (context,
-                                                                                url,
-                                                                                downloadProgress) =>
-                                                                            CircularProgressIndicator(value: downloadProgress.progress),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            const Icon(Icons.error),
-                                                                      ),
-                                                                      //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
-                                                                    ),
-                                                            ),
-                                                            Container(
-                                                              transform: Matrix4
-                                                                  .translationValues(
-                                                                      -10.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                              width: 40,
-                                                              height: 40,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                border: Border.all(
-                                                                    width: 1,
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                              child: team2ImageLeave ==
-                                                                      ""
-                                                                  ? const CircleAvatar(
-                                                                      backgroundImage:
-                                                                          AssetImage(
-                                                                              "assets/profile.png"),
-                                                                      radius:
-                                                                          15,
-                                                                    )
-                                                                  : ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              50.0),
-                                                                      child:
-                                                                          CachedNetworkImage(
-                                                                        width:
-                                                                            40,
-                                                                        height:
-                                                                            40,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        imageUrl:
-                                                                            team2ImageLeave,
-                                                                        progressIndicatorBuilder: (context,
-                                                                                url,
-                                                                                downloadProgress) =>
-                                                                            CircularProgressIndicator(value: downloadProgress.progress),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            const Icon(Icons.error),
-                                                                      ),
-                                                                      //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
-                                                                    ),
-                                                            ),
-                                                          ],
                                                         ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 0),
-                                                    child: Text(
-                                                        remainingTeamLeave,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 14,
-                                                            color:
-                                                                Colors.black)),
+                                                        Container(
+                                                          transform:
+                                                              Matrix4.translationValues(
+                                                                -10.0,
+                                                                0.0,
+                                                                0.0,
+                                                              ),
+                                                          width: 40,
+                                                          height: 40,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                border: Border.all(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                          child:
+                                                              team2ImageLeave ==
+                                                                  ""
+                                                              ? const CircleAvatar(
+                                                                  backgroundImage:
+                                                                      AssetImage(
+                                                                        "assets/profile.png",
+                                                                      ),
+                                                                  radius: 15,
+                                                                )
+                                                              : ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        50.0,
+                                                                      ),
+                                                                  child: CachedNetworkImage(
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    imageUrl:
+                                                                        team2ImageLeave,
+                                                                    progressIndicatorBuilder:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                          downloadProgress,
+                                                                        ) => CircularProgressIndicator(
+                                                                          value:
+                                                                              downloadProgress.progress,
+                                                                        ),
+                                                                    errorWidget:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                          error,
+                                                                        ) => const Icon(
+                                                                          Icons
+                                                                              .error,
+                                                                        ),
+                                                                  ),
+                                                                  //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                                                ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 0,
+                                                ),
+                                                child: Text(
+                                                  remainingTeamLeave,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                    color: Colors.black,
                                                   ),
-                                                  const Spacer(),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      //_showTeamLeaveAlertNew(context);
-                                                    },
-                                                    child: Container(
-                                                      height: 45,
-                                                      width: 130,
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 5),
-                                                      decoration: BoxDecoration(
-                                                        gradient:
-                                                            const LinearGradient(
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              InkWell(
+                                                onTap: () {
+                                                  //_showTeamLeaveAlertNew(context);
+                                                },
+                                                child: Container(
+                                                  height: 45,
+                                                  width: 130,
+                                                  margin: EdgeInsets.symmetric(
+                                                    horizontal: 5,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    gradient:
+                                                        const LinearGradient(
                                                           colors: [
                                                             AppTheme
                                                                 .themeGreenColor,
                                                             AppTheme
-                                                                .themeBlueColor
+                                                                .themeBlueColor,
                                                           ],
                                                           begin:
                                                               Alignment.topLeft,
                                                           end: Alignment
                                                               .bottomRight,
                                                         ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: const Text(
-                                                        "View Details",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : const Center(
-                                                child: Text(
-                                                  "No one is on Leave today",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 12,
-                                                      color: AppTheme
-                                                          .themeGreenColor),
-                                                ),
-                                              )),
-                                SizedBox(height: 5),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    // Taskbox
-
-                    //My Team Card
-                    showMyTeam
-                        ? Column(
-                            children: [
-                              // Taskbox
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 7),
-                                padding: EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Color(0xFFF8F8F8),
-                                  boxShadow: const <BoxShadow>[
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 1.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "My Task Box",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 14.5,
-                                                color: Colors.black),
-                                          ),
-                                          flex: 1,
-                                        ),
-                                        Text(
-                                          monthStr,
-                                          style: const TextStyle(
-                                              fontSize: 12.5,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    isTaskBoxLoading
-                                        ? Center(
-                                            child: Loader(),
-                                          )
-                                        : Column(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  // navigateScreen(leaveType);
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 7,
-                                                      right: 7,
-                                                      bottom: 7),
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            4),
-                                                    color:
-                                                        const Color(0xFFFFFFFF),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 1.0,
-                                                      ),
-                                                    ],
+                                                          8,
+                                                        ),
                                                   ),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_task1.png",
-                                                        width: 36,
-                                                        height: 36,
+                                                  alignment: Alignment.center,
+                                                  child: const Text(
+                                                    "View Details",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const Center(
+                                            child: Text(
+                                              "No one is on Leave today",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color: AppTheme.themeGreenColor,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                  SizedBox(height: 5),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Taskbox
+
+                      //My Team Card
+                      showMyTeam
+                          ? Column(
+                              children: [
+                                // Taskbox
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 7),
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Color(0xFFF8F8F8),
+                                    boxShadow: const <BoxShadow>[
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 1.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "My Task Box",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 14.5,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            monthStr,
+                                            style: const TextStyle(
+                                              fontSize: 12.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      isTaskBoxLoading
+                                          ? Center(child: Loader())
+                                          : Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    // navigateScreen(leaveType);
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          left: 7,
+                                                          right: 7,
+                                                          bottom: 7,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color: const Color(
+                                                        0xFFFFFFFF,
                                                       ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
+                                                      boxShadow:
+                                                          const <BoxShadow>[
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black12,
+                                                              blurRadius: 1.0,
+                                                            ),
+                                                          ],
+                                                    ),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_task1.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -1471,22 +1566,24 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "Leave Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "$leaveCount Leave Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                               SizedBox(
                                                                 height: 5,
@@ -1495,68 +1592,79 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "No Data",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              Colors.grey),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "Pending",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              AppTheme.orangeColor),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: AppTheme
+                                                                            .orangeColor,
+                                                                      ),
                                                                     ),
                                                             ],
-                                                          )),
-                                                    ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  // navigateScreen(correctionType);
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 7,
-                                                      right: 7,
-                                                      bottom: 7),
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                    color:
-                                                        const Color(0xFFFFFFFF),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 1.0,
+                                                SizedBox(height: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // navigateScreen(correctionType);
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          left: 7,
+                                                          right: 7,
+                                                          bottom: 7,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color: const Color(
+                                                        0xFFFFFFFF,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_task2.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
+                                                      boxShadow:
+                                                          const <BoxShadow>[
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black12,
+                                                              blurRadius: 1.0,
+                                                            ),
+                                                          ],
+                                                    ),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_task2.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -1568,22 +1676,24 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "Attendance Correction",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "$correctionCount Attendance Correction",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                               SizedBox(
                                                                 height: 5,
@@ -1593,68 +1703,79 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "No Data",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              Colors.grey),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "Pending",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              AppTheme.orangeColor),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: AppTheme
+                                                                            .orangeColor,
+                                                                      ),
                                                                     ),
                                                             ],
-                                                          )),
-                                                    ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  // navigateScreen(mrfType);
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 7,
-                                                      right: 7,
-                                                      bottom: 7),
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                    color:
-                                                        const Color(0xFFFFFFFF),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 1.0,
+                                                SizedBox(height: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // navigateScreen(mrfType);
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          left: 7,
+                                                          right: 7,
+                                                          bottom: 7,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color: const Color(
+                                                        0xFFFFFFFF,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_task3.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
+                                                      boxShadow:
+                                                          const <BoxShadow>[
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black12,
+                                                              blurRadius: 1.0,
+                                                            ),
+                                                          ],
+                                                    ),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_task3.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -1665,22 +1786,24 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "MRF Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "$mrfCount MRF Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                               SizedBox(
                                                                 height: 5,
@@ -1689,68 +1812,79 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "No Data",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              Colors.grey),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "Pending",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              AppTheme.orangeColor),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: AppTheme
+                                                                            .orangeColor,
+                                                                      ),
                                                                     ),
                                                             ],
-                                                          )),
-                                                    ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  //navigateScreen(tourType);
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 7,
-                                                      right: 7,
-                                                      bottom: 7),
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                    color:
-                                                        const Color(0xFFFFFFFF),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 1.0,
+                                                SizedBox(height: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //navigateScreen(tourType);
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          left: 7,
+                                                          right: 7,
+                                                          bottom: 7,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color: const Color(
+                                                        0xFFFFFFFF,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_task5.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
+                                                      boxShadow:
+                                                          const <BoxShadow>[
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black12,
+                                                              blurRadius: 1.0,
+                                                            ),
+                                                          ],
+                                                    ),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_task5.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -1761,22 +1895,24 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "Tour Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "$tourCount Tour Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                               SizedBox(
                                                                 height: 5,
@@ -1785,68 +1921,79 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "No Data",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              Colors.grey),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "Pending",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              AppTheme.orangeColor),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: AppTheme
+                                                                            .orangeColor,
+                                                                      ),
                                                                     ),
                                                             ],
-                                                          )),
-                                                    ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  //navigateScreen(compOffType);
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 7,
-                                                      right: 7,
-                                                      bottom: 7),
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                    color:
-                                                        const Color(0xFFFFFFFF),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 1.0,
+                                                SizedBox(height: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //navigateScreen(compOffType);
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          left: 7,
+                                                          right: 7,
+                                                          bottom: 7,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color: const Color(
+                                                        0xFFFFFFFF,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_task4.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
+                                                      boxShadow:
+                                                          const <BoxShadow>[
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black12,
+                                                              blurRadius: 1.0,
+                                                            ),
+                                                          ],
+                                                    ),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_task4.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -1857,22 +2004,24 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "Comp-Off Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "$cOffCount Comp-Off Approval",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          color:
-                                                                              Colors.black),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                               SizedBox(
                                                                 height: 5,
@@ -1881,656 +2030,639 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                                   ? Text(
                                                                       "No Data",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              Colors.grey),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
                                                                     )
                                                                   : Text(
                                                                       "Pending",
                                                                       style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .w900,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          color:
-                                                                              AppTheme.orangeColor),
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                        fontSize:
+                                                                            12.5,
+                                                                        color: AppTheme
+                                                                            .orangeColor,
+                                                                      ),
                                                                     ),
                                                             ],
-                                                          )),
-                                                    ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                  ],
+                                              ],
+                                            ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
+                                const SizedBox(height: 20),
 
-                              //My Team Card
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 7),
-                                padding: EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Color(0xFFF8F8F8),
-                                  boxShadow: const <BoxShadow>[
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 1.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "My Team",
-                                            style: TextStyle(
+                                //My Team Card
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 7),
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Color(0xFFF8F8F8),
+                                    boxShadow: const <BoxShadow>[
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 1.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "My Team",
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 14.5,
-                                                color: Colors.black),
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            flex: 1,
                                           ),
-                                          flex: 1,
-                                        ),
-                                        InkWell(
+                                          InkWell(
                                             onTap: () {
                                               //  Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
                                             },
                                             child: const Text(
                                               "View More",
                                               style: TextStyle(
-                                                  fontSize: 12.5,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black),
-                                            ))
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(
-                                            height: 90,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
+                                                fontSize: 12.5,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_team1.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      Spacer(),
-                                                      Text(
-                                                        "$myTeamCount",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Color(
-                                                                0xFF707070),
-                                                            fontSize: 30.5),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "My Team",
-                                                    style: TextStyle(
-                                                        fontSize: 12.5,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                  ),
-                                                ]),
                                           ),
-                                        )),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(
-                                            height: 90,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_team2.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      Spacer(),
-                                                      Text(
-                                                        "$totalPresentCount",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Color(
-                                                                0xFF707070),
-                                                            fontSize: 30.5),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Total Present",
-                                                    style: TextStyle(
-                                                        fontSize: 12.5,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                  ),
-                                                ]),
-                                          ),
-                                        )),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(
-                                            height: 90,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_team3.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      Spacer(),
-                                                      Text(
-                                                        "$totalAbsentCount",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Color(
-                                                                0xFF707070),
-                                                            fontSize: 30.5),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Total Absent",
-                                                    style: TextStyle(
-                                                        fontSize: 12.5,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                  ),
-                                                ]),
-                                          ),
-                                        )),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(
-                                            height: 90,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_team4.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      Spacer(),
-                                                      Text(
-                                                        "$unplannedLeaveCount",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Color(
-                                                                0xFF707070),
-                                                            fontSize: 30.5),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Unplanned Leave",
-                                                    style: TextStyle(
-                                                        fontSize: 12.5,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                  ),
-                                                ]),
-                                          ),
-                                        )),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(
-                                            height: 90,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/ic_team5.png",
-                                                        width: 36,
-                                                        height: 36,
-                                                      ),
-                                                      Spacer(),
-                                                      Text(
-                                                        "$plannedLeaveCount",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Color(
-                                                                0xFF707070),
-                                                            fontSize: 30.5),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Planned Leave",
-                                                    style: TextStyle(
-                                                        fontSize: 12.5,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                  ),
-                                                ]),
-                                          ),
-                                        )),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Expanded(
-                                            child: InkWell(
-                                          onTap: () {
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
-                                          },
-                                          child: Container(),
-                                        )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          )
-                        : Container(),
-
-                    //Ticket Management card
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Text(
-                                  "Ticket Management",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 14.5,
-                                      color: Colors.black),
-                                ),
-                                flex: 1,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTicketManagmentScreen()),);
-                                },
-                                child: const Text(
-                                  "View More",
-                                  style: TextStyle(
-                                      fontSize: 12.5,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          ticketLoading
-                              ? Center(
-                                  child: Loader(),
-                                )
-                              : InkWell(
-                                  onTap: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTicketManagmentScreen()),);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        height: 100,
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          color: Colors.grey.withOpacity(0.10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "$assignedTicketCount",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFF8588A8),
-                                                  fontSize: 24.5),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            const Text(
-                                              "Assigned Tickets",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black,
-                                                  fontSize: 14.5),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                      const SizedBox(
-                                        width: 10,
+                                        ],
                                       ),
-                                      Expanded(
-                                          child: Container(
-                                        height: 100,
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          color: Colors.grey.withOpacity(0.10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "$pendingTicketCount",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFFF9B115),
-                                                  fontSize: 24.5),
+                                      SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_team1.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          "$myTeamCount",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Color(
+                                                              0xFF707070,
+                                                            ),
+                                                            fontSize: 30.5,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "My Team",
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            const SizedBox(
-                                              height: 5,
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_team2.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          "$totalPresentCount",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Color(
+                                                              0xFF707070,
+                                                            ),
+                                                            fontSize: 30.5,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "Total Present",
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            const Text(
-                                              "Pending Tickets",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black,
-                                                  fontSize: 14.5),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                      const SizedBox(
-                                        width: 10,
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                          child: Container(
-                                        height: 100,
-                                        padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          color: Colors.grey.withOpacity(0.10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "$myTicketCount",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFF2EB85C),
-                                                  fontSize: 24.5),
+                                      SizedBox(height: 15),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_team3.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          "$totalAbsentCount",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Color(
+                                                              0xFF707070,
+                                                            ),
+                                                            fontSize: 30.5,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "Total Absent",
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            const SizedBox(
-                                              height: 5,
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_team4.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          "$unplannedLeaveCount",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Color(
+                                                              0xFF707070,
+                                                            ),
+                                                            fontSize: 30.5,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "Unplanned Leave",
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            const Text(
-                                              "My Tickets",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black,
-                                                  fontSize: 14.5),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 15),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/ic_team5.png",
+                                                          width: 36,
+                                                          height: 36,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          "$plannedLeaveCount",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Color(
+                                                              0xFF707070,
+                                                            ),
+                                                            fontSize: 30.5,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "Planned Leave",
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            const SizedBox(
-                                              height: 5,
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTeamAttendance()),);
+                                              },
+                                              child: Container(),
                                             ),
-                                          ],
-                                        ),
-                                      )),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              //Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTicketScreen()),);
-                            },
-                            child: Container(
-                              height: 49,
-                              width: 180,
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    AppTheme.themeGreenColor,
-                                    AppTheme.themeBlueColor
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
+                                const SizedBox(height: 20),
+                              ],
+                            )
+                          : Container(),
+
+                      //Ticket Management card
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    "Ticket Management",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 14.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  flex: 1,
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "Create New Ticket",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                                InkWell(
+                                  onTap: () {
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTicketManagmentScreen()),);
+                                  },
+                                  child: const Text(
+                                    "View More",
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            ticketLoading
+                                ? Center(child: Loader())
+                                : InkWell(
+                                    onTap: () {
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => QDTicketManagmentScreen()),);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 100,
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: Colors.grey.withOpacity(
+                                                0.10,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "$assignedTicketCount",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Color(0xFF8588A8),
+                                                    fontSize: 24.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                const Text(
+                                                  "Assigned Tickets",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                    fontSize: 14.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Container(
+                                            height: 100,
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: Colors.grey.withOpacity(
+                                                0.10,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "$pendingTicketCount",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Color(0xFFF9B115),
+                                                    fontSize: 24.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                const Text(
+                                                  "Pending Tickets",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                    fontSize: 14.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Container(
+                                            height: 100,
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: Colors.grey.withOpacity(
+                                                0.10,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "$myTicketCount",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Color(0xFF2EB85C),
+                                                    fontSize: 24.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                const Text(
+                                                  "My Tickets",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black,
+                                                    fontSize: 14.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            const SizedBox(height: 20),
+                            InkWell(
+                              onTap: () {
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTicketScreen()),);
+                              },
+                              child: Container(
+                                height: 49,
+                                width: 180,
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      AppTheme.themeGreenColor,
+                                      AppTheme.themeBlueColor,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  "Create New Ticket",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                      const SizedBox(height: 20),
 
-                    //Quick Links
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Quick Links",
-                                  style: TextStyle(
+                      //Quick Links
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Quick Links",
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 14.5,
-                                      color: Colors.black),
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  flex: 1,
                                 ),
-                                flex: 1,
-                              ),
-                              InkWell(
+                                InkWell(
                                   onTap: () {
                                     //  Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()),);
                                   },
                                   child: const Text(
                                     "View More",
                                     style: TextStyle(
-                                        fontSize: 12.5,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                                  ))
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
@@ -2547,26 +2679,22 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                           width: 32,
                                           height: 32,
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
+                                        SizedBox(width: 5),
                                         Text(
                                           "Community",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black,
-                                              fontSize: 12),
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                        SizedBox(height: 5),
                                       ],
                                     ),
-                                  )),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Expanded(
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
@@ -2583,26 +2711,22 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                           width: 32,
                                           height: 32,
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
+                                        SizedBox(width: 5),
                                         Text(
                                           "Travel",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black,
-                                              fontSize: 12),
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                        SizedBox(height: 5),
                                       ],
                                     ),
-                                  )),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Expanded(
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
@@ -2619,26 +2743,22 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                           width: 32,
                                           height: 32,
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
+                                        SizedBox(width: 5),
                                         Text(
                                           "Task",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black,
-                                              fontSize: 12),
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                        SizedBox(height: 5),
                                       ],
                                     ),
-                                  )),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Expanded(
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
@@ -2655,52 +2775,78 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                           width: 32,
                                           height: 32,
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
+                                        SizedBox(width: 5),
                                         Text(
                                           "Payroll",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black,
-                                              fontSize: 12),
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                        SizedBox(height: 5),
                                       ],
                                     ),
-                                  )),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  flex: 1,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HolidayScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/ic_quick_community.svg",
+                                          width: 32,
+                                          height: 32,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "Holiday",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                      const SizedBox(height: 20),
 
-                    //Community
-                    Container(
+                      //Community
+                      Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         padding: EdgeInsets.all(0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.white,
                           boxShadow: const <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 1.0,
-                            ),
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
                           ],
                         ),
                         child: communityLoading
-                            ? Center(
-                                child: Loader(),
-                              )
+                            ? Center(child: Loader())
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -2715,31 +2861,40 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                           Container(
                                             height: 150,
                                             child: PageView.builder(
-                                                itemCount: titleList.length,
-                                                pageSnapping: true,
-                                                controller: _pageController,
-                                                onPageChanged: (page) {
-                                                  setState(() {
-                                                    activePage = page;
-                                                  });
-                                                  print("New Active Page is " +
-                                                      activePage.toString());
-                                                },
-                                                itemBuilder:
-                                                    (context, pagePosition) {
-                                                  bool active = pagePosition ==
-                                                      activePage;
-                                                  return slider(titleList,
-                                                      pagePosition, active);
-                                                }),
+                                              itemCount: titleList.length,
+                                              pageSnapping: true,
+                                              controller: _pageController,
+                                              onPageChanged: (page) {
+                                                setState(() {
+                                                  activePage = page;
+                                                });
+                                                print(
+                                                  "New Active Page is " +
+                                                      activePage.toString(),
+                                                );
+                                              },
+                                              itemBuilder:
+                                                  (context, pagePosition) {
+                                                    bool active =
+                                                        pagePosition ==
+                                                        activePage;
+                                                    return slider(
+                                                      titleList,
+                                                      pagePosition,
+                                                      active,
+                                                    );
+                                                  },
+                                            ),
                                           ),
                                           Positioned(
                                             child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: indicators(
-                                                    titleList.length,
-                                                    activePage)),
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: indicators(
+                                                titleList.length,
+                                                activePage,
+                                              ),
+                                            ),
                                             bottom: 2,
                                             left: 2,
                                           ),
@@ -2748,197 +2903,49 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                     ),
                                   ),
                                 ],
-                              )),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 1.0,
-                          ),
-                        ],
+                              ),
                       ),
-                      child: activePage == 0
-                          ? birthdayList.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: birthdayList.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext cntx, int indx) {
-                                    String postId =
-                                        birthdayList[indx]['id'].toString();
-                                    String userName = birthdayList[indx]
-                                            ['username']
-                                        .toString();
-                                    String empProfile = birthdayList[indx]
-                                            ['profile_photo']
-                                        .toString();
-                                    String designation = birthdayList[indx]
-                                            ['designation']
-                                        .toString();
-
-                                    return InkWell(
-                                      onTap: () {
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 10, right: 10, bottom: 10),
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: AppTheme.themeBlueColor
-                                              .withOpacity(0.11),
-                                          boxShadow: const <BoxShadow>[
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 1.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            empProfile == ""
-                                                ? const CircleAvatar(
-                                                    backgroundImage: AssetImage(
-                                                        "assets/profile.png"),
-                                                    radius: 20,
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40.0),
-                                                    child: CachedNetworkImage(
-                                                      width: 40,
-                                                      height: 40,
-                                                      fit: BoxFit.cover,
-                                                      imageUrl: empProfile,
-                                                      progressIndicatorBuilder: (context,
-                                                              url,
-                                                              downloadProgress) =>
-                                                          CircularProgressIndicator(
-                                                              value:
-                                                                  downloadProgress
-                                                                      .progress),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
-                                                              Icons.error),
-                                                    ),
-                                                    //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
-                                                  ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      userName,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          fontSize: 13.5,
-                                                          color: Colors.black),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Text(
-                                                      "($designation)",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 11.5,
-                                                          color: Colors.black),
-                                                    ),
-                                                  ],
-                                                )),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xFFFFFFFF),
-                                                  boxShadow: <BoxShadow>[
-                                                    BoxShadow(
-                                                      color: Colors.black12,
-                                                      blurRadius: 1.0,
-                                                    ),
-                                                  ],
-                                                  shape: BoxShape.circle),
-                                              child: const Center(
-                                                child: Icon(
-                                                  Icons.arrow_forward_ios_sharp,
-                                                  color:
-                                                      AppTheme.themeBlueColor,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  })
-                              : const Center(
-                                  child: Text(
-                                    "Nobody have birthday today",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppTheme.themeGreenColor),
-                                  ),
-                                )
-                          : activePage == 1
-                              ? anniversaryList.isNotEmpty
+                      const SizedBox(height: 5),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(color: Colors.black12, blurRadius: 1.0),
+                          ],
+                        ),
+                        child: activePage == 0
+                            ? birthdayList.isNotEmpty
                                   ? ListView.builder(
-                                      itemCount: anniversaryList.length,
+                                      itemCount: birthdayList.length,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemBuilder:
-                                          (BuildContext cntx, int indx) {
-                                        String postId = anniversaryList[indx]
-                                                ['id']
+                                      itemBuilder: (BuildContext cntx, int indx) {
+                                        String postId = birthdayList[indx]['id']
                                             .toString();
-                                        String userName = anniversaryList[indx]
-                                                ['username']
-                                            .toString();
+                                        String userName =
+                                            birthdayList[indx]['username']
+                                                .toString();
                                         String empProfile =
-                                            anniversaryList[indx]
-                                                    ['profile_photo']
+                                            birthdayList[indx]['profile_photo']
                                                 .toString();
                                         String designation =
-                                            anniversaryList[indx]['designation']
+                                            birthdayList[indx]['designation']
                                                 .toString();
 
                                         return InkWell(
                                           onTap: () {
-                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
+                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
                                           },
                                           child: Container(
                                             margin: const EdgeInsets.only(
-                                                left: 10,
-                                                right: 10,
-                                                bottom: 10),
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10,
+                                            ),
                                             padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -2956,90 +2963,256 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                               children: [
                                                 empProfile == ""
                                                     ? const CircleAvatar(
-                                                        backgroundImage: AssetImage(
-                                                            "assets/profile.png"),
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                              "assets/profile.png",
+                                                            ),
                                                         radius: 20,
                                                       )
                                                     : ClipRRect(
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(40.0),
-                                                        child:
-                                                            CachedNetworkImage(
+                                                            BorderRadius.circular(
+                                                              40.0,
+                                                            ),
+                                                        child: CachedNetworkImage(
                                                           width: 40,
                                                           height: 40,
                                                           fit: BoxFit.cover,
                                                           imageUrl: empProfile,
-                                                          progressIndicatorBuilder: (context,
-                                                                  url,
-                                                                  downloadProgress) =>
-                                                              CircularProgressIndicator(
-                                                                  value: downloadProgress
-                                                                      .progress),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              const Icon(
-                                                                  Icons.error),
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                downloadProgress,
+                                                              ) => CircularProgressIndicator(
+                                                                value:
+                                                                    downloadProgress
+                                                                        .progress,
+                                                              ),
+                                                          errorWidget:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                error,
+                                                              ) => const Icon(
+                                                                Icons.error,
+                                                              ),
                                                         ),
                                                         //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
                                                       ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
+                                                SizedBox(width: 10),
                                                 Expanded(
-                                                    flex: 1,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          userName,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                              fontSize: 13.5,
-                                                              color:
-                                                                  Colors.black),
+                                                  flex: 1,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        userName,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 13.5,
+                                                          color: Colors.black,
                                                         ),
-                                                        SizedBox(
-                                                          height: 5,
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Text(
+                                                        "($designation)",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 11.5,
+                                                          color: Colors.black,
                                                         ),
-                                                        Text(
-                                                          "($designation)",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontSize: 11.5,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ],
-                                                    )),
-                                                SizedBox(
-                                                  width: 10,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
+                                                SizedBox(width: 10),
                                                 Container(
                                                   height: 40,
                                                   width: 40,
                                                   decoration:
                                                       const BoxDecoration(
-                                                          color:
-                                                              Color(0xFFFFFFFF),
-                                                          boxShadow: <BoxShadow>[
-                                                            BoxShadow(
-                                                              color: Colors
-                                                                  .black12,
-                                                              blurRadius: 1.0,
+                                                        color: Color(
+                                                          0xFFFFFFFF,
+                                                        ),
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                            color:
+                                                                Colors.black12,
+                                                            blurRadius: 1.0,
+                                                          ),
+                                                        ],
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_sharp,
+                                                      color: AppTheme
+                                                          .themeBlueColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                        "Nobody have birthday today",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppTheme.themeGreenColor,
+                                        ),
+                                      ),
+                                    )
+                            : activePage == 1
+                            ? anniversaryList.isNotEmpty
+                                  ? ListView.builder(
+                                      itemCount: anniversaryList.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (BuildContext cntx, int indx) {
+                                        String postId =
+                                            anniversaryList[indx]['id']
+                                                .toString();
+                                        String userName =
+                                            anniversaryList[indx]['username']
+                                                .toString();
+                                        String empProfile =
+                                            anniversaryList[indx]['profile_photo']
+                                                .toString();
+                                        String designation =
+                                            anniversaryList[indx]['designation']
+                                                .toString();
+
+                                        return InkWell(
+                                          onTap: () {
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10,
+                                            ),
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: AppTheme.themeBlueColor
+                                                  .withOpacity(0.11),
+                                              boxShadow: const <BoxShadow>[
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 1.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                empProfile == ""
+                                                    ? const CircleAvatar(
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                              "assets/profile.png",
                                                             ),
-                                                          ],
-                                                          shape:
-                                                              BoxShape.circle),
+                                                        radius: 20,
+                                                      )
+                                                    : ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              40.0,
+                                                            ),
+                                                        child: CachedNetworkImage(
+                                                          width: 40,
+                                                          height: 40,
+                                                          fit: BoxFit.cover,
+                                                          imageUrl: empProfile,
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                downloadProgress,
+                                                              ) => CircularProgressIndicator(
+                                                                value:
+                                                                    downloadProgress
+                                                                        .progress,
+                                                              ),
+                                                          errorWidget:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                error,
+                                                              ) => const Icon(
+                                                                Icons.error,
+                                                              ),
+                                                        ),
+                                                        //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                                      ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        userName,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 13.5,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Text(
+                                                        "($designation)",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 11.5,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Color(
+                                                          0xFFFFFFFF,
+                                                        ),
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                            color:
+                                                                Colors.black12,
+                                                            blurRadius: 1.0,
+                                                          ),
+                                                        ],
+                                                        shape: BoxShape.circle,
+                                                      ),
                                                   child: Center(
                                                     child: Icon(
                                                       Icons
@@ -3049,376 +3222,354 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
+                                                SizedBox(width: 10),
                                               ],
                                             ),
                                           ),
                                         );
-                                      })
+                                      },
+                                    )
                                   : const Center(
                                       child: Text(
                                         "Nobody have anniversary today",
                                         style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w700,
-                                            color: AppTheme.themeGreenColor),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppTheme.themeGreenColor,
+                                        ),
                                       ),
                                     )
-                              : activePage == 2
-                                  ? newJoineeList.isNotEmpty
-                                      ? ListView.builder(
-                                          itemCount: newJoineeList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder:
-                                              (BuildContext cntx, int indx) {
-                                            String postId = newJoineeList[indx]
-                                                    ['id']
+                            : activePage == 2
+                            ? newJoineeList.isNotEmpty
+                                  ? ListView.builder(
+                                      itemCount: newJoineeList.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (BuildContext cntx, int indx) {
+                                        String postId =
+                                            newJoineeList[indx]['id']
                                                 .toString();
-                                            String userName =
-                                                newJoineeList[indx]['username']
-                                                    .toString();
-                                            String empProfile =
-                                                newJoineeList[indx]
-                                                        ['profile_photo']
-                                                    .toString();
-                                            String designation =
-                                                newJoineeList[indx]
-                                                        ['designation']
-                                                    .toString();
+                                        String userName =
+                                            newJoineeList[indx]['username']
+                                                .toString();
+                                        String empProfile =
+                                            newJoineeList[indx]['profile_photo']
+                                                .toString();
+                                        String designation =
+                                            newJoineeList[indx]['designation']
+                                                .toString();
 
-                                            return InkWell(
-                                              onTap: () {
-                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
-                                              },
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    bottom: 10),
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: AppTheme.themeBlueColor
-                                                      .withOpacity(0.11),
-                                                  boxShadow: const <BoxShadow>[
-                                                    BoxShadow(
-                                                      color: Colors.black12,
-                                                      blurRadius: 1.0,
-                                                    ),
-                                                  ],
+                                        return InkWell(
+                                          onTap: () {
+                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10,
+                                            ),
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: AppTheme.themeBlueColor
+                                                  .withOpacity(0.11),
+                                              boxShadow: const <BoxShadow>[
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 1.0,
                                                 ),
-                                                child: Row(
-                                                  children: [
-                                                    empProfile == ""
-                                                        ? const CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    "assets/profile.png"),
-                                                            radius: 20,
-                                                          )
-                                                        : ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        40.0),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              width: 40,
-                                                              height: 40,
-                                                              fit: BoxFit.cover,
-                                                              imageUrl:
-                                                                  empProfile,
-                                                              progressIndicatorBuilder: (context,
-                                                                      url,
-                                                                      downloadProgress) =>
-                                                                  CircularProgressIndicator(
-                                                                      value: downloadProgress
-                                                                          .progress),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  const Icon(Icons
-                                                                      .error),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                empProfile == ""
+                                                    ? const CircleAvatar(
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                              "assets/profile.png",
                                                             ),
-                                                            //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
-                                                          ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Expanded(
-                                                        flex: 1,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              userName,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  fontSize:
-                                                                      13.5,
-                                                                  color: Colors
-                                                                      .black),
+                                                        radius: 20,
+                                                      )
+                                                    : ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              40.0,
                                                             ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            Text(
-                                                              "($designation)",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      11.5,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                          ],
-                                                        )),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              color: Color(
-                                                                  0xFFFFFFFF),
-                                                              boxShadow: <BoxShadow>[
-                                                                BoxShadow(
-                                                                  color: Colors
-                                                                      .black12,
-                                                                  blurRadius:
-                                                                      1.0,
-                                                                ),
-                                                              ],
-                                                              shape: BoxShape
-                                                                  .circle),
-                                                      child: Center(
-                                                        child: Icon(
-                                                          Icons
-                                                              .arrow_forward_ios_sharp,
-                                                          color: AppTheme
-                                                              .themeBlueColor,
+                                                        child: CachedNetworkImage(
+                                                          width: 40,
+                                                          height: 40,
+                                                          fit: BoxFit.cover,
+                                                          imageUrl: empProfile,
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                downloadProgress,
+                                                              ) => CircularProgressIndicator(
+                                                                value:
+                                                                    downloadProgress
+                                                                        .progress,
+                                                              ),
+                                                          errorWidget:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                error,
+                                                              ) => const Icon(
+                                                                Icons.error,
+                                                              ),
+                                                        ),
+                                                        //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                                      ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        userName,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 13.5,
+                                                          color: Colors.black,
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                  ],
+                                                      SizedBox(height: 5),
+                                                      Text(
+                                                        "($designation)",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 11.5,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          })
-                                      : const Center(
-                                          child: Text(
-                                            "Nobody have Joined today",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700,
-                                                color:
-                                                    AppTheme.themeGreenColor),
-                                          ),
-                                        )
-                                  : activePage == 3
-                                      ? kudosList.isNotEmpty
-                                          ? ListView.builder(
-                                              itemCount: kudosList.length,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemBuilder: (BuildContext cntx,
-                                                  int indx) {
-                                                String postId = kudosList[indx]
-                                                        ['id']
-                                                    .toString();
-                                                String userName =
-                                                    kudosList[indx]['username']
-                                                        .toString();
-                                                String empProfile =
-                                                    kudosList[indx]
-                                                            ['profile_photo']
-                                                        .toString();
-                                                String designation =
-                                                    kudosList[indx]
-                                                            ['designation']
-                                                        .toString();
-
-                                                return InkWell(
-                                                  onTap: () {
-                                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
-                                                  },
-                                                  child: Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 10,
-                                                            right: 10,
-                                                            bottom: 10),
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: AppTheme
-                                                          .themeBlueColor
-                                                          .withOpacity(0.11),
-                                                      boxShadow: const <BoxShadow>[
-                                                        BoxShadow(
-                                                          color: Colors.black12,
-                                                          blurRadius: 1.0,
+                                                SizedBox(width: 10),
+                                                Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Color(
+                                                          0xFFFFFFFF,
                                                         ),
-                                                      ],
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        empProfile == ""
-                                                            ? const CircleAvatar(
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        "assets/profile.png"),
-                                                                radius: 20,
-                                                              )
-                                                            : ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            40.0),
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  width: 40,
-                                                                  height: 40,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  imageUrl:
-                                                                      empProfile,
-                                                                  progressIndicatorBuilder: (context,
-                                                                          url,
-                                                                          downloadProgress) =>
-                                                                      CircularProgressIndicator(
-                                                                          value:
-                                                                              downloadProgress.progress),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      const Icon(
-                                                                          Icons
-                                                                              .error),
-                                                                ),
-                                                                //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
-                                                              ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Expanded(
-                                                            flex: 1,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  userName,
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      fontSize:
-                                                                          13.5,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  "($designation)",
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontSize:
-                                                                          11.5,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Container(
-                                                          height: 40,
-                                                          width: 40,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                                  color: Color(
-                                                                      0xFFFFFFFF),
-                                                                  boxShadow: <BoxShadow>[
-                                                                    BoxShadow(
-                                                                      color: Colors
-                                                                          .black12,
-                                                                      blurRadius:
-                                                                          1.0,
-                                                                    ),
-                                                                  ],
-                                                                  shape: BoxShape
-                                                                      .circle),
-                                                          child: Center(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios_sharp,
-                                                              color: AppTheme
-                                                                  .themeBlueColor,
-                                                            ),
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                            color:
+                                                                Colors.black12,
+                                                            blurRadius: 1.0,
                                                           ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                      ],
+                                                        ],
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_sharp,
+                                                      color: AppTheme
+                                                          .themeBlueColor,
                                                     ),
                                                   ),
-                                                );
-                                              })
-                                          : const Center(
-                                              child: Text(
-                                                "Nobody received KUDOS today",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: AppTheme
-                                                        .themeGreenColor),
-                                              ),
-                                            )
-                                      : Container(),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                                                ),
+                                                SizedBox(width: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                        "Nobody have Joined today",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppTheme.themeGreenColor,
+                                        ),
+                                      ),
+                                    )
+                            : activePage == 3
+                            ? kudosList.isNotEmpty
+                                  ? ListView.builder(
+                                      itemCount: kudosList.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (BuildContext cntx, int indx) {
+                                        String postId = kudosList[indx]['id']
+                                            .toString();
+                                        String userName =
+                                            kudosList[indx]['username']
+                                                .toString();
+                                        String empProfile =
+                                            kudosList[indx]['profile_photo']
+                                                .toString();
+                                        String designation =
+                                            kudosList[indx]['designation']
+                                                .toString();
+
+                                        return InkWell(
+                                          onTap: () {
+                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityScreen()),);
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10,
+                                            ),
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: AppTheme.themeBlueColor
+                                                  .withOpacity(0.11),
+                                              boxShadow: const <BoxShadow>[
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 1.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                empProfile == ""
+                                                    ? const CircleAvatar(
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                              "assets/profile.png",
+                                                            ),
+                                                        radius: 20,
+                                                      )
+                                                    : ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              40.0,
+                                                            ),
+                                                        child: CachedNetworkImage(
+                                                          width: 40,
+                                                          height: 40,
+                                                          fit: BoxFit.cover,
+                                                          imageUrl: empProfile,
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                downloadProgress,
+                                                              ) => CircularProgressIndicator(
+                                                                value:
+                                                                    downloadProgress
+                                                                        .progress,
+                                                              ),
+                                                          errorWidget:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                error,
+                                                              ) => const Icon(
+                                                                Icons.error,
+                                                              ),
+                                                        ),
+                                                        //child: Image.network(empProfile,width: 60,height: 60,fit: BoxFit.cover,),
+                                                      ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        userName,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 13.5,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Text(
+                                                        "($designation)",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 11.5,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Color(
+                                                          0xFFFFFFFF,
+                                                        ),
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                            color:
+                                                                Colors.black12,
+                                                            blurRadius: 1.0,
+                                                          ),
+                                                        ],
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_sharp,
+                                                      color: AppTheme
+                                                          .themeBlueColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                        "Nobody received KUDOS today",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppTheme.themeGreenColor,
+                                        ),
+                                      ),
+                                    )
+                            : Container(),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -3429,81 +3580,91 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     double margin = active ? 8 : 8;
 
     return AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOutCubic,
-        //margin: EdgeInsets.all(margin),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-              ),
-            ],
-            color: pagePosition == 0
-                ? const Color(0xFFF0ED86).withOpacity(0.50)
-                : pagePosition == 1
-                    ? const Color(0xFF304C9F).withOpacity(0.20)
-                    : pagePosition == 2
-                        ? const Color(0xFFF4EDE3).withOpacity(0.50)
-                        : pagePosition == 3
-                            ? const Color(0xFFFFF7C7).withOpacity(1)
-                            : const Color(0xFFF7F6FD)
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubic,
+      //margin: EdgeInsets.all(margin),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(color: Colors.black12, blurRadius: 6.0),
+        ],
+        color: pagePosition == 0
+            ? const Color(0xFFF0ED86).withOpacity(0.50)
+            : pagePosition == 1
+            ? const Color(0xFF304C9F).withOpacity(0.20)
+            : pagePosition == 2
+            ? const Color(0xFFF4EDE3).withOpacity(0.50)
+            : pagePosition == 3
+            ? const Color(0xFFFFF7C7).withOpacity(1)
+            : const Color(0xFFF7F6FD),
 
-            /*image: DecorationImage(
+        /*image: DecorationImage(
               fit: BoxFit.cover, image: CachedNetworkImageProvider(images[pagePosition]))*/
-            ),
-        child: GestureDetector(
-          onTap: () {
-            setState(() {
-              pagePosition++;
-            });
-          },
-          child: Row(
-            children: [
-              Expanded(
-                  child: Column(
+      ),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            pagePosition++;
+          });
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 3),
                   Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Text(titleList[pagePosition],
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 23,
-                              height: 1.2,
-                              color: Colors.black))),
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text(
+                      titleList[pagePosition],
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 23,
+                        height: 1.2,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 3),
                   Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Text(descriptionList[pagePosition],
-                          style: TextStyle(
-                              fontSize: 15, color: AppTheme.themeBlueColor)))
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text(
+                      descriptionList[pagePosition],
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AppTheme.themeBlueColor,
+                      ),
+                    ),
+                  ),
                 ],
-              )),
-              SizedBox(
-                height: 110,
-                width: 100,
-                child: OverflowBox(
-                  minHeight: 180,
-                  maxHeight: 180,
-                  child: Lottie.asset(pagePosition == 0
+              ),
+            ),
+            SizedBox(
+              height: 110,
+              width: 100,
+              child: OverflowBox(
+                minHeight: 180,
+                maxHeight: 180,
+                child: Lottie.asset(
+                  pagePosition == 0
                       ? "assets/d1.json"
                       : pagePosition == 1
-                          ? "assets/d2.json"
-                          : pagePosition == 2
-                              ? "assets/d3.json"
-                              : pagePosition == 3
-                                  ? "assets/d4.json"
-                                  : "assets/d5.json"),
+                      ? "assets/d2.json"
+                      : pagePosition == 2
+                      ? "assets/d3.json"
+                      : pagePosition == 3
+                      ? "assets/d4.json"
+                      : "assets/d5.json",
                 ),
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   List<Widget> indicators(imagesLength, currentIndex) {
@@ -3513,10 +3674,11 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
         width: 8,
         height: 8,
         decoration: BoxDecoration(
-            color: currentIndex == index
-                ? Colors.black
-                : Colors.grey.withOpacity(0.4),
-            shape: BoxShape.circle),
+          color: currentIndex == index
+              ? Colors.black
+              : Colors.grey.withOpacity(0.4),
+          shape: BoxShape.circle,
+        ),
       );
     });
   }
@@ -3651,7 +3813,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-correction-notification', token, clientCode, context);
+      baseUrl,
+      'get-correction-notification',
+      token,
+      clientCode,
+      context,
+    );
     var responseJSON = json.decode(response.body);
     print(responseJSON);
     if (responseJSON['success'] == true) {
@@ -3664,10 +3831,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         isNotiLoading = false;
       });
@@ -3686,7 +3855,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-check-in-check-out', token, clientCode, context);
+      baseUrl,
+      'get-check-in-check-out',
+      token,
+      clientCode,
+      context,
+    );
     //Navigator.pop(context);
     var responseJSON = json.decode(response.body);
     print(responseJSON);
@@ -3818,19 +3992,23 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         attStatus = false;
       });
       LogoutUserFromApp.logOut(context);
     } else {
-      Toast.show(responseJSON['message'],
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         attStatus = false;
       });
@@ -3843,7 +4021,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-attendance-dashboard', token, clientCode, context);
+      baseUrl,
+      'get-attendance-dashboard',
+      token,
+      clientCode,
+      context,
+    );
     //Navigator.pop(context);
     var responseJSON = json.decode(response.body);
     print(responseJSON);
@@ -3853,8 +4036,8 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
             responseJSON['data']['attendanceCount']['present_count'].toString();
         absentDaysCount =
             responseJSON['data']['attendanceCount']['absent_count'].toString();
-        leaveDaysCount =
-            responseJSON['data']['attendanceCount']['paid_count'].toString();
+        leaveDaysCount = responseJSON['data']['attendanceCount']['paid_count']
+            .toString();
         correctionDaysCount =
             responseJSON['data']['attendanceCount']['paid_count'].toString();
       }
@@ -3864,19 +4047,23 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         analysisLoading = false;
       });
       LogoutUserFromApp.logOut(context);
     } else {
-      Toast.show(responseJSON['message'],
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         analysisLoading = false;
       });
@@ -3889,7 +4076,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-leave-balance', token, clientCode, context);
+      baseUrl,
+      'get-leave-balance',
+      token,
+      clientCode,
+      context,
+    );
     //Navigator.pop(context);
     var responseJSON = json.decode(response.body);
     print(responseJSON);
@@ -3908,19 +4100,23 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         leaveBalanceStatus = false;
       });
       LogoutUserFromApp.logOut(context);
     } else {
-      Toast.show(responseJSON['message'],
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         leaveBalanceStatus = false;
       });
@@ -3937,8 +4133,10 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     if (countdownTimer != null) {
       countdownTimer!.cancel();
     }
-    countdownTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+    countdownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => setCountDown(),
+    );
   }
 
   setCountDown() {
@@ -3971,7 +4169,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     });
     ApiBaseHelper helper = ApiBaseHelper();
     var response = await helper.getWithToken(
-        baseUrl, 'get-announcement', token, clientCode, context);
+      baseUrl,
+      'get-announcement',
+      token,
+      clientCode,
+      context,
+    );
     //Navigator.pop(context);
     var responseJSON = json.decode(response.body);
     print(responseJSON);
@@ -4030,30 +4233,36 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
         descriptionList.add("Nobody received KUDOS today");
       } else {
         descriptionList.add(
-            "$kudosCount People received KUDOS for their exceptional performance");
+          "$kudosCount People received KUDOS for their exceptional performance",
+        );
       }
 
       descriptionList.add(
-          "Share your thoughts, give wishes and know about your colleagues");
+        "Share your thoughts, give wishes and know about your colleagues",
+      );
 
       setState(() {
         communityLoading = false;
       });
     } else if (responseJSON['code'] == 401 ||
         responseJSON['message'] == 'Invalid token.') {
-      Toast.show("Your Login session is Expired!! Please login again.",
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         communityLoading = false;
       });
       LogoutUserFromApp.logOut(context);
     } else {
-      Toast.show(responseJSON['message'],
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
-          backgroundColor: Colors.red);
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
       setState(() {
         communityLoading = false;
       });
@@ -4068,10 +4277,7 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
 
-    _cameraController = CameraController(
-      firstCamera,
-      ResolutionPreset.high,
-    );
+    _cameraController = CameraController(firstCamera, ResolutionPreset.high);
 
     await _cameraController.initialize();
     setState(() {

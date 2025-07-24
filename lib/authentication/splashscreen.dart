@@ -53,7 +53,7 @@ class _splashState extends State<SplashScreen> {
                 child: Lottie.asset("assets/splash_loader.json"),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -87,21 +87,31 @@ class _splashState extends State<SplashScreen> {
     } else {
       if (orgDetails == '') {
         Timer(
-            const Duration(seconds: 4),
-            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => LoginScreen())));
+          const Duration(seconds: 4),
+          () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
+          ),
+        );
       } else {
         if (widget.token != '') {
           print(widget.token);
           Timer(
-              const Duration(seconds: 4),
-              () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => UserDashboardScreen())));
+            const Duration(seconds: 4),
+            () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) => UserDashboardScreen(),
+              ),
+            ),
+          );
         } else {
           Timer(
-              const Duration(seconds: 4),
-              () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => LoginScreen())));
+            const Duration(seconds: 4),
+            () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) => LoginScreen(),
+              ),
+            ),
+          );
         }
       }
     }

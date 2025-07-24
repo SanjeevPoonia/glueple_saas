@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:saas_glueple/pending_scr/edit_details_dialog.dart';
+import 'package:glueplenew/pending_scr/edit_details_dialog.dart';
 import 'package:lottie/lottie.dart';
 
 class ClockOutScreen extends StatefulWidget {

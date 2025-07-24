@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:saas_glueple/dialogs/successful_dialog.dart';
-
+import 'package:glueplenew/dialogs/successful_dialog.dart';
 
 class ApplyLeaveBottomSheet extends StatefulWidget {
   @override

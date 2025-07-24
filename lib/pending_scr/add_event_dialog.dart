@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:saas_glueple/pending_scr/new_details_saved_dialog.dart';
+import 'package:glueplenew/pending_scr/delete_entry_q.dart';
 
 class AddEventDialog extends StatefulWidget {
   @override

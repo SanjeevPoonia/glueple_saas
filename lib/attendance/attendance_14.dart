@@ -1,13 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:saas_glueple/attendance/attendance_17.dart';
-import 'package:saas_glueple/attendance/attendance_correction.dart';
-import 'package:saas_glueple/attendance/attendancedetail.dart';
-import 'package:saas_glueple/dialogs/attendence_detail_dialog.dart';
-import 'package:saas_glueple/dialogs/leave_management_dialog.dart';
-import 'package:saas_glueple/leave_management/leave_management_screen.dart';
-import 'package:saas_glueple/widget/appbar.dart';
+import 'package:glueplenew/attendance/attendance_17.dart';
+import 'package:glueplenew/attendance/attendance_correction.dart';
+import 'package:glueplenew/leave_management/leave_management_screen.dart';
+import 'package:glueplenew/pending_scr/leave_management_dialog.dart';
+import 'package:glueplenew/widget/appbar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Attendance14 extends StatefulWidget {
@@ -38,36 +36,38 @@ class _Attendance14State extends State<Attendance14> {
     ];
 
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.white,
-        appBar: CustomAppBar(
-          title: 'Attendance',
-          leading: InkWell(
-              onTap: () => Navigator.pop(context),
-              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white)),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications,
-                size: 30,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LeaveManagementScreen(),
-                  ),
-                );
-              },
-            ),
-            const IconButton(
-              icon: Icon(Icons.category, size: 30, color: Colors.white),
-              onPressed: null,
-            ),
-          ],
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      appBar: CustomAppBar(
+        title: 'Attendance',
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
         ),
-        body: Stack(children: [
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.notifications,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LeaveManagementScreen(),
+                ),
+              );
+            },
+          ),
+          const IconButton(
+            icon: Icon(Icons.category, size: 30, color: Colors.white),
+            onPressed: null,
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
           // Fixed glowing background
           IgnorePointer(
             child: Stack(
@@ -114,723 +114,634 @@ class _Attendance14State extends State<Attendance14> {
 
           // Scrollable content
           SafeArea(
-              child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 10),
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () => setState(
-                                        () => selectedCenter = 0,
-                                      ),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: selectedCenter == 0
-                                              ? const Color(0xFF1B81A4)
-                                              : Colors.transparent,
-                                          borderRadius: BorderRadius.circular(
-                                            24,
-                                          ),
-                                          // boxShadow: selectedCenter == 0
-                                          //     ? [
-                                          //         BoxShadow(
-                                          //           color: Colors.grey.withOpacity(0.3),
-                                          //           spreadRadius: 2,
-                                          //           blurRadius: 5,
-                                          //           offset: const Offset(0, 3),
-                                          //         )
-                                          //   ]
-                                          // : [],
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "Dashboard",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: selectedCenter == 0
-                                                  ? Colors.white
-                                                  : const Color(
-                                                      0xFF1B81A4,
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () => setState(
-                                        () => selectedCenter = 1,
-                                      ),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: selectedCenter == 1
-                                              ? const Color(0xFF1B81A4)
-                                              : Colors.transparent,
-                                          borderRadius: BorderRadius.circular(
-                                            24,
-                                          ),
-                                          // boxShadow: selectedCenter == 1
-                                          //     ? [
-                                          //         BoxShadow(
-                                          //           color: Colors.grey.withOpacity(0.3),
-                                          //           spreadRadius: 2,
-                                          //           blurRadius: 5,
-                                          //           offset: const Offset(0, 3),
-                                          //         )
-                                          //   ]
-                                          // : [],
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "Calendar",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: selectedCenter == 1
-                                                  ? Colors.white
-                                                  : const Color(
-                                                      0xFF1B81A4,
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (selectedCenter == 0)
-                        Positioned(
-                          top: 100,
-                          left: 0,
-                          right: 0,
-                          child: Column(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Row(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 18,
-                                      right: 18,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 16,
-                                        ),
-                                        Text(
-                                          'Today',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 26,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-
-                                        // SizedBox(height: 2),
-                                        Text(
-                                          '19 Sept 2023',
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  ...records.map((record) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(
-                                        16.0,
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.grey.shade400,
-                                          ),
-                                          color: Colors.white60,
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                            12.0,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              _statusColumn(
-                                                "First Half",
-                                                record['firstHalf']
-                                                        ?.toString() ??
-                                                    '',
-                                                record['color1'] as Color,
-                                              ),
-                                              _statusColumn(
-                                                "Second Half",
-                                                record['secondHalf']
-                                                        ?.toString() ??
-                                                    '',
-                                                record['color2'] as Color,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  const Text(
-                                                    "Total Break",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    record['break']
-                                                            ?.toString() ??
-                                                        '',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                  const SizedBox(height: 16),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    padding: const EdgeInsets.all(
-                                      16,
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      setState(() => selectedCenter = 0),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        const BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 10,
-                                        ),
-                                      ],
+                                      color: selectedCenter == 0
+                                          ? const Color(0xFF1B81A4)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(24),
+                                      // boxShadow: selectedCenter == 0
+                                      //     ? [
+                                      //         BoxShadow(
+                                      //           color: Colors.grey.withOpacity(0.3),
+                                      //           spreadRadius: 2,
+                                      //           blurRadius: 5,
+                                      //           offset: const Offset(0, 3),
+                                      //         )
+                                      //   ]
+                                      // : [],
                                     ),
-                                    child: _buildTrackedTimeSection(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(
-                                      18.0,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                10,
-                                              ),
-                                              boxShadow: [
-                                                const BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 10,
-                                                ),
-                                              ],
-                                              color: const Color(
-                                                0xFF00C797,
-                                              ),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  builder: (context) =>
-                                                      LeaveManagementDialog(),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 20,
-                                                  vertical: 16,
-                                                ),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                    12,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                "Leave Management",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                    child: Center(
+                                      child: Text(
+                                        "Dashboard",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: selectedCenter == 0
+                                              ? Colors.white
+                                              : const Color(0xFF1B81A4),
                                         ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                10,
-                                              ),
-                                              boxShadow: [
-                                                const BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 10,
-                                                ),
-                                              ],
-                                              color: const Color(
-                                                0xFF1B81A4,
-                                              ),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () => Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AttendanceCorrection(),
-                                                  )),
-                                              style: ElevatedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 20,
-                                                  vertical: 16,
-                                                ),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                    12,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                "Apply Correction",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      if (selectedCenter == 1)
-                        Positioned(
-                          top: 100,
-                          left: 0,
-                          right: 0,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
                                 ),
-                                child: TableCalendar(
-                                  firstDay: DateTime.utc(
-                                    2020,
-                                    1,
-                                    1,
-                                  ),
-                                  lastDay: DateTime.utc(
-                                    2030,
-                                    12,
-                                    31,
-                                  ),
-                                  focusedDay: _focusedDay,
-                                  calendarFormat: CalendarFormat.month,
-                                  calendarStyle: const CalendarStyle(
-                                    todayDecoration: BoxDecoration(
-                                      color: Color(0xFF304C9F),
-                                      shape: BoxShape.circle,
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      setState(() => selectedCenter = 1),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
                                     ),
-                                    selectedDecoration: BoxDecoration(
-                                      color: Color(0xFF00C797),
-                                      shape: BoxShape.circle,
+                                    decoration: BoxDecoration(
+                                      color: selectedCenter == 1
+                                          ? const Color(0xFF1B81A4)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(24),
+                                      // boxShadow: selectedCenter == 1
+                                      //     ? [
+                                      //         BoxShadow(
+                                      //           color: Colors.grey.withOpacity(0.3),
+                                      //           spreadRadius: 2,
+                                      //           blurRadius: 5,
+                                      //           offset: const Offset(0, 3),
+                                      //         )
+                                      //   ]
+                                      // : [],
                                     ),
-                                    markerDecoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    weekendTextStyle: TextStyle(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  headerStyle: const HeaderStyle(
-                                    titleTextStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                    formatButtonVisible: false,
-                                    titleCentered: true,
-                                    leftChevronIcon: Icon(
-                                      Icons.arrow_back_ios,
-                                    ),
-                                    rightChevronIcon: Icon(
-                                      Icons.arrow_forward_ios,
-                                    ),
-                                  ),
-                                  eventLoader: (day) => _getEventsForDay(day),
-                                  selectedDayPredicate: (day) {
-                                    return isSameDay(
-                                      day,
-                                      _selectedDay,
-                                    );
-                                  },
-                                  onDaySelected: (selectedDay, focusedDay) {
-                                    setState(() {
-                                      _selectedDay = selectedDay;
-                                      _focusedDay = focusedDay;
-                                    });
-                                  },
-                                  calendarBuilders: CalendarBuilders(
-                                    selectedBuilder:
-                                        (context, day, focusedDay) {
-                                      final events = _getEventsForDay(day);
-                                      if (events.isNotEmpty) {
-                                        String event = events.first;
-                                        Color color;
-                                        String abbr;
-                                        if (event == "Present") {
-                                          color = Colors.green;
-                                          abbr = "PR";
-                                        } else if (event == "Absent") {
-                                          color = Colors.red;
-                                          abbr = "AB";
-                                        } else if (event == "Week Off") {
-                                          color = Colors.indigo;
-                                          abbr = "WO";
-                                        } else if (event == "Public Holiday") {
-                                          color = const Color(
-                                            0xFF2B7B8A,
-                                          );
-                                          abbr = "PH";
-                                        } else if (event == "Paid Leave") {
-                                          color = Colors.indigo;
-                                          abbr = "PL";
-                                        } else if (event == "Leave w/o Pay") {
-                                          color = Colors.orange;
-                                          abbr = "LW";
-                                        } else if (event == "Half Day Absent") {
-                                          color = const Color(
-                                            0xFFFF0000,
-                                          );
-                                          abbr = "HD";
-                                        } else {
-                                          color = const Color(
-                                            0xFF1B81A4,
-                                          );
-                                          abbr = event
-                                              .substring(0, 2)
-                                              .toUpperCase();
-                                        }
-                                        return CircleAvatar(
-                                          backgroundColor: color,
-                                          radius: 18,
-                                          child: Text(
-                                            abbr,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return CircleAvatar(
-                                          backgroundColor:
-                                              const Color(0xFF1B81A4),
-                                          radius: 18,
-                                          child: Text(
-                                            '${day.day}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    todayBuilder: (context, day, focusedDay) {
-                                      if (!isSameDay(
-                                        day,
-                                        _selectedDay,
-                                      )) {
-                                        return CircleAvatar(
-                                          backgroundColor:
-                                              const Color(0xFF304C9F),
-                                          radius: 18,
-                                          child: Text(
-                                            '${day.day}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    defaultBuilder: (context, day, focusedDay) {
-                                      final events = _getEventsForDay(day);
-                                      if (events.isNotEmpty) {
-                                        String event = events.first;
-                                        Color color;
-                                        if (event == "Present")
-                                          color = Colors.green;
-                                        else if (event == "Absent")
-                                          color = Colors.red;
-                                        else if (event == "Week Off")
-                                          color = Colors.indigo;
-                                        else if (event == "Public Holiday")
-                                          color = const Color(
-                                            0xFF2B7B8A,
-                                          );
-                                        else if (event == "Paid Leave")
-                                          color = Colors.indigo;
-                                        else if (event == "Leave w/o Pay")
-                                          color = Colors.orange;
-                                        else if (event == "Half Day Absent")
-                                          color = const Color(
-                                            0xFFFF0000,
-                                          );
-                                        else
-                                          color = const Color(
-                                            0xFF1B81A4,
-                                          );
-                                        return Center(
-                                          child: Text(
-                                            '${day.day}',
-                                            style: TextStyle(
-                                              color: color,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return Center(
-                                        child: Text(
-                                          '${day.day}',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
+                                    child: Center(
+                                      child: Text(
+                                        "Calendar",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: selectedCenter == 1
+                                              ? Colors.white
+                                              : const Color(0xFF1B81A4),
                                         ),
-                                      );
-                                    },
-                                    dowBuilder: (context, day) {
-                                      final text = [
-                                        'S',
-                                        'M',
-                                        'T',
-                                        'W',
-                                        'T',
-                                        'F',
-                                        'S',
-                                      ][day.weekday % 7];
-                                      return Center(
-                                        child: Text(
-                                          text,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _legend(
-                                          "Today",
-                                          const Color(0xFF304C9F),
-                                          "T",
-                                        ),
-                                        _legend(
-                                          "Present",
-                                          const Color(0xFF1D963A),
-                                          "PR",
-                                        ),
-                                        _legend(
-                                          "Public Holiday",
-                                          const Color(0xFF2B7B8A),
-                                          "PH",
-                                        ),
-                                        _legend(
-                                          "Week Off",
-                                          const Color(0xFF5C5959),
-                                          "WO",
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _legend(
-                                          "Paid Leave",
-                                          Colors.indigo,
-                                          "PL",
-                                        ),
-                                        _legend(
-                                          "Leave w/o Pay",
-                                          Colors.orange,
-                                          "LW",
-                                        ),
-                                        _legend(
-                                          "Half Day Absent",
-                                          const Color(0xFFFF0000),
-                                          "HD",
-                                        ),
-                                        _legend(
-                                          "Absent",
-                                          Colors.red,
-                                          "AB",
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Padding(
-                                padding: const EdgeInsetsGeometry.all(0),
-                                child: Wrap(
-                                  spacing: 7,
-                                  children: [
-                                    _filterButton("Today"),
-                                    _filterButton("Yesterday"),
-                                    _filterButton("This Month"),
-                                    _filterButton("Last Month"),
-                                    _filterButton("Last 3 Month"),
-                                    _filterButton("Last 6 Month"),
-                                    _filterButton("Last Year"),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Center(
-                                child: Container(
-                                  width: 350,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      const BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF00C797),
-                                        Color(0xFF1B81A4),
-                                      ],
-                                    ),
-                                  ),
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 40,
-                                        vertical: 12,
-                                      ),
-                                      backgroundColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          12,
-                                        ),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      "View Details",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 30),
                             ],
                           ),
                         ),
-                    ],
-                  )))
-        ]));
+                      ],
+                    ),
+                  ),
+                  if (selectedCenter == 0)
+                    Positioned(
+                      top: 100,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 18, right: 18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 16),
+                                    Text(
+                                      'Today',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    // SizedBox(height: 2),
+                                    Text(
+                                      '19 Sept 2023',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              ...records.map((record) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                      color: Colors.white60,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          _statusColumn(
+                                            "First Half",
+                                            record['firstHalf']?.toString() ??
+                                                '',
+                                            record['color1'] as Color,
+                                          ),
+                                          _statusColumn(
+                                            "Second Half",
+                                            record['secondHalf']?.toString() ??
+                                                '',
+                                            record['color2'] as Color,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                "Total Break",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              Text(
+                                                record['break']?.toString() ??
+                                                    '',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                              const SizedBox(height: 16),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    const BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                ),
+                                child: _buildTrackedTimeSection(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(18.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          boxShadow: [
+                                            const BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 10,
+                                            ),
+                                          ],
+                                          color: const Color(0xFF00C797),
+                                        ),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              builder: (context) =>
+                                                  LeaveManagementDialog(),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 16,
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            "Leave Management",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          boxShadow: [
+                                            const BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 10,
+                                            ),
+                                          ],
+                                          color: const Color(0xFF1B81A4),
+                                        ),
+                                        child: TextButton(
+                                          onPressed: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AttendanceCorrection(),
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 16,
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            "Apply Correction",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (selectedCenter == 1)
+                    Positioned(
+                      top: 100,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
+                            child: TableCalendar(
+                              firstDay: DateTime.utc(2020, 1, 1),
+                              lastDay: DateTime.utc(2030, 12, 31),
+                              focusedDay: _focusedDay,
+                              calendarFormat: CalendarFormat.month,
+                              calendarStyle: const CalendarStyle(
+                                todayDecoration: BoxDecoration(
+                                  color: Color(0xFF304C9F),
+                                  shape: BoxShape.circle,
+                                ),
+                                selectedDecoration: BoxDecoration(
+                                  color: Color(0xFF00C797),
+                                  shape: BoxShape.circle,
+                                ),
+                                markerDecoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                weekendTextStyle: TextStyle(color: Colors.red),
+                              ),
+                              headerStyle: const HeaderStyle(
+                                titleTextStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                formatButtonVisible: false,
+                                titleCentered: true,
+                                leftChevronIcon: Icon(Icons.arrow_back_ios),
+                                rightChevronIcon: Icon(Icons.arrow_forward_ios),
+                              ),
+                              eventLoader: (day) => _getEventsForDay(day),
+                              selectedDayPredicate: (day) {
+                                return isSameDay(day, _selectedDay);
+                              },
+                              onDaySelected: (selectedDay, focusedDay) {
+                                setState(() {
+                                  _selectedDay = selectedDay;
+                                  _focusedDay = focusedDay;
+                                });
+                              },
+                              calendarBuilders: CalendarBuilders(
+                                selectedBuilder: (context, day, focusedDay) {
+                                  final events = _getEventsForDay(day);
+                                  if (events.isNotEmpty) {
+                                    String event = events.first;
+                                    Color color;
+                                    String abbr;
+                                    if (event == "Present") {
+                                      color = Colors.green;
+                                      abbr = "PR";
+                                    } else if (event == "Absent") {
+                                      color = Colors.red;
+                                      abbr = "AB";
+                                    } else if (event == "Week Off") {
+                                      color = Colors.indigo;
+                                      abbr = "WO";
+                                    } else if (event == "Public Holiday") {
+                                      color = const Color(0xFF2B7B8A);
+                                      abbr = "PH";
+                                    } else if (event == "Paid Leave") {
+                                      color = Colors.indigo;
+                                      abbr = "PL";
+                                    } else if (event == "Leave w/o Pay") {
+                                      color = Colors.orange;
+                                      abbr = "LW";
+                                    } else if (event == "Half Day Absent") {
+                                      color = const Color(0xFFFF0000);
+                                      abbr = "HD";
+                                    } else {
+                                      color = const Color(0xFF1B81A4);
+                                      abbr = event
+                                          .substring(0, 2)
+                                          .toUpperCase();
+                                    }
+                                    return CircleAvatar(
+                                      backgroundColor: color,
+                                      radius: 18,
+                                      child: Text(
+                                        abbr,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return CircleAvatar(
+                                      backgroundColor: const Color(0xFF1B81A4),
+                                      radius: 18,
+                                      child: Text(
+                                        '${day.day}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                todayBuilder: (context, day, focusedDay) {
+                                  if (!isSameDay(day, _selectedDay)) {
+                                    return CircleAvatar(
+                                      backgroundColor: const Color(0xFF304C9F),
+                                      radius: 18,
+                                      child: Text(
+                                        '${day.day}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                defaultBuilder: (context, day, focusedDay) {
+                                  final events = _getEventsForDay(day);
+                                  if (events.isNotEmpty) {
+                                    String event = events.first;
+                                    Color color;
+                                    if (event == "Present")
+                                      color = Colors.green;
+                                    else if (event == "Absent")
+                                      color = Colors.red;
+                                    else if (event == "Week Off")
+                                      color = Colors.indigo;
+                                    else if (event == "Public Holiday")
+                                      color = const Color(0xFF2B7B8A);
+                                    else if (event == "Paid Leave")
+                                      color = Colors.indigo;
+                                    else if (event == "Leave w/o Pay")
+                                      color = Colors.orange;
+                                    else if (event == "Half Day Absent")
+                                      color = const Color(0xFFFF0000);
+                                    else
+                                      color = const Color(0xFF1B81A4);
+                                    return Center(
+                                      child: Text(
+                                        '${day.day}',
+                                        style: TextStyle(
+                                          color: color,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return Center(
+                                    child: Text(
+                                      '${day.day}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                dowBuilder: (context, day) {
+                                  final text = [
+                                    'S',
+                                    'M',
+                                    'T',
+                                    'W',
+                                    'T',
+                                    'F',
+                                    'S',
+                                  ][day.weekday % 7];
+                                  return Center(
+                                    child: Text(
+                                      text,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _legend(
+                                      "Today",
+                                      const Color(0xFF304C9F),
+                                      "T",
+                                    ),
+                                    _legend(
+                                      "Present",
+                                      const Color(0xFF1D963A),
+                                      "PR",
+                                    ),
+                                    _legend(
+                                      "Public Holiday",
+                                      const Color(0xFF2B7B8A),
+                                      "PH",
+                                    ),
+                                    _legend(
+                                      "Week Off",
+                                      const Color(0xFF5C5959),
+                                      "WO",
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _legend("Paid Leave", Colors.indigo, "PL"),
+                                    _legend(
+                                      "Leave w/o Pay",
+                                      Colors.orange,
+                                      "LW",
+                                    ),
+                                    _legend(
+                                      "Half Day Absent",
+                                      const Color(0xFFFF0000),
+                                      "HD",
+                                    ),
+                                    _legend("Absent", Colors.red, "AB"),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsetsGeometry.all(0),
+                            child: Wrap(
+                              spacing: 7,
+                              children: [
+                                _filterButton("Today"),
+                                _filterButton("Yesterday"),
+                                _filterButton("This Month"),
+                                _filterButton("Last Month"),
+                                _filterButton("Last 3 Month"),
+                                _filterButton("Last 6 Month"),
+                                _filterButton("Last Year"),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Container(
+                              width: 350,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  const BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF00C797),
+                                    Color(0xFF1B81A4),
+                                  ],
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 40,
+                                    vertical: 12,
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "View Details",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildStatCard(String value, String label) {
@@ -842,7 +753,10 @@ class _Attendance14State extends State<Attendance14> {
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           const BoxShadow(
-              color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -927,9 +841,7 @@ class _Attendance14State extends State<Attendance14> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => Attendance17(),
-                ),
+                MaterialPageRoute(builder: (context) => Attendance17()),
               );
             },
             child: const Padding(
