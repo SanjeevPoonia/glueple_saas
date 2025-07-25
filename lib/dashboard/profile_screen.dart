@@ -5,6 +5,7 @@ import 'package:glueplenew/widget/appbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:toast/toast.dart';
+import 'package:intl/intl.dart';
 
 import '../network/Utils.dart';
 import '../network/api_dialog.dart';
@@ -51,6 +52,7 @@ class _qdProfile extends State<QDProfileScreen> {
 
   XFile? imageFile;
   File? file;
+
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
@@ -62,34 +64,9 @@ class _qdProfile extends State<QDProfileScreen> {
           child: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
         ),
       ),
-
-      // AppBar(
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       Icons.keyboard_arrow_left_outlined,
-      //       color: Colors.white,
-      //       size: 35,
-      //     ),
-      //     onPressed: () => {Navigator.of(context).pop()},
-      //   ),
-      //   backgroundColor: AppTheme.themeColor,
-      //   title: const Text(
-      //     "My Profile",
-      //     style: TextStyle(
-      //       fontSize: 18.5,
-      //       fontWeight: FontWeight.bold,
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      //   /*actions: [IconButton(onPressed: (){
-      //         _showAlertDialog();
-
-      //       }, icon: SvgPicture.asset("assets/logout.svg"))] ,*/
-      //   centerTitle: true,
-      // ),
       backgroundColor: Colors.white,
       body: isLoading
-          ? SizedBox()
+          ? Center(child: CircularProgressIndicator(color: AppTheme.themeColor))
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -513,18 +490,13 @@ class _qdProfile extends State<QDProfileScreen> {
                     ),
                   ),
 
+                  // Rest of your UI cards (Personal Details, Family Details, etc.)
                   Row(
                     children: [
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         PersonalDetailScreen(true),
-                            //   ),
-                            // );
+                            // Navigation logic
                           },
                           child: Container(
                             margin: EdgeInsets.only(
@@ -535,9 +507,8 @@ class _qdProfile extends State<QDProfileScreen> {
                             ),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: AppTheme
-                                    .orangeColor, // Set the border color here
-                                width: 1.0, // Set the border width
+                                color: AppTheme.orangeColor,
+                                width: 1.0,
                               ),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
@@ -547,12 +518,8 @@ class _qdProfile extends State<QDProfileScreen> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      10.0,
-                                    ), // Adjust the top-left corner radius
-                                    topRight: Radius.circular(
-                                      10.0,
-                                    ), // Adjust the top-right corner radius
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
                                   ),
                                   child: Container(
                                     height: 20,
@@ -584,8 +551,7 @@ class _qdProfile extends State<QDProfileScreen> {
                                   'Personal Details',
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: Colors
-                                        .black, // Set the desired font size
+                                    color: Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
@@ -597,12 +563,7 @@ class _qdProfile extends State<QDProfileScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => FamilyDetailsScreen(true),
-                            //   ),
-                            // );
+                            // Navigation logic
                           },
                           child: Container(
                             margin: EdgeInsets.only(
@@ -613,9 +574,8 @@ class _qdProfile extends State<QDProfileScreen> {
                             ),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: AppTheme
-                                    .orangeColor, // Set the border color here
-                                width: 1.0, // Set the border width
+                                color: AppTheme.orangeColor,
+                                width: 1.0,
                               ),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
@@ -625,12 +585,8 @@ class _qdProfile extends State<QDProfileScreen> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      10.0,
-                                    ), // Adjust the top-left corner radius
-                                    topRight: Radius.circular(
-                                      10.0,
-                                    ), // Adjust the top-right corner radius
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
                                   ),
                                   child: Container(
                                     height: 20,
@@ -662,8 +618,7 @@ class _qdProfile extends State<QDProfileScreen> {
                                   'Family Details',
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: Colors
-                                        .black, // Set the desired font size
+                                    color: Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
@@ -1214,166 +1169,119 @@ class _qdProfile extends State<QDProfileScreen> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // Future.delayed(const Duration(milliseconds: 0), () {
-  //   _getDashboardData();
-  // });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 0), () {
+      _getDashboardData();
+    });
+  }
 
-  // _getDashboardData() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, 'Please Wait...');
-  //   userIdStr = await MyUtils.getSharedPreferences("user_id");
-  //   fullNameStr = await MyUtils.getSharedPreferences("full_name");
-  //   token = await MyUtils.getSharedPreferences("token");
-  //   designationStr = await MyUtils.getSharedPreferences("designation");
-  //   empId = await MyUtils.getSharedPreferences("emp_id");
-  //   baseUrl = await MyUtils.getSharedPreferences("base_url");
-  //   clientCode = await MyUtils.getSharedPreferences("client_code") ?? "";
-  //   Navigator.of(context).pop();
-  //   getUserProfile();
-  // }
+  _getDashboardData() async {
+    setState(() {
+      isLoading = true;
+    });
+    APIDialog.showAlertDialog(context, 'Please Wait...');
+    userIdStr = await MyUtils.getSharedPreferences("user_id");
+    fullNameStr = await MyUtils.getSharedPreferences("full_name");
+    token = await MyUtils.getSharedPreferences("token");
+    designationStr = await MyUtils.getSharedPreferences("designation");
+    empId = await MyUtils.getSharedPreferences("emp_id");
+    baseUrl = await MyUtils.getSharedPreferences("base_url");
+    clientCode = await MyUtils.getSharedPreferences("client_code") ?? "";
+    Navigator.of(context).pop();
+    getUserProfile();
+  }
 
-  // getUserProfile() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, 'Please Wait...');
-  //   ApiBaseHelper helper = ApiBaseHelper();
-  //   var response = await helper.getWithToken(
-  //     baseUrl,
-  //     'employee/getEmployeeProfileDetails',
-  //     token,
-  //     context,
-  //   );
-  //   Navigator.pop(context);
-  //   var responseJSON = json.decode(response.body);
-  //   print(responseJSON);
-  //   if (responseJSON['error'] == false) {
-  //     List<dynamic> tempList = responseJSON['data'];
-  //     for (int i = 0; i < tempList.length; i++) {
-  //       employeeIdStr = tempList[i]['emp_id'].toString();
-  //       if (tempList[i]['first_name'] != null) {
-  //         NameStr = tempList[i]['first_name'].toString();
-  //       }
-  //       if (tempList[i]['last_name'] != null) {
-  //         NameStr = "$NameStr ${tempList[i]['last_name']}";
-  //       }
-  //       joiningDate = tempList[i]['joining_date'].toString();
-  //       mobileNoStr = tempList[i]['mobile'].toString();
-  //       emailStr = tempList[i]['email'].toString();
-  //       departmentStr = tempList[i]['employeee_department'].toString();
-  //       desiStr = tempList[i]['employee_designation'].toString();
-  //       reportingManager = tempList[i]['reporting_manager_name'].toString();
-  //     }
+  getUserProfile() async {
+    // Don't show another loading dialog since we already have one
+    ApiBaseHelper helper = ApiBaseHelper();
+    try {
+      var response = await helper.getWithToken(
+        baseUrl,
+        'get-profile',
+        token,
+        clientCode,
+        context,
+      );
 
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     getUserProfileStatus();
-  //   } else {
-  //     Toast.show(
-  //       responseJSON['message'],
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     getUserProfileStatus();
-  //   }
-  // }
+      var responseJSON = json.decode(response.body);
+      print("Profile Response: $responseJSON");
 
-  // getUserProfileStatus() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, "Please wait...");
-  //   ApiBaseHelper helper = ApiBaseHelper();
-  //   var response = await helper.getWithToken(
-  //     baseUrl,
-  //     "employee/getEmployeeProfileDetailStatus?",
-  //     token,
-  //     context,
-  //   );
-  //   Navigator.pop(context);
-  //   var responseJSON = json.decode(response.body);
-  //   print(responseJSON);
-  //   if (responseJSON['error'] == false) {
-  //     List<dynamic> tempUserList = [];
-  //     tempUserList = responseJSON['data'];
-  //     for (int i = 0; i < tempUserList.length; i++) {
-  //       offerLaterStatus = tempUserList[i]['offer_letter_status'];
-  //       offerRejectedStatus = tempUserList[i]['offer_letter_rejection_status'];
-  //       personalDetailsStatus = tempUserList[i]['personal_details_status'];
-  //       familyDetailsStatus = tempUserList[i]['family_details_status'];
-  //       educationDetailsStatus = tempUserList[i]['education_detail_status'];
-  //       bankDetailsStatus = tempUserList[i]['bank_details_status'];
-  //       socialDetailsStatus = tempUserList[i]['social_detail_status'];
-  //       workExperienceDetailsStatus =
-  //           tempUserList[i]['work_experience_detail_status'];
-  //       referenceDetailsStatus = tempUserList[i]['reference_detail_status'];
-  //       empPolicyDetyailsStatus = tempUserList[i]['emp_policy_status'];
-  //       documentDetailsStatus = tempUserList[i]['documents_details_status'];
-  //     }
-  //   } else {
-  //     Toast.show(
-  //       responseJSON['message'],
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //   }
+      // Updated condition to match the actual API response
+      if (responseJSON['code'] == 200 && responseJSON['data'] != null) {
+        List<dynamic> tempList = responseJSON['data'];
+        if (tempList.isNotEmpty) {
+          var profileData = tempList[0];
 
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  //   getUserProfileImage();
-  // }
+          // Map the API response fields to your variables
+          employeeIdStr = profileData['emp_id']?.toString() ?? "";
 
-  // getUserProfileImage() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, "Please wait...");
-  //   ApiBaseHelper helper = ApiBaseHelper();
-  //   var response = await helper.getWithToken(
-  //     baseUrl,
-  //     "employee/getEmployeeProfilePic",
-  //     token,
-  //     context,
-  //   );
-  //   Navigator.pop(context);
-  //   var responseJSON = json.decode(response.body);
-  //   print(responseJSON);
-  //   if (responseJSON['error'] == false) {
-  //     List<dynamic> tempUserList = [];
-  //     tempUserList = responseJSON['data']['data'];
-  //     String rootPath = responseJSON['data']['root_path'].toString();
-  //     String fileName = "";
-  //     for (int i = 0; i < tempUserList.length; i++) {
-  //       fileName = tempUserList[i]['filename'].toString();
-  //     }
+          // Handle name from the API response
+          if (profileData['name'] != null) {
+            NameStr = profileData['name'].toString();
+          } else if (profileData['first_name'] != null) {
+            NameStr = profileData['first_name'].toString();
+            if (profileData['last_name'] != null) {
+              NameStr = "$NameStr ${profileData['last_name']}";
+            }
+          }
 
-  //     if (fileName.isNotEmpty) {
-  //       profileImage = "$rootPath/$fileName";
-  //     }
-  //   } /*else {
-  //     Toast.show(responseJSON['message'],
-  //         duration: Toast.lengthLong,
-  //         gravity: Toast.bottom,
-  //         backgroundColor: Colors.red);
-  //   }*/
+          // Format joining date
+          if (profileData['joining_date'] != null) {
+            try {
+              var dateTime = DateTime.parse(profileData['joining_date']);
+              joiningDate = DateFormat("MMM d, yyyy").format(dateTime);
+            } catch (e) {
+              joiningDate = profileData['joining_date'].toString();
+            }
+          }
 
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
+          mobileNoStr =
+              profileData['personal_mobile']?.toString() ??
+              profileData['mobile']?.toString() ??
+              "";
+          emailStr =
+              profileData['personal_email']?.toString() ??
+              profileData['email']?.toString() ??
+              "";
+          departmentStr = profileData['department_name']?.toString() ?? "";
+          desiStr = profileData['designation_name']?.toString() ?? "";
+          reportingManager = profileData['reported_to_name']?.toString() ?? "";
+
+          // Handle profile image if available
+          if (profileData['profile_image'] != null) {
+            profileImage = profileData['profile_image'].toString();
+          }
+        }
+
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        Toast.show(
+          responseJSON['message'] ?? "Something went wrong",
+          duration: Toast.lengthLong,
+          gravity: Toast.bottom,
+          backgroundColor: Colors.red,
+        );
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+      Toast.show(
+        "Network error occurred",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   _showAlertDialog() {
     showDialog(
@@ -1399,8 +1307,7 @@ class _qdProfile extends State<QDProfileScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              //prepairGallery();
-              // imageSelectorFromGallery(context);
+              // Add gallery selection logic here
             },
             child: Container(
               decoration: BoxDecoration(
@@ -1424,7 +1331,7 @@ class _qdProfile extends State<QDProfileScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              // prepairCamera();
+              // Add camera selection logic here
             },
             child: Container(
               decoration: BoxDecoration(
@@ -1449,440 +1356,4 @@ class _qdProfile extends State<QDProfileScreen> {
       ),
     );
   }
-
-  // /**********Capture Image From Camera*************/
-  // Future<void> prepairCamera() async {
-  //   /*APIDialog.showAlertDialog(context, "Preparing Camera..");
-  //   final hasPermission = await _handleCameraPermission();
-  //   if (!hasPermission) {
-  //     Navigator.of(context).pop();
-  //     _showCameraPermissionCustomDialog();
-  //     return;
-  //   }
-  //   Navigator.of(context).pop();*/
-  //   imageSelector(context);
-  //   //prepairCamera();
-  // }
-
-  // Future<void> prepairGallery() async {
-  //   APIDialog.showAlertDialog(context, "Preparing Gallery..");
-  //   final hasPermission = await _handleGalleryPermission();
-  //   if (!hasPermission) {
-  //     Navigator.of(context).pop();
-  //     _showReadImagePermissionCustomDialog();
-  //     return;
-  //   }
-  //   Navigator.of(context).pop();
-  //   imageSelectorFromGallery(context);
-  //   //prepairCamera();
-  // }
-
-  // Future<bool> _handleCameraPermission() async {
-  //   bool serviceEnabled;
-  //   PermissionStatus status = await Permission.camera.status;
-  //   if (status.isGranted) {
-  //     serviceEnabled = true;
-  //   } else if (status.isPermanentlyDenied) {
-  //     serviceEnabled = false;
-  //   } else {
-  //     var camStatus = await Permission.camera.request();
-  //     if (camStatus.isGranted) {
-  //       serviceEnabled = true;
-  //     } else {
-  //       serviceEnabled = false;
-  //     }
-  //   }
-  //   return serviceEnabled;
-  // }
-
-  // Future<bool> _handleGalleryPermission() async {
-  //   bool serviceEnabled;
-  //   PermissionStatus status = await Permission.storage.status;
-  //   if (status.isGranted) {
-  //     serviceEnabled = true;
-  //   } else if (status.isPermanentlyDenied) {
-  //     serviceEnabled = false;
-  //   } else {
-  //     var camStatus = await Permission.storage.request();
-  //     if (camStatus.isGranted) {
-  //       serviceEnabled = true;
-  //     } else {
-  //       serviceEnabled = false;
-  //     }
-  //   }
-  //   return serviceEnabled;
-  // }
-
-  // _showCameraPermissionCustomDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(20.0),
-  //         ), //this right here
-  //         child: Container(
-  //           height: 300,
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(12.0),
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Align(
-  //                   alignment: Alignment.centerRight,
-  //                   child: InkWell(
-  //                     onTap: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                     child: Icon(
-  //                       Icons.close_rounded,
-  //                       color: Colors.red,
-  //                       size: 20,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 20),
-  //                 Text(
-  //                   "Please allow Camera Permissions For Capture Image",
-  //                   style: TextStyle(
-  //                     color: Colors.black,
-  //                     fontWeight: FontWeight.w900,
-  //                     fontSize: 14,
-  //                   ),
-  //                 ),
-
-  //                 SizedBox(height: 20),
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                     //call attendance punch in or out
-  //                   },
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(10),
-  //                       color: AppTheme.themeColor,
-  //                     ),
-  //                     height: 45,
-  //                     padding: const EdgeInsets.all(10),
-  //                     child: const Center(
-  //                       child: Text(
-  //                         "OK",
-  //                         style: TextStyle(
-  //                           fontWeight: FontWeight.w500,
-  //                           fontSize: 14,
-  //                           color: Colors.white,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // _showReadImagePermissionCustomDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(20.0),
-  //         ), //this right here
-  //         child: Container(
-  //           height: 300,
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(12.0),
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Align(
-  //                   alignment: Alignment.centerRight,
-  //                   child: InkWell(
-  //                     onTap: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                     child: Icon(
-  //                       Icons.close_rounded,
-  //                       color: Colors.red,
-  //                       size: 20,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 20),
-  //                 Text(
-  //                   "Please allow Read Images Permission for Browse Image from Gallery",
-  //                   style: TextStyle(
-  //                     color: Colors.black,
-  //                     fontWeight: FontWeight.w900,
-  //                     fontSize: 14,
-  //                   ),
-  //                 ),
-
-  //                 SizedBox(height: 20),
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                     //call attendance punch in or out
-  //                   },
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(10),
-  //                       color: AppTheme.themeColor,
-  //                     ),
-  //                     height: 45,
-  //                     padding: const EdgeInsets.all(10),
-  //                     child: const Center(
-  //                       child: Text(
-  //                         "OK",
-  //                         style: TextStyle(
-  //                           fontWeight: FontWeight.w500,
-  //                           fontSize: 14,
-  //                           color: Colors.white,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // imageSelectorFromGallery(BuildContext context) async {
-  //   imageFile = await ImagePicker().pickImage(
-  //     source: ImageSource.gallery,
-  //     imageQuality: 60,
-  //   );
-  //   if (imageFile != null) {
-  //     file = File(imageFile!.path);
-
-  //     final imageFiles = imageFile;
-  //     if (imageFiles != null) {
-  //       print("You selected  image : " + imageFiles.path.toString());
-  //       setState(() {
-  //         debugPrint("SELECTED IMAGE PICK   $imageFiles");
-  //       });
-
-  //       _showImageDialog();
-  //     } else {
-  //       print("You have not taken image");
-  //     }
-  //   } else {
-  //     Toast.show(
-  //       "Unable to Browse Image. Please try Again...",
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //   }
-  // }
-
-  // imageSelector(BuildContext context) async {
-  //   imageFile = await ImagePicker().pickImage(
-  //     source: ImageSource.camera,
-  //     imageQuality: 60,
-  //     preferredCameraDevice: CameraDevice.front,
-  //   );
-
-  //   if (imageFile != null) {
-  //     file = File(imageFile!.path);
-
-  //     final imageFiles = imageFile;
-  //     if (imageFiles != null) {
-  //       print("You selected  image : " + imageFiles.path.toString());
-  //       setState(() {
-  //         debugPrint("SELECTED IMAGE PICK   $imageFiles");
-  //       });
-
-  //       _showImageDialog();
-  //     } else {
-  //       print("You have not taken image");
-  //     }
-  //   } else {
-  //     Toast.show(
-  //       "Unable to capture Image. Please try Again...",
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //   }
-  // }
-
-  // _showImageDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (ctx) => AlertDialog(
-  //       title: const Text(
-  //         "Upload Profile Image",
-  //         style: TextStyle(
-  //           fontWeight: FontWeight.bold,
-  //           color: Colors.red,
-  //           fontSize: 18,
-  //         ),
-  //       ),
-  //       content: Container(
-  //         width: double.infinity,
-  //         height: 300,
-  //         decoration: BoxDecoration(
-  //           color: Colors.grey,
-  //           shape: BoxShape.rectangle,
-  //           image: DecorationImage(image: FileImage(file!), fit: BoxFit.cover),
-  //         ),
-  //       ),
-  //       actions: <Widget>[
-  //         TextButton(
-  //           onPressed: () {
-  //             Navigator.of(ctx).pop();
-  //             UploadImage();
-  //           },
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(10),
-  //               color: AppTheme.themeColor,
-  //             ),
-  //             height: 45,
-  //             padding: const EdgeInsets.all(10),
-  //             child: const Center(
-  //               child: Text(
-  //                 "Upload",
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.w500,
-  //                   fontSize: 14,
-  //                   color: Colors.white,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         TextButton(
-  //           onPressed: () {
-  //             Navigator.of(ctx).pop();
-  //           },
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(10),
-  //               color: AppTheme.greyColor,
-  //             ),
-  //             height: 45,
-  //             padding: const EdgeInsets.all(10),
-  //             child: const Center(
-  //               child: Text(
-  //                 "Cancel",
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.w500,
-  //                   fontSize: 14,
-  //                   color: Colors.white,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // UploadImage() async {
-  //   APIDialog.showAlertDialog(context, 'Uploading Profile Image...');
-  //   String fileName = imageFile!.path.split('/').last;
-  //   String extension = fileName.split('.').last;
-
-  //   print(fileName);
-  //   FormData formData = FormData.fromMap({
-  //     "file": await MultipartFile.fromFile(imageFile!.path, filename: fileName),
-  //   });
-  //   /*FormData formData = FormData.fromMap({
-  //     "file": await MultipartFile.fromFile(imageFile!.path,
-  //         filename: fileName,
-  //       contentType: MediaType("image", extension)
-  //     ),
-  //   });*/
-
-  //   String apiUrl = baseUrl + "employee/uploadEmployeeProfilePic";
-  //   print(apiUrl);
-
-  //   Dio dio = Dio();
-  //   dio.options.headers['Content-Type'] = 'multipart/form-data';
-  //   dio.options.headers['X-Auth-Token'] = token;
-  //   try {
-  //     var response = await dio.post(apiUrl, data: formData);
-  //     print(response.data);
-  //     Navigator.pop(context);
-  //     // var responseJSON = json.decode(response.data);
-  //     //
-  //     // print(responseJSON);
-  //     if (response.data['error'] == false) {
-  //       Toast.show(
-  //         response.data['message'],
-  //         duration: Toast.lengthLong,
-  //         gravity: Toast.bottom,
-  //         backgroundColor: Colors.green,
-  //       );
-  //       getUserProfileImage();
-  //     } else {
-  //       Toast.show(
-  //         response.data['message'],
-  //         duration: Toast.lengthLong,
-  //         gravity: Toast.bottom,
-  //         backgroundColor: Colors.red,
-  //       );
-  //     }
-  //   } on DioError catch (e) {
-  //     print(e);
-  //     print(e.response.toString());
-  //     Navigator.pop(context);
-  //     Toast.show(
-  //       e.message,
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //   }
-  // }
-
-  // /********************* get Offer Letter***************************/
-  // getUserLetter(String type) async {
-  //   APIDialog.showAlertDialog(context, 'Please Wait...');
-
-  //   var requestModel = {"type": type, "emp_id": empId};
-
-  //   ApiBaseHelper helper = ApiBaseHelper();
-  //   var response = await helper.postAPIWithHeader(
-  //     baseUrl,
-  //     'rest_api/getEmpLetters',
-  //     requestModel,
-  //     context,
-  //     token,
-  //   );
-  //   Navigator.pop(context);
-  //   var responseJSON = json.decode(response.body);
-  //   print(responseJSON);
-  //   if (responseJSON['error'] == false) {
-  //     String pdfUrl = responseJSON['data']['file_path'].toString();
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => ShowOfferLetterScreen(type, pdfUrl, empId),
-  //       ),
-  //     );
-  //   } else {
-  //     Toast.show(
-  //       responseJSON['message'],
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //   }
-  // }
 }

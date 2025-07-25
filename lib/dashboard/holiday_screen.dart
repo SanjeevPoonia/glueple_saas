@@ -22,6 +22,7 @@ class _holidayList extends State<HolidayScreen> {
   late var token;
   late var empId;
   late var baseUrl;
+  String? clientcode;
   List<dynamic> holidayList = [];
 
   @override
@@ -35,34 +36,9 @@ class _holidayList extends State<HolidayScreen> {
           child: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
         ),
       ),
-
-      // AppBar(
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       Icons.keyboard_arrow_left_outlined,
-      //       color: Colors.black,
-      //       size: 35,
-      //     ),
-      //     onPressed: () => {Navigator.of(context).pop()},
-      //   ),
-      //   backgroundColor: AppTheme.at_details_header,
-      //   title: const Text(
-      //     "Holiday",
-      //     style: TextStyle(
-      //       fontSize: 18.5,
-      //       fontWeight: FontWeight.bold,
-      //       color: Colors.black,
-      //     ),
-      //   ),
-      /*actions: [IconButton(onPressed: (){
-              _showAlertDialog();
-
-            }, icon: SvgPicture.asset("assets/logout.svg"))] ,*/
-      //   centerTitle: true,
-      // ),
       backgroundColor: Colors.white,
       body: isLoading
-          ? SizedBox()
+          ? Center(child: CircularProgressIndicator(color: AppTheme.themeColor))
           : holidayList.length == 0
           ? Align(
               alignment: Alignment.center,
@@ -84,40 +60,74 @@ class _holidayList extends State<HolidayScreen> {
                 String noDays = "";
                 String dayStr = "";
                 String holiday = "";
-                String holiday_tyoe = "";
+                String holiday_type = "";
                 String holidayFor = "";
 
                 var backColor = AppTheme.task_progress_back;
                 var textColor = AppTheme.themeColor;
 
-                if (holidayList[index]['holiday_from'] != null) {
-                  var dateTime = DateFormat(
-                    "dd-MM-yyyy",
-                  ).parse(holidayList[index]['holiday_from']);
-                  fromDate = DateFormat("MMM d,yyyy").format(dateTime);
+                // Updated field mappings based on API response
+                if (holidayList[index]['from_date'] != null) {
+                  try {
+                    var dateTime = DateFormat(
+                      "yyyy-MM-dd",
+                    ).parse(holidayList[index]['from_date']);
+                    fromDate = DateFormat("MMM d,yyyy").format(dateTime);
+                  } catch (e) {
+                    fromDate = holidayList[index]['from_date'];
+                  }
                 }
-                if (holidayList[index]['holiday_to'] != null) {
-                  var dateTime = DateFormat(
-                    "dd-MM-yyyy",
-                  ).parse(holidayList[index]['holiday_to']);
-                  toDate = DateFormat("MMM d,yyyy").format(dateTime);
+
+                if (holidayList[index]['to_date'] != null) {
+                  try {
+                    var dateTime = DateFormat(
+                      "yyyy-MM-dd",
+                    ).parse(holidayList[index]['to_date']);
+                    toDate = DateFormat("MMM d,yyyy").format(dateTime);
+                  } catch (e) {
+                    toDate = holidayList[index]['to_date'];
+                  }
                 }
-                if (holidayList[index]['days'] != null) {
-                  noDays = holidayList[index]['days'].toString();
+
+                // Calculate days between dates
+                if (holidayList[index]['from_date'] != null &&
+                    holidayList[index]['to_date'] != null) {
+                  try {
+                    var fromDateTime = DateFormat(
+                      "yyyy-MM-dd",
+                    ).parse(holidayList[index]['from_date']);
+                    var toDateTime = DateFormat(
+                      "yyyy-MM-dd",
+                    ).parse(holidayList[index]['to_date']);
+                    noDays = (toDateTime.difference(fromDateTime).inDays + 1)
+                        .toString();
+                  } catch (e) {
+                    noDays = "1";
+                  }
                 }
-                if (holidayList[index]['day'] != null) {
-                  dayStr = holidayList[index]['day'];
+
+                if (holidayList[index]['name'] != null) {
+                  holiday = holidayList[index]['name'];
                 }
-                if (holidayList[index]['holiday'] != null) {
-                  holiday = holidayList[index]['holiday'];
+
+                // Check if restricted holiday
+                if (holidayList[index]['restricted'] != null) {
+                  holiday_type = holidayList[index]['restricted'] == true
+                      ? "Restricted"
+                      : "Public";
                 }
-                if (holidayList[index]['holiday_type'] != null) {
-                  holiday_tyoe = holidayList[index]['holiday_type'].toString();
+
+                // Get gender restrictions if any
+                if (holidayList[index]['gender'] != null &&
+                    holidayList[index]['gender'].length > 0) {
+                  List<dynamic> genderList = holidayList[index]['gender'];
+                  if (genderList.length < 3) {
+                    // Not for all genders
+                    holidayFor = genderList.join(", ");
+                  }
                 }
-                if (holidayList[index]['holiday_for'] != null) {
-                  holidayFor = holidayList[index]['holiday_for'].toString();
-                }
-                print("Holiday Type: $holiday_tyoe");
+
+                print("Holiday Type: $holiday_type");
                 return Stack(
                   children: [
                     Padding(
@@ -141,9 +151,10 @@ class _holidayList extends State<HolidayScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 15),
-
                                   Text(
-                                    "$fromDate - $toDate",
+                                    fromDate == toDate
+                                        ? fromDate
+                                        : "$fromDate - $toDate",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -153,7 +164,7 @@ class _holidayList extends State<HolidayScreen> {
                                   SizedBox(height: 10),
                                   holidayFor.isNotEmpty
                                       ? Text(
-                                          "Holiday For:$holidayFor",
+                                          "Holiday For: $holidayFor",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -192,9 +203,9 @@ class _holidayList extends State<HolidayScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            holiday_tyoe.isNotEmpty
-                                ? holiday_tyoe
-                                : "Days:- $noDays",
+                            holiday_type.isNotEmpty
+                                ? holiday_type
+                                : "Days: $noDays",
                             style: TextStyle(
                               color: textColor,
                               fontWeight: FontWeight.bold,
@@ -211,65 +222,79 @@ class _holidayList extends State<HolidayScreen> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Future.delayed(const Duration(milliseconds: 0), () {
-  //     _getDashboardData();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 0), () {
+      _getDashboardData();
+    });
+  }
 
-  // _getDashboardData() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, 'Please Wait...');
-  //   userIdStr = await MyUtils.getSharedPreferences("user_id");
-  //   fullNameStr = await MyUtils.getSharedPreferences("full_name");
-  //   token = await MyUtils.getSharedPreferences("token");
-  //   designationStr = await MyUtils.getSharedPreferences("designation");
-  //   empId = await MyUtils.getSharedPreferences("emp_id");
-  //   baseUrl = await MyUtils.getSharedPreferences("base_url");
-  //   Navigator.of(context).pop();
-  //   getLeaveList();
-  // }
+  _getDashboardData() async {
+    setState(() {
+      isLoading = true;
+    });
+    APIDialog.showAlertDialog(context, 'Please Wait...');
+    userIdStr = await MyUtils.getSharedPreferences("user_id");
+    fullNameStr = await MyUtils.getSharedPreferences("full_name");
+    token = await MyUtils.getSharedPreferences("token");
+    designationStr = await MyUtils.getSharedPreferences("designation");
+    empId = await MyUtils.getSharedPreferences("emp_id");
 
-  // getLeaveList() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   APIDialog.showAlertDialog(context, 'Please Wait...');
-  //   ApiBaseHelper helper = ApiBaseHelper();
-  //   var response = await helper.getWithToken(
-  //     baseUrl,
-  //     'attendance_management/holidays',
-  //     token,
-  //     context,
-  //   );
-  //   Navigator.pop(context);
-  //   var responseJSON = json.decode(response.body);
-  //   print(responseJSON);
-  //   if (responseJSON['error'] == false) {
-  //     holidayList.clear();
-  //     holidayList = responseJSON['data']['holidays_list'];
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   } else {
-  //     Toast.show(
-  //       responseJSON['message'],
-  //       duration: Toast.lengthLong,
-  //       gravity: Toast.bottom,
-  //       backgroundColor: Colors.red,
-  //     );
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     _finishScreens();
-  //   }
-  // }
+    baseUrl = await MyUtils.getSharedPreferences("base_url");
+    clientcode = await MyUtils.getSharedPreferences("client_code") ?? "";
+    Navigator.of(context).pop(); // Remove loading dialog
+    getLeaveList();
+  }
 
-  // _finishScreens() {
-  //   Navigator.pop(context);
-  // }
+  getLeaveList() async {
+    // Don't show another loading dialog since we already have one
+    ApiBaseHelper helper = ApiBaseHelper();
+    try {
+      var response = await helper.getWithToken(
+        baseUrl,
+        'get-holidays',
+        token,
+        clientcode!,
+        context,
+      );
+
+      var responseJSON = json.decode(response.body);
+      print("Response: $responseJSON");
+
+      if (responseJSON['code'] == 200 && responseJSON['data'] != null) {
+        holidayList.clear();
+        holidayList = responseJSON['data'];
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        Toast.show(
+          responseJSON['message'] ?? "Something went wrong",
+          duration: Toast.lengthLong,
+          gravity: Toast.bottom,
+          backgroundColor: Colors.red,
+        );
+        setState(() {
+          isLoading = false;
+        });
+        _finishScreens();
+      }
+    } catch (e) {
+      print("Error: $e");
+      Toast.show(
+        "Network error occurred",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  _finishScreens() {
+    Navigator.pop(context);
+  }
 }
