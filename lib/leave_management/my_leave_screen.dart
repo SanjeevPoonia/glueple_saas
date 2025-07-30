@@ -5,9 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../widget/appbar.dart';
 import '../network/Utils.dart';
-import '../network/api_dialog.dart';
 import '../network/api_helper.dart';
-import '../utils/app_theme.dart';
 
 class MyLeaveScreen extends StatefulWidget {
   const MyLeaveScreen({super.key});
@@ -23,8 +21,11 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
   late var token;
   late var baseUrl;
   String? clientCode;
+  late var employeeId;
 
   List<dynamic> pendingLeaves = [];
+  List<dynamic> cancelledLeaves = [];
+
   List<dynamic> approvedLeaves = [];
   List<dynamic> rejectedLeaves = [];
 
@@ -51,19 +52,32 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
   }
 
   _fetchLeaveData() async {
-    await Future.wait<void>([
-      _getLeaveList("pending"),
-      _getLeaveList("approved"),
-      _getLeaveList("rejected"),
-    ]);
+    // For pending and cancelled leaves (these are handled together in one API call)
+    await _getLeaveList("pending");
+    await _getLeaveList("cancelled");
+
+    // For approved and rejected leaves (these are handled together in one API call)
+    await _getLeaveList("approve");
   }
 
   _getLeaveList(String status) async {
     try {
       ApiBaseHelper helper = ApiBaseHelper();
+      String apiStatus = status;
+
+      if (status == 'pending') {
+        apiStatus = 'pending';
+      } else if (status == 'cancelled') {
+        apiStatus = 'cancelled';
+      } else if (status == 'approve') {
+        apiStatus = 'approve';
+      } else if (status == 'reject') {
+        apiStatus = 'reject';
+      }
+
       var response = await helper.getWithToken(
         baseUrl,
-        'get-employee-applied-leave?page=1&limit=50&request_for=applied&parameter=leave&status=$status',
+        'get-employee-applied-leave?page=1&limit=50&request_for=applied&parameter=leave&status=$apiStatus',
         token,
         clientCode!,
         context,
@@ -73,24 +87,124 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
       print("$status leaves response: $responseJSON");
 
       if (responseJSON['code'] == 200 && responseJSON['data'] != null) {
-        List<dynamic> leaveData = responseJSON['data']['data'] ?? [];
+        // Check if data is in the nested 'data' array within the response
+        List<dynamic> leaveData = [];
+        if (responseJSON['data'] is Map &&
+            responseJSON['data']['data'] != null) {
+          leaveData = responseJSON['data']['data'] ?? [];
+        } else if (responseJSON['data'] is List) {
+          leaveData = responseJSON['data'] ?? [];
+        }
 
+        // Filter leaves based on status and is_cancel flag
+        List<dynamic> filteredLeaves = [];
+        if (status == 'pending') {
+          filteredLeaves = leaveData
+              .where(
+                (leave) =>
+                    leave['approvers_status'] == 'pending' &&
+                    leave['is_cancel'] != true,
+              )
+              .toList();
+        } else if (status == 'cancelled') {
+          filteredLeaves = leaveData
+              .where((leave) => leave['is_cancel'] == true)
+              .toList();
+        } else if (status == 'approve') {
+          filteredLeaves = leaveData
+              .where((leave) => leave['approvers_status'] == 'approve')
+              .toList();
+        } else if (status == 'reject') {
+          filteredLeaves = leaveData
+              .where((leave) => leave['approvers_status'] == 'reject')
+              .toList();
+        }
+
+        // Update the appropriate list based on the status
         setState(() {
           switch (status) {
             case "pending":
-              pendingLeaves = leaveData;
+              pendingLeaves = filteredLeaves;
               break;
-            case "approved":
-              approvedLeaves = leaveData;
+            case "cancelled":
+              cancelledLeaves = filteredLeaves;
               break;
-            case "rejected":
-              rejectedLeaves = leaveData;
+            case "approve":
+              approvedLeaves = filteredLeaves;
+              // Also update rejected leaves from the same API response
+              var rejected = leaveData
+                  .where((leave) => leave['approvers_status'] == 'reject')
+                  .toList();
+              rejectedLeaves = rejected;
+              break;
+            case "reject":
+              // This case is handled in the 'approve' case
               break;
           }
         });
       }
     } catch (e) {
       print("Error fetching $status leaves: $e");
+    }
+  }
+
+  Future<void> _cancelLeave(String? leaveId) async {
+    if (leaveId == null || leaveId.isEmpty) {
+      Toast.show('Error: Leave ID is missing');
+      return;
+    }
+
+    employeeId = (await MyUtils.getSharedPreferences("employee_id")) ?? "";
+    if (employeeId == null || employeeId.isEmpty) {
+      Toast.show('Error: Employee ID not found');
+      return;
+    }
+
+    print("Employee ID: $employeeId");
+    print("Leave ID: $leaveId");
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      ApiBaseHelper helper = ApiBaseHelper();
+      String url = 'cancel-Leave?cancel_id=$leaveId&employee_id=$employeeId';
+
+      print("Calling cancel API: $url");
+
+      var response = await helper.getWithToken(
+        baseUrl,
+        url,
+        token,
+        clientCode!,
+        context,
+      );
+
+      var responseJSON = json.decode(response.body);
+      print("Cancel leave response: $responseJSON");
+
+      if (responseJSON['code'] == 200) {
+        await _fetchLeaveData();
+        if (mounted) {
+          Toast.show('Leave cancelled successfully');
+        }
+      } else {
+        if (mounted) {
+          Toast.show('Failed to cancel leave: ${responseJSON['message']}');
+        }
+      }
+    } catch (e) {
+      print("Error cancelling leave: $e");
+      if (mounted) {
+        Toast.show('An error occurred while cancelling leave');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -216,7 +330,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Pending (${pendingLeaves.length})",
+                                          "Pending/Cancelled (${pendingLeaves.length + cancelledLeaves.length})",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: selectedCenter == 0
@@ -265,7 +379,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: selectedCenter == 0
-                              ? _buildPendingLeaves()
+                              ? _buildPendingCancelledLeaves()
                               : _buildApprovedRejectedLeaves(),
                         ),
                       ],
@@ -277,8 +391,10 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
     );
   }
 
-  Widget _buildPendingLeaves() {
-    if (pendingLeaves.isEmpty) {
+  Widget _buildPendingCancelledLeaves() {
+    List<dynamic> combinedLeaves = [...pendingLeaves, ...cancelledLeaves];
+
+    if (combinedLeaves.isEmpty) {
       return Center(
         child: Column(
           children: [
@@ -286,7 +402,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
             Icon(Icons.event_busy, size: 80, color: Colors.grey[400]),
             SizedBox(height: 16),
             Text(
-              "No Pending Leaves",
+              "No Pending/Cancelled Leaves",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -301,11 +417,15 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: pendingLeaves.length,
+      itemCount: combinedLeaves.length,
       separatorBuilder: (context, index) => SizedBox(height: 12),
       itemBuilder: (context, index) {
-        var leave = pendingLeaves[index];
-        return _buildLeaveItem(leave, "pending");
+        var leave = combinedLeaves[index];
+        String status = pendingLeaves.contains(leave)
+            ? "pending"
+            : "cancelled"; // ✅ Correct
+
+        return _buildLeaveItem(leave, status);
       },
     );
   }
@@ -373,11 +493,15 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
         statusColor = Color(0xFFF5DD09);
         statusText = 'Pending';
         break;
-      case 'approved':
+      case 'cancelled':
+        statusColor = Color(0xFFFF0000);
+        statusText = 'Cancelled';
+        break;
+      case 'approve':
         statusColor = Color(0xFF1D963A);
         statusText = 'Approved';
         break;
-      case 'rejected':
+      case 'reject':
         statusColor = Color(0xFFFF0000);
         statusText = 'Rejected';
         break;
@@ -385,7 +509,6 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
         statusColor = Colors.grey;
         statusText = 'Unknown';
     }
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -426,25 +549,78 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  statusText,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: statusText == 'Pending'
-                        ? Colors.black
-                        : Colors.white,
-                    fontSize: 12,
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      statusText,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 8),
+                  if (statusText == 'Pending')
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Cancel Leave'),
+                              content: Text(
+                                'Are you sure you want to cancel this leave request?',
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                    'No',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    'Yes',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _cancelLeave(leave['id'].toString());
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 8),
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red[100],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 16,
+                          color: Colors.red[800],
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),

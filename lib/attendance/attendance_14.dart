@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:glueplenew/attendance/attendance_17.dart';
 import 'package:glueplenew/attendance/attendance_correction.dart';
+import 'package:glueplenew/leave_management/leave_management_dialog.dart';
 import 'package:glueplenew/leave_management/leave_management_screen.dart';
-import 'package:glueplenew/pending_scr/leave_management_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
