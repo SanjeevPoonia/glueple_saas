@@ -158,7 +158,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            ApplyLeave_Screen(),
+                                            ApplyLeaveScreen(),
                                       ),
                                     );
                                   },
@@ -241,7 +241,7 @@ class _LeaveManagementDialog extends State<LeaveManagementDialog> {
                                     showModalBottomSheet(
                                       context: context,
                                       isScrollControlled: true,
-                                      backgroundColor: Colors.blue,
+                                      backgroundColor: Colors.transparent,
                                       builder: (context) =>
                                           TourApplicationBottomSheet(),
                                     );

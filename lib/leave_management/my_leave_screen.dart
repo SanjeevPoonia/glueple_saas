@@ -58,6 +58,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
 
     // For approved and rejected leaves (these are handled together in one API call)
     await _getLeaveList("approve");
+    await _getLeaveList("reject");
   }
 
   _getLeaveList(String status) async {
@@ -154,7 +155,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
       return;
     }
 
-    employeeId = (await MyUtils.getSharedPreferences("employee_id")) ?? "";
+    employeeId = (await MyUtils.getSharedPreferences("user_id")) ?? "";
     if (employeeId == null || employeeId.isEmpty) {
       Toast.show('Error: Employee ID not found');
       return;
@@ -423,9 +424,11 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
         var leave = combinedLeaves[index];
         String status = pendingLeaves.contains(leave)
             ? "pending"
-            : "cancelled"; // ✅ Correct
+            : "cancelled"; //
 
-        return _buildLeaveItem(leave, status);
+        String leaveId = leave['_id'] ?? '';
+
+        return _buildLeaveItem(leave, status, leaveId);
       },
     );
   }
@@ -463,12 +466,13 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
         String status = approvedLeaves.contains(leave)
             ? "approved"
             : "rejected";
-        return _buildLeaveItem(leave, status);
+        String leaveId = leave['_id'] ?? '';
+        return _buildLeaveItem(leave, status, leaveId);
       },
     );
   }
 
-  Widget _buildLeaveItem(dynamic leave, String status) {
+  Widget _buildLeaveItem(dynamic leave, String status, String leaveId) {
     String leaveType = leave['leave_short_name'] ?? 'N/A';
     String leaveDate = leave['leave_date'] ?? '';
     String reason = leave['reason'] ?? 'No reason provided';
@@ -598,7 +602,7 @@ class _MyLeaveScreen extends State<MyLeaveScreen> {
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    _cancelLeave(leave['id'].toString());
+                                    _cancelLeave(leaveId);
                                   },
                                 ),
                               ],
