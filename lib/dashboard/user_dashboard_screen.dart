@@ -17,6 +17,10 @@ import 'package:glueplenew/authentication/logout_functionality.dart';
 import 'package:glueplenew/dashboard/holiday_screen.dart';
 import 'package:glueplenew/dashboard/profile_screen.dart';
 import 'package:glueplenew/leave_management/leave_management_screen.dart';
+import 'package:glueplenew/payslip/payslip_download.dart';
+import 'package:glueplenew/profile/my_profile_screen.dart';
+import 'package:glueplenew/profile/profile_edit_details.dart';
+import 'package:glueplenew/taskbox/taskbox_home.dart';
 
 //import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 // import 'package:geolocator/geolocator.dart';
@@ -310,7 +314,7 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              QDProfileScreen(),
+                                              MyProfileScreen(),
                                         ),
                                       ),
                                       child: Column(
@@ -2730,7 +2734,12 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => AllTask_Screen(false)),);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TaskBoxHome(),
+                                        ),
+                                      );
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -2762,7 +2771,13 @@ class _userDashboardScreen extends State<UserDashboardScreen> {
                                   flex: 1,
                                   child: InkWell(
                                     onTap: () {
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context)=>QDRequestPayslip()));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PayslipDownloadScr(),
+                                        ),
+                                      );
                                     },
                                     child: Column(
                                       crossAxisAlignment:

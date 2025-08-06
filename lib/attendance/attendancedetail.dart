@@ -377,7 +377,7 @@ class _AttendanceDetailScreenState extends State<AttendanceDetailScreen> {
     setState(() => isLoading = true);
 
     token = (await MyUtils.getSharedPreferences("token")) ?? "";
-    empId = (await MyUtils.getSharedPreferences("employee_id")) ?? "";
+    empId = (await MyUtils.getSharedPreferences("user_id")) ?? "";
     baseUrl = (await MyUtils.getSharedPreferences("base_url")) ?? "";
     clientCode = await MyUtils.getSharedPreferences("client_code") ?? "";
 
