@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:glueplenew/profile/document_upload_screen.dart';
+import 'package:glueplenew/profile/edit_bank_details.dart';
+import 'package:glueplenew/profile/edit_basic_workexp.dart';
+import 'package:glueplenew/profile/edit_education_details.dart';
+import 'package:glueplenew/profile/edit_family_details.dart';
+import 'package:glueplenew/profile/edit_id_card_details.dart';
+import 'package:glueplenew/profile/edit_personal_details.dart';
+import 'package:glueplenew/profile/edit_reference_details.dart';
+import 'package:glueplenew/profile/edit_social_details.dart';
+import 'package:glueplenew/profile/edit_workexp_details.dart';
+import 'package:glueplenew/profile/id_card_details_dialog.dart';
+import 'package:glueplenew/profile/upload_document_details.dart';
 import '../widget/appbar.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -10,19 +22,60 @@ class ProfileEditPage extends StatefulWidget {
 
 class _ProfileEditPage extends State<ProfileEditPage> {
   final List<Map<String, dynamic>> sections = [
-    {"title": "Personal Details", "icon": "personal.png", "progress": 1.0},
-    {"title": "Family Details", "icon": "family.png", "progress": 1.0},
-    {"title": "Education Details", "icon": "education.png", "progress": 1.0},
-    {"title": "Bank Details", "icon": "bank.png", "progress": 1.0},
-    {"title": "Social Details", "icon": "reference.png", "progress": 0.7},
-    {"title": "Reference Details", "icon": "reference.png", "progress": 0.7},
+    {
+      "title": "Personal Details",
+      "icon": "personal.png",
+      "progress": 1.0,
+      "screen": EditPersonalDetails(),
+    },
+    {
+      "title": "Family Details",
+      "icon": "family.png",
+      "progress": 1.0,
+      "screen": EditFamilyDetails(),
+    },
+    {
+      "title": "Education Details",
+      "icon": "education.png",
+      "progress": 1.0,
+      "screen": EditEducationDetails(),
+    },
+    {
+      "title": "Bank Details",
+      "icon": "bank.png",
+      "progress": 1.0,
+      "screen": EditBankDetails(),
+    },
+    {
+      "title": "Social Details",
+      "icon": "reference.png",
+      "progress": 0.7,
+      "screen": EditSocialDetails(),
+    },
+    {
+      "title": "Reference Details",
+      "icon": "reference.png",
+      "progress": 0.7,
+      "screen": EditReferenceDetails(),
+    },
     {
       "title": "Work Experience Details",
       "icon": "reference.png",
       "progress": 0.7,
+      "screen": EditBasicWorkExp(),
     },
-    {"title": "Upload Documents", "icon": "document.png", "progress": 1.0},
-    {"title": "ID Card Details", "icon": "idcard.png", "progress": 0.7},
+    {
+      "title": "Upload Documents",
+      "icon": "document.png",
+      "progress": 1.0,
+      "screen": EditDocumentUploadDetails(),
+    },
+    {
+      "title": "ID Card Details",
+      "icon": "idcard.png",
+      "progress": 0.7,
+      "screen": EditIdCardDetails(),
+    },
   ];
 
   @override
@@ -124,10 +177,20 @@ class _ProfileEditPage extends State<ProfileEditPage> {
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final section = sections[index];
-                        return _buildProgressCard(
-                          title: section['title'],
-                          iconPath: 'assets/${section['icon']}',
-                          progress: section['progress'],
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => section['screen'],
+                              ),
+                            );
+                          },
+                          child: _buildProgressCard(
+                            title: section['title'],
+                            iconPath: 'assets/${section['icon']}',
+                            progress: section['progress'],
+                          ),
                         );
                       },
                     ),

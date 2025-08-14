@@ -1,20 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:glueplenew/payslip/payslip_download_dialog.dart';
+// - We at QDegrees believe to operate our business in the most ethical and professional way and expect our employees to-
+// - Deal on behalf of the Company with professionalism, honesty, integrity as well as high moral and ethical standards.
+// - Never compromise our values, no matter how strong the internal or external pressure may be to perform, meet goals.
+// - Be a role modelby communicating with others and acting in a manner consistent withour core values.
+// - Adhere, adopt and follow the practices in business ethics. Many of these practices attract legal requirements.
+// - Violation of laws can cause significant damage to an individual or the company thus an employee should seriously carry accountability and comply.v
 
-class PassRequiredDialog extends StatefulWidget {
+import 'package:flutter/material.dart';
+
+class PolicyDownloadDialog extends StatefulWidget {
   @override
-  State<PassRequiredDialog> createState() => _PassRequiredDialog();
+  State<PolicyDownloadDialog> createState() => _PolicyDownloadDialog();
 }
 
-class _PassRequiredDialog extends State<PassRequiredDialog> {
+class _PolicyDownloadDialog extends State<PolicyDownloadDialog> {
   TextEditingController passwordCtl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(14),
       child: DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        minChildSize: 0.4,
+        initialChildSize: 0.7,
+        minChildSize: 0.7,
         maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
@@ -47,7 +53,7 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                 Row(
                   children: [
                     Text(
-                      "Password is required",
+                      "Accountability of an employee",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
@@ -63,53 +69,37 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                     const SizedBox(width: 20),
                   ],
                 ),
+                SizedBox(height: 16),
+                Divider(),
+                SizedBox(height: 8),
+                Text(
+                  '''
+- We at QDegrees believe to operate our business in the most ethical and professional way and expect our employees to-
+- Deal on behalf of the Company with professionalism, honesty, integrity as well as high moral and ethical standards.
+- Never compromise our values, no matter how strong the internal or external pressure may be to perform, meet goals.
+- Be a role modelby communicating with others and acting in a manner consistent withour core values.
+- Adhere, adopt and follow the practices in business ethics. Many of these practices attract legal requirements.
+- Violation of laws can cause significant damage to an individual or the company thus an employee should seriously carry accountability and comply.v''',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 SizedBox(height: 8),
                 Divider(),
                 SizedBox(height: 8),
                 Text(
-                  "This document is password protected. Please enter a password",
+                  "I have thoroughly read the instructions and accepted the policy",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.lightBlue.shade400,
                   ),
                 ),
-                SizedBox(height: 16),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFE6F7FF),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Password",
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                      TextField(
-                        controller: passwordCtl,
-                        maxLength: 500,
-                        obscureText: true,
-                        // maxLines: 2,
-                        decoration: InputDecoration(
-                          counterText: "",
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        onChanged: (_) => setState(() {}),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
+                SizedBox(height: 8),
+                Divider(),
+                SizedBox(height: 8),
 
                 Row(
                   children: [
@@ -117,21 +107,12 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10),
-                          ],
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF00C797), Color(0xFF1B81A4)],
-                          ),
+
+                          color: Colors.grey.shade300,
                         ),
                         child: TextButton(
                           onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => PayslipDownloadDialog(),
-                            );
+                            Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
@@ -144,8 +125,8 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                             ),
                           ),
                           child: Text(
-                            "Submit",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            "Back",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
                         ),
                       ),

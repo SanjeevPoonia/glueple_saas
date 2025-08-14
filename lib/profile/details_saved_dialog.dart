@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:glueplenew/payslip/payslip_download_dialog.dart';
+import 'package:glueplenew/payslip/payslip_preview.dart';
+import 'package:glueplenew/profile/profile_edit_details.dart';
 
-class PassRequiredDialog extends StatefulWidget {
+class EditSavedDialog extends StatefulWidget {
+  const EditSavedDialog({super.key});
+
   @override
-  State<PassRequiredDialog> createState() => _PassRequiredDialog();
+  State<EditSavedDialog> createState() => _EditSavedDialog();
 }
 
-class _PassRequiredDialog extends State<PassRequiredDialog> {
-  TextEditingController passwordCtl = TextEditingController();
+class _EditSavedDialog extends State<EditSavedDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(14),
       child: DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        minChildSize: 0.4,
+        initialChildSize: 0.51,
+        minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
@@ -25,7 +27,8 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
           child: SingleChildScrollView(
             controller: scrollController,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Header
                 Row(
@@ -46,13 +49,6 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Text(
-                      "Password is required",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
                     Spacer(),
                     GestureDetector(
                       onTap: () {
@@ -63,53 +59,23 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                     const SizedBox(width: 20),
                   ],
                 ),
-                SizedBox(height: 8),
-                Divider(),
-                SizedBox(height: 8),
+
+                Image.asset(
+                  'assets/run_with_time.png',
+                  height: 200,
+                  width: 200,
+                ),
+                SizedBox(height: 18),
                 Text(
-                  "This document is password protected. Please enter a password",
+                  "Details saved successfully!",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.lightBlue.shade400,
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFE6F7FF),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Password",
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                      TextField(
-                        controller: passwordCtl,
-                        maxLength: 500,
-                        obscureText: true,
-                        // maxLines: 2,
-                        decoration: InputDecoration(
-                          counterText: "",
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        onChanged: (_) => setState(() {}),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
+                SizedBox(height: 18),
 
                 Row(
                   children: [
@@ -126,11 +92,13 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => PayslipDownloadDialog(),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ProfileEditPage();
+                                },
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -144,7 +112,7 @@ class _PassRequiredDialog extends State<PassRequiredDialog> {
                             ),
                           ),
                           child: Text(
-                            "Submit",
+                            "Next",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),

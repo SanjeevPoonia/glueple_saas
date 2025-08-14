@@ -1,7 +1,25 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:intl/intl.dart';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/Utils.dart';
+import 'package:glueplenew/network/api_dialog.dart';
+import 'package:glueplenew/network/api_helper.dart';
+import 'package:glueplenew/profile/bank_detail_screen.dart';
+import 'package:glueplenew/profile/document_upload_screen.dart';
+import 'package:glueplenew/profile/edit_workexp_details.dart';
+import 'package:glueplenew/profile/education_detail_screen.dart';
+import 'package:glueplenew/profile/family_detail_screen.dart';
+import 'package:glueplenew/profile/personal_detail_screen.dart';
+import 'package:glueplenew/profile/policy_detail_screen.dart';
 import 'package:glueplenew/profile/profile_edit_details.dart';
 import 'package:glueplenew/profile/profile_photo_dialog.dart';
+import 'package:glueplenew/profile/reference_detail_screen.dart';
+import 'package:glueplenew/profile/social_detail_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:toast/toast.dart';
 import '../widget/appbar.dart';
 
 class MyProfileScreen extends StatefulWidget {
@@ -12,21 +30,44 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreen extends State<MyProfileScreen> {
-  final List<Map<String, dynamic>> sections = [
-    {"title": "Personal Details", "icon": "personal.png", "progress": 1.0},
-    {"title": "Family Details", "icon": "family.png", "progress": 1.0},
-    {"title": "Education Details", "icon": "education.png", "progress": 1.0},
-    {"title": "Bank Details", "icon": "bank.png", "progress": 1.0},
-    {"title": "Social Details", "icon": "reference.png", "progress": 0.7},
-    {"title": "Reference Details", "icon": "reference.png", "progress": 0.7},
-    {
-      "title": "Work Experience Details",
-      "icon": "reference.png",
-      "progress": 0.7,
-    },
-    {"title": "Upload Documents", "icon": "document.png", "progress": 1.0},
-    {"title": "ID Card Details", "icon": "idcard.png", "progress": 0.7},
-  ];
+  bool isLoading = false;
+  late var userIdStr;
+  late var fullNameStr;
+  late var designationStr;
+  late var token;
+  late var empId;
+  late var baseUrl;
+  // ignore: prefer_typing_uninitialized_variables
+  var profileData;
+
+  var clientCode = "";
+
+  String employeeIdStr = "";
+  String NameStr = "";
+  String joiningDate = "";
+  String mobileNoStr = "";
+  String emailStr = "";
+  String departmentStr = "";
+  String desiStr = "";
+  String reportingManager = "";
+
+  int offerLaterStatus = 0;
+  int offerRejectedStatus = 0;
+  int personalDetailsStatus = 0;
+  int familyDetailsStatus = 0;
+  int educationDetailsStatus = 0;
+  int bankDetailsStatus = 0;
+  int socialDetailsStatus = 0;
+  int workExperienceDetailsStatus = 0;
+  int referenceDetailsStatus = 0;
+  int empPolicyDetyailsStatus = 0;
+  int documentDetailsStatus = 0;
+
+  String profileImage = "";
+
+  XFile? imageFile;
+  File? file;
+  bool sectionsLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -153,15 +194,40 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                       color: Color.fromARGB(33, 0, 199, 152),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.network(
-                                        "https://randomuser.me/api/portraits/men/75.jpg",
-                                        height: 55,
-                                        width: 55,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                    child:
+                                        // ClipRRect(
+                                        //   borderRadius: BorderRadius.circular(12),
+                                        //   child: Image.network(
+                                        //     "https://randomuser.me/api/portraits/men/75.jpg",
+                                        //     height: 55,
+                                        //     width: 55,
+                                        //     fit: BoxFit.cover,
+                                        //   ),
+                                        // ),
+                                        InkWell(
+                                          onTap: () {
+                                            // _showAlertDialog();
+                                          },
+                                          child: profileImage == ""
+                                              ? CircleAvatar(
+                                                  backgroundImage: AssetImage(
+                                                    "assets/profile.png",
+                                                  ),
+                                                  radius: 55,
+                                                )
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        12.0,
+                                                      ),
+                                                  child: Image.network(
+                                                    profileImage,
+                                                    width: 55,
+                                                    height: 55,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                        ),
                                   ),
                                   const SizedBox(width: 12),
 
@@ -170,9 +236,9 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: const [
+                                      children: [
                                         Text(
-                                          "John Smith",
+                                          NameStr,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18,
@@ -180,7 +246,7 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          'Junior UI Developer',
+                                          desiStr,
                                           style: TextStyle(
                                             color: Color(0xFF00C797),
                                             fontSize: 14,
@@ -210,17 +276,17 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                               ),
 
                               Divider(),
-                              _buildRow("Employee ID", "QD2204"),
+                              _buildRow("Employee ID", employeeIdStr),
                               Divider(),
-                              _buildRow("Joining Date", "2022-03-22"),
+                              _buildRow("Joining Date", joiningDate),
                               Divider(),
-                              _buildRow("Mobile No.", 98765432101),
+                              _buildRow("Mobile No.", mobileNoStr),
                               Divider(),
-                              _buildRow("Email", "johnsmith@qdegrees.org"),
+                              _buildRow("Email", emailStr),
                               Divider(),
-                              _buildRow("Department", "Product Development"),
+                              _buildRow("Department", departmentStr),
                               Divider(),
-                              _buildRow("Reporting Manager", "Kristen Johnson"),
+                              _buildRow("Reporting Manager", reportingManager),
                             ],
                           ),
                         ),
@@ -230,7 +296,14 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                             maxWidth: double.maxFinite,
                           ),
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileEditPage(),
+                                ),
+                              );
+                            },
                             style: OutlinedButton.styleFrom(
                               fixedSize: Size(double.maxFinite, 60),
                               side: const BorderSide(
@@ -251,21 +324,11 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                   fit: BoxFit.contain,
                                 ),
                                 Spacer(),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProfileEditPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit Documents',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF00C797),
-                                    ),
+                                const Text(
+                                  'Edit Documents',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF00C797),
                                   ),
                                 ),
                                 Spacer(),
@@ -282,77 +345,120 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 6,
-                                offset: Offset(0, 3),
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PolicyDetailScreen(
+                                baseUrl: baseUrl,
+                                token: token,
+                                clientCode: clientCode,
                               ),
-                            ],
+                            ),
                           ),
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(33, 0, 199, 152),
-                                  borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
                                 ),
-                                child: Image.asset(
-                                  "assets/idcard.png",
-                                  height: 30,
-                                  width: 30,
-                                  fit: BoxFit.contain,
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(33, 0, 199, 152),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/idcard.png",
+                                    height: 30,
+                                    width: 30,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Policies",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Policies",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    const Text(
-                                      'Company Policies',
-                                      style: TextStyle(
-                                        color: Color(0xFF707070),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                      const SizedBox(height: 6),
+                                      const Text(
+                                        'Company Policies',
+                                        style: TextStyle(
+                                          color: Color(0xFF707070),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
-                        ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: sections.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 12),
-                          itemBuilder: (context, index) {
-                            final section = sections[index];
-                            return _buildProgressCard(
-                              title: section['title'],
-                              iconPath: 'assets/${section['icon']}',
-                              progress: section['progress'],
-                            );
-                          },
-                        ),
+
+                        // In your ListView.separated, wrap it with:
+                        sectionsLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFF00C797),
+                                ),
+                              )
+                            : ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: sections.length,
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(height: 12),
+                                itemBuilder: (context, index) {
+                                  final section = sections[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (section['dialog'] != null) {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) =>
+                                              section['dialog'],
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                section['screen'],
+                                          ),
+                                        );
+                                      }
+                                    },
+
+                                    child: _buildProgressCard(
+                                      title: section['title'],
+                                      iconPath: 'assets/${section['icon']}',
+                                      progress: section['progress'],
+                                    ),
+                                  );
+                                },
+                              ),
                       ],
                     ),
                   ),
@@ -477,5 +583,231 @@ class _MyProfileScreen extends State<MyProfileScreen> {
         ],
       ),
     );
+  }
+
+  // Replace this hardcoded list
+  List<Map<String, dynamic>> sections = [];
+
+  // Add this configuration map instead (only static values here)
+  final Map<String, Map<String, dynamic>> sectionConfig = {
+    "personal_details": {"icon": "personal.png"},
+    "family_details": {"icon": "family.png"},
+    "education_details": {"icon": "education.png"},
+    "bank_details": {"icon": "bank.png"},
+    "social_details": {"icon": "social.png"},
+    "reference_details": {"icon": "reference.png"},
+    "work_experience_details": {"icon": "reference.png"},
+    "upload_documents": {"icon": "document.png"},
+  };
+
+  Widget _screenForStep(String shortName) {
+    switch (shortName) {
+      case 'personal_details':
+        return PersonalDetailScreen(profiledata: profileData);
+      case 'family_details':
+        return FamilyDetailScreen();
+      case 'education_details':
+        return EducationDetailScreen();
+      case 'bank_details':
+        return BankDetailScreen();
+      case 'social_details':
+        return SocialDetailScreen();
+      case 'reference_details':
+        return ReferenceDetailScreen();
+      case 'work_experience_details':
+        return EditWorkExp();
+      case 'upload_documents':
+        return DocumentUploadScreen();
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 0), () {
+      _getDashboardData();
+    });
+  }
+
+  _getDashboardData() async {
+    setState(() {
+      isLoading = true;
+      sectionsLoading = true;
+    });
+    APIDialog.showAlertDialog(context, 'Please Wait...');
+    userIdStr = await MyUtils.getSharedPreferences("user_id");
+    fullNameStr = await MyUtils.getSharedPreferences("full_name");
+    token = await MyUtils.getSharedPreferences("token");
+    designationStr = await MyUtils.getSharedPreferences("designation");
+    empId = await MyUtils.getSharedPreferences("emp_id");
+    baseUrl = await MyUtils.getSharedPreferences("base_url");
+    clientCode = await MyUtils.getSharedPreferences("client_code") ?? "";
+    Navigator.of(context).pop();
+    await getUserProfile();
+    await getOnboardingSteps();
+  }
+
+  getUserProfile() async {
+    // Don't show another loading dialog since we already have one
+    ApiBaseHelper helper = ApiBaseHelper();
+    try {
+      var response = await helper.getWithToken(
+        baseUrl,
+        'get-profile',
+        token,
+        clientCode,
+        context,
+      );
+
+      var responseJSON = json.decode(response.body);
+      print("Profile Response: $responseJSON");
+
+      // Updated condition to match the actual API response
+      if (responseJSON['code'] == 200 && responseJSON['data'] != null) {
+        List<dynamic> tempList = responseJSON['data'];
+        if (tempList.isNotEmpty) {
+          profileData = tempList[0];
+
+          // Map the API response fields to your variables
+          employeeIdStr = profileData['emp_id']?.toString() ?? "";
+
+          // Handle name from the API response
+          if (profileData['name'] != null) {
+            NameStr = profileData['name'].toString();
+          } else if (profileData['first_name'] != null) {
+            NameStr = profileData['first_name'].toString();
+            if (profileData['last_name'] != null) {
+              NameStr = "$NameStr ${profileData['last_name']}";
+            }
+          }
+
+          // Format joining date
+          if (profileData['joining_date'] != null) {
+            try {
+              var dateTime = DateTime.parse(profileData['joining_date']);
+              joiningDate = DateFormat("MMM d, yyyy").format(dateTime);
+            } catch (e) {
+              joiningDate = profileData['joining_date'].toString();
+            }
+          }
+
+          mobileNoStr =
+              profileData['personal_mobile']?.toString() ??
+              profileData['mobile']?.toString() ??
+              "";
+          emailStr =
+              profileData['personal_email']?.toString() ??
+              profileData['email']?.toString() ??
+              "";
+          departmentStr = profileData['department_name']?.toString() ?? "";
+          desiStr = profileData['designation_name']?.toString() ?? "";
+          reportingManager = profileData['reported_to_name']?.toString() ?? "";
+
+          // Handle profile image if available
+          if (profileData['profile_image'] != null) {
+            profileImage = profileData['profile_image'].toString();
+          }
+        }
+
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        Toast.show(
+          responseJSON['message'] ?? "Something went wrong",
+          duration: Toast.lengthLong,
+          gravity: Toast.bottom,
+          backgroundColor: Colors.red,
+        );
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+      Toast.show(
+        "Network error occurred",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  getOnboardingSteps() async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    try {
+      var response = await helper.getWithToken(
+        baseUrl,
+        'get-onboarding-step?view_profile=true',
+        token,
+        clientCode,
+        context,
+      );
+
+      var responseJSON = json.decode(response.body);
+      print("Onboarding Steps Response: $responseJSON");
+
+      if (responseJSON['code'] == 200 && responseJSON['data'] != null) {
+        List<dynamic> stepsList = responseJSON['data'];
+
+        // Sort by sort_order from API
+        stepsList.sort(
+          (a, b) => (a['sort_order'] ?? 0).compareTo(b['sort_order'] ?? 0),
+        );
+
+        List<Map<String, dynamic>> tempSections = [];
+
+        for (var step in stepsList) {
+          final shortName = step['short_name'];
+          if (!sectionConfig.containsKey(shortName))
+            continue; // Skip unknown steps
+
+          final config = sectionConfig[shortName]!;
+
+          // Calculate progress properly
+          double progressValue = 0.0;
+          if (step.containsKey('completion_percentage')) {
+            progressValue = (step['completion_percentage'] ?? 0) / 100.0;
+          } else {
+            // Fallback: use is_active status
+            progressValue = step['is_active'] == true ? 1.0 : 0.0;
+          }
+
+          tempSections.add({
+            "title": step['name'] ?? "",
+            "icon": config['icon'],
+            "progress": progressValue,
+            "screen": _screenForStep(shortName),
+            "dialog": config['dialog'], // Will be null if not set
+          });
+        }
+
+        setState(() {
+          sections = tempSections;
+          sectionsLoading = false; // Add this line
+        });
+      } else {
+        Toast.show(
+          responseJSON['message'] ?? "Something went wrong",
+          duration: Toast.lengthLong,
+          gravity: Toast.bottom,
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Error fetching onboarding steps: $e");
+      Toast.show(
+        "Network error occurred",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+    }
   }
 }

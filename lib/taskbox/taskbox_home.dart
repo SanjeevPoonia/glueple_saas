@@ -1,11 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:glueplenew/authentication/logout_functionality.dart';
+import 'package:glueplenew/network/Utils.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/taskbox/task_filter_dialog.dart';
 import 'package:glueplenew/taskbox/create_task_screen.dart';
 import 'package:glueplenew/taskbox/task_detail_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:table_calendar/table_calendar.dart';
-import '../dialogs/activity_correction.dart';
+import 'package:toast/toast.dart';
 import '../widget/appbar.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class TaskBoxHome extends StatefulWidget {
   const TaskBoxHome({super.key});
@@ -15,24 +22,37 @@ class TaskBoxHome extends StatefulWidget {
 }
 
 class _TaskBoxHome extends State<TaskBoxHome> {
-  int selectedCenter = 0;
   int taskselection = 0;
+  bool attDashboardLoading = false;
+  List<dynamic> taskList = [];
 
-  DateTime? _selectedDay;
-  DateTime _focusedDay = DateTime.now();
-  final DateTime _today = DateTime.now();
+  String todayDateStr = "";
+  int totalTasks = 0;
+  int openTasks = 0;
+  int reopenedTasks = 0;
+  int closeTasks = 0;
+  int toDoTasks = 0;
+  int inProgressTasks = 0;
+  int rejectedTasks = 0;
+  int holdTasks = 0;
 
-  DateTimeRange? selectedRange;
-  final startCtl = TextEditingController(text: '22-04-2023');
-  final endCtl = TextEditingController(text: '23-04-2023');
-  final reasonCtl = TextEditingController(text: 'Lorem Ipsum is a dummy text');
-  late int charCount;
+  var userIdStr = "";
+  var designationStr = "";
+  var token = "";
+  var fullNameStr = "";
+  var empId = "";
+  var baseUrl = "";
+  var clientCode = "";
+  var platform = "";
+  var isAttendanceAccess = "1";
+  var firstName = "";
+  var userProfile = "";
 
-  List TeamImages = [
-    'assets/natasha.png',
-    'assets/sagar.png',
-    'assets/girlavatar.png',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +81,6 @@ class _TaskBoxHome extends State<TaskBoxHome> {
       ),
       body: Stack(
         children: [
-          // Fixed glowing background
           IgnorePointer(
             child: Stack(
               children: [
@@ -105,154 +124,65 @@ class _TaskBoxHome extends State<TaskBoxHome> {
             ),
           ),
 
-          // Scrollable content
           SafeArea(
             child: SingleChildScrollView(
-              // padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Toggle (Dashboard / Calendar)
-                  // SizedBox(height: 16),
-
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  //   child: Container(
-                  //     padding: const EdgeInsets.all(4),
-                  //     height: 55,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.white,
-                  //       borderRadius: BorderRadius.circular(24),
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //           color: Colors.black12,
-                  //           blurRadius: 8,
-                  //           offset: Offset(0, 4),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     child: Row(
-                  //       children: [
-                  //         Expanded(
-                  //           child: GestureDetector(
-                  //             onTap: () => setState(() => selectedCenter = 0),
-                  //             child: Container(
-                  //               padding: const EdgeInsets.symmetric(
-                  //                 vertical: 12,
-                  //               ),
-                  //               decoration: BoxDecoration(
-                  //                 color: selectedCenter == 0
-                  //                     ? Color(0xFF1B81A4)
-                  //                     : Colors.transparent,
-                  //                 borderRadius: BorderRadius.circular(24),
-                  //               ),
-                  //               child: Center(
-                  //                 child: Text(
-                  //                   "Dashboard",
-                  //                   style: TextStyle(
-                  //                     fontWeight: FontWeight.bold,
-                  //                     color: selectedCenter == 0
-                  //                         ? Colors.white
-                  //                         : Color(0xFF1B81A4),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         Expanded(
-                  //           child: GestureDetector(
-                  //             onTap: () => setState(() => selectedCenter = 1),
-                  //             child: Container(
-                  //               padding: const EdgeInsets.symmetric(
-                  //                 vertical: 12,
-                  //               ),
-                  //               decoration: BoxDecoration(
-                  //                 color: selectedCenter == 1
-                  //                     ? Color(0xFF1B81A4)
-                  //                     : Colors.transparent,
-                  //                 borderRadius: BorderRadius.circular(24),
-                  //               ),
-                  //               child: Center(
-                  //                 child: Text(
-                  //                   "Calendar",
-                  //                   style: TextStyle(
-                  //                     fontWeight: FontWeight.bold,
-                  //                     color: selectedCenter == 1
-                  //                         ? Colors.white
-                  //                         : Color(0xFF1B81A4),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 24),
-                  // if (selectedCenter == 0)
                   Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 18.0),
                         child: Column(
                           children: [
-                            // Row(
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceBetween,
-                            //   children: [
-                            //     Text(
-                            //       "Leave\nBalance",
-                            //       style: TextStyle(
-                            //         fontSize: 35,
-                            //         color: Colors.black,
-                            //         fontWeight: FontWeight.w800,
-                            //         height: 1, // Reduce line spacing
-                            //       ),
-                            //     ),
-                            //     // Add animation(assets/Automation.json)
-                            //     SizedBox(
-                            //       width: 100,
-                            //       height: 100,
-                            //       child: Padding(
-                            //         padding: const EdgeInsets.only(
-                            //           right: 8.0,
-                            //         ),
-                            //         child: Lottie.asset(
-                            //           'assets/Automation.json',
-                            //           repeat: true,
-                            //           fit: BoxFit.contain,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                             SizedBox(height: 18),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildStatCard("14", "Total\nTasks"),
-                                _buildStatCard("11", "Open\nTasks"),
-                                _buildStatCard("0", "Responded\nTasks"),
+                                _buildStatCard(
+                                  totalTasks.toString(),
+                                  "Total\nTasks",
+                                ),
+                                _buildStatCard(
+                                  openTasks.toString(),
+                                  "Open\nTasks",
+                                ),
+                                _buildStatCard(
+                                  reopenedTasks.toString(),
+                                  "Responded\nTasks",
+                                ),
                               ],
                             ),
                             SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildStatCard("3", "Close\nTasks"),
-                                _buildStatCard("0", "To Do\nTasks"),
-                                _buildStatCard("0", "In Progress\nTasks"),
+                                _buildStatCard(
+                                  closeTasks.toString(),
+                                  "Close\nTasks",
+                                ),
+                                _buildStatCard(
+                                  toDoTasks.toString(),
+                                  "To Do\nTasks",
+                                ),
+                                _buildStatCard(
+                                  inProgressTasks.toString(),
+                                  "In Progress\nTasks",
+                                ),
                               ],
                             ),
                             SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildStatCard("0", "Rejected\nTasks"),
-                                _buildStatCard("0", "Hold\nTasks"),
+                                _buildStatCard(
+                                  rejectedTasks.toString(),
+                                  "Rejected\nTasks",
+                                ),
+                                _buildStatCard(
+                                  holdTasks.toString(),
+                                  "Hold\nTasks",
+                                ),
                                 Container(
                                   width: 110,
                                   padding: EdgeInsets.all(10),
@@ -336,685 +266,12 @@ class _TaskBoxHome extends State<TaskBoxHome> {
 
                       const SizedBox(height: 20),
 
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text(
-                      //         "Team Leaves",
-                      //         style: TextStyle(
-                      //           fontSize: 20,
-                      //           fontWeight: FontWeight.w900,
-                      //         ),
-                      //       ),
-                      //       SizedBox(height: 10),
-                      //       Container(
-                      //         // height: 80,
-                      //         padding: EdgeInsets.all(8),
-                      //         decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(8),
-                      //           color: Color.fromARGB(155, 0, 199, 152),
-                      //         ),
-                      //         child: Row(
-                      //           children: [
-                      //             SizedBox(width: 18),
-                      //             Row(
-                      //               mainAxisAlignment:
-                      //                   MainAxisAlignment.center,
-                      //               children: [
-                      //                 for (
-                      //                   int i = 0;
-                      //                   i < TeamImages.length;
-                      //                   i++
-                      //                 )
-                      //                   Align(
-                      //                     widthFactor: 0.5,
-                      //                     child: CircleAvatar(
-                      //                       radius: 20,
-                      //                       backgroundImage: AssetImage(
-                      //                         TeamImages[i],
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //               ],
-                      //             ),
-                      //             SizedBox(width: 18),
-                      //             Text(
-                      //               "and 5 more....",
-                      //               style: TextStyle(
-                      //                 fontSize: 14,
-                      //                 fontWeight: FontWeight.bold,
-                      //               ),
-                      //             ),
-                      //             Spacer(),
-                      //             Container(
-                      //               width: 90,
-                      //               decoration: BoxDecoration(
-                      //                 borderRadius: BorderRadius.circular(10),
-                      //                 boxShadow: [
-                      //                   BoxShadow(
-                      //                     color: Colors.black26,
-                      //                     blurRadius: 10,
-                      //                   ),
-                      //                 ],
-                      //                 gradient: LinearGradient(
-                      //                   colors: [
-                      //                     Color(0xFF00C797),
-                      //                     Color(0xFF1B81A4),
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //               child: TextButton(
-                      //                 onPressed: () {
-                      //                   showModalBottomSheet(
-                      //                     backgroundColor: Colors.transparent,
-                      //                     isScrollControlled: true,
-                      //                     context: context,
-                      //                     builder: (ctx) => StatefulBuilder(
-                      //                       builder:
-                      //                           (
-                      //                             BuildContext context,
-                      //                             StateSetter setModalState,
-                      //                           ) {
-                      //                             return Container(
-                      //                               padding: EdgeInsets.all(
-                      //                                 14,
-                      //                               ),
-                      //                               decoration: const BoxDecoration(
-                      //                                 borderRadius: BorderRadius.only(
-                      //                                   topLeft:
-                      //                                       Radius.circular(
-                      //                                         15,
-                      //                                       ),
-                      //                                   topRight:
-                      //                                       Radius.circular(
-                      //                                         15,
-                      //                                       ),
-                      //                                   bottomLeft:
-                      //                                       Radius.circular(
-                      //                                         15,
-                      //                                       ),
-                      //                                   bottomRight:
-                      //                                       Radius.circular(
-                      //                                         15,
-                      //                                       ),
-                      //                                 ),
-                      //                                 color: Colors.white,
-                      //                               ),
-                      //                               margin:
-                      //                                   const EdgeInsets.symmetric(
-                      //                                     horizontal: 20,
-                      //                                     vertical: 20,
-                      //                                   ),
-                      //                               child: Column(
-                      //                                 mainAxisSize:
-                      //                                     MainAxisSize.min,
-                      //                                 mainAxisAlignment:
-                      //                                     MainAxisAlignment
-                      //                                         .start,
-                      //                                 children: [
-                      //                                   Container(
-                      //                                     width: 100,
-                      //                                     height: 7,
-                      //                                     decoration:
-                      //                                         BoxDecoration(
-                      //                                           color: Colors
-                      //                                               .grey,
-                      //                                           borderRadius:
-                      //                                               BorderRadius.circular(
-                      //                                                 15,
-                      //                                               ),
-                      //                                         ),
-                      //                                   ),
-                      //                                   SizedBox(height: 20),
-                      //                                   Row(
-                      //                                     children: [
-                      //                                       Text(
-                      //                                         "Team Leaves",
-                      //                                         style: TextStyle(
-                      //                                           fontSize: 20,
-                      //                                           fontWeight:
-                      //                                               FontWeight
-                      //                                                   .w900,
-                      //                                         ),
-                      //                                       ),
-                      //                                       Spacer(),
-                      //                                       GestureDetector(
-                      //                                         onTap: () {
-                      //                                           Navigator.of(
-                      //                                             ctx,
-                      //                                           ).pop();
-                      //                                         },
-                      //                                         child: Icon(
-                      //                                           Icons.close,
-                      //                                         ),
-                      //                                       ),
-                      //                                       const SizedBox(
-                      //                                         width: 20,
-                      //                                       ),
-                      //                                     ],
-                      //                                   ),
-                      //                                   SizedBox(height: 8),
-                      //                                   Divider(),
-                      //                                   SizedBox(height: 8),
-                      //                                   SizedBox(
-                      //                                     height: 300,
-                      //                                     child: ListView.builder(
-                      //                                       shrinkWrap: true,
-                      //                                       physics:
-                      //                                           NeverScrollableScrollPhysics(),
-                      //                                       itemCount: 7,
-                      //                                       itemBuilder: (context, index) {
-                      //                                         final isNatasha =
-                      //                                             index % 2 ==
-                      //                                             0;
-                      //                                         final name =
-                      //                                             isNatasha
-                      //                                             ? 'Natasha Jain'
-                      //                                             : 'Sagar Sharma';
-                      //                                         final image =
-                      //                                             isNatasha
-                      //                                             ? 'assets/natasha.png'
-                      //                                             : 'assets/sagar.png';
-                      //                                         final date =
-                      //                                             '23.07.2023 - 26.07.2023';
-                      //                                         final status =
-                      //                                             isNatasha
-                      //                                             ? 'on leave'
-                      //                                             : 'Planned';
-                      //                                         final statusColor =
-                      //                                             isNatasha
-                      //                                             ? Colors
-                      //                                                   .purple
-                      //                                             : Colors
-                      //                                                   .blue;
-                      //                                         final daysLeft =
-                      //                                             isNatasha
-                      //                                             ? '3 days left'
-                      //                                             : '5 days left';
-
-                      //                                         return Padding(
-                      //                                           padding:
-                      //                                               const EdgeInsets.symmetric(
-                      //                                                 vertical:
-                      //                                                     6.0,
-                      //                                               ),
-                      //                                           child: Row(
-                      //                                             children: [
-                      //                                               CircleAvatar(
-                      //                                                 radius:
-                      //                                                     24,
-                      //                                                 backgroundImage:
-                      //                                                     AssetImage(
-                      //                                                       image,
-                      //                                                     ),
-                      //                                               ),
-                      //                                               const SizedBox(
-                      //                                                 width:
-                      //                                                     12,
-                      //                                               ),
-                      //                                               Expanded(
-                      //                                                 child: Column(
-                      //                                                   crossAxisAlignment:
-                      //                                                       CrossAxisAlignment.start,
-                      //                                                   children: [
-                      //                                                     Text(
-                      //                                                       name,
-                      //                                                       style: const TextStyle(
-                      //                                                         fontWeight: FontWeight.bold,
-                      //                                                       ),
-                      //                                                     ),
-                      //                                                     const SizedBox(
-                      //                                                       height: 2,
-                      //                                                     ),
-                      //                                                     Text(
-                      //                                                       date,
-                      //                                                       style: TextStyle(
-                      //                                                         fontSize: 12,
-                      //                                                         color: Colors.black54,
-                      //                                                       ),
-                      //                                                     ),
-                      //                                                   ],
-                      //                                                 ),
-                      //                                               ),
-                      //                                               Column(
-                      //                                                 crossAxisAlignment:
-                      //                                                     CrossAxisAlignment.end,
-                      //                                                 children: [
-                      //                                                   Text(
-                      //                                                     status,
-                      //                                                     style: TextStyle(
-                      //                                                       fontSize: 14,
-                      //                                                       fontWeight: FontWeight.w600,
-                      //                                                       color: statusColor,
-                      //                                                     ),
-                      //                                                   ),
-                      //                                                   const SizedBox(
-                      //                                                     height:
-                      //                                                         2,
-                      //                                                   ),
-                      //                                                   Text(
-                      //                                                     daysLeft,
-                      //                                                     style: const TextStyle(
-                      //                                                       fontSize: 12,
-                      //                                                       color: Colors.black54,
-                      //                                                     ),
-                      //                                                   ),
-                      //                                                 ],
-                      //                                               ),
-                      //                                             ],
-                      //                                           ),
-                      //                                         );
-                      //                                       },
-                      //                                     ),
-                      //                                   ),
-                      //                                   const SizedBox(
-                      //                                     height: 25,
-                      //                                   ),
-                      //                                   const SizedBox(
-                      //                                     height: 20,
-                      //                                   ),
-                      //                                   Column(
-                      //                                     children: [
-                      //                                       const SizedBox(
-                      //                                         height: 5,
-                      //                                       ),
-                      //                                       SizedBox(
-                      //                                         height: 18,
-                      //                                       ),
-                      //                                     ],
-                      //                                   ),
-                      //                                   SizedBox(height: 15),
-                      //                                   Container(
-                      //                                     width: double
-                      //                                         .maxFinite,
-                      //                                     decoration: BoxDecoration(
-                      //                                       borderRadius:
-                      //                                           BorderRadius.circular(
-                      //                                             10,
-                      //                                           ),
-                      //                                       boxShadow: [
-                      //                                         BoxShadow(
-                      //                                           color: Colors
-                      //                                               .black26,
-                      //                                           blurRadius:
-                      //                                               10,
-                      //                                         ),
-                      //                                       ],
-                      //                                       gradient: LinearGradient(
-                      //                                         colors: [
-                      //                                           Color(
-                      //                                             0xFF00C797,
-                      //                                           ),
-                      //                                           Color(
-                      //                                             0xFF1B81A4,
-                      //                                           ),
-                      //                                         ],
-                      //                                       ),
-                      //                                     ),
-                      //                                     child: TextButton(
-                      //                                       onPressed: () {
-                      //                                         Navigator.pop(
-                      //                                           context,
-                      //                                         );
-                      //                                       },
-                      //                                       style: ElevatedButton.styleFrom(
-                      //                                         padding:
-                      //                                             const EdgeInsets.symmetric(
-                      //                                               horizontal:
-                      //                                                   20,
-                      //                                               vertical:
-                      //                                                   12,
-                      //                                             ),
-                      //                                         backgroundColor:
-                      //                                             Colors
-                      //                                                 .transparent,
-                      //                                         shape: RoundedRectangleBorder(
-                      //                                           borderRadius:
-                      //                                               BorderRadius.circular(
-                      //                                                 12,
-                      //                                               ),
-                      //                                         ),
-                      //                                       ),
-                      //                                       child: Text(
-                      //                                         "Back",
-                      //                                         style: TextStyle(
-                      //                                           color: Colors
-                      //                                               .white,
-                      //                                           fontSize: 16,
-                      //                                         ),
-                      //                                       ),
-                      //                                     ),
-                      //                                   ),
-                      //                                   const SizedBox(
-                      //                                     height: 16,
-                      //                                   ),
-                      //                                 ],
-                      //                               ),
-                      //                             );
-                      //                           },
-                      //                     ),
-                      //                   );
-                      //                 },
-                      //                 style: ElevatedButton.styleFrom(
-                      //                   padding: const EdgeInsets.symmetric(
-                      //                     horizontal: 20,
-                      //                     vertical: 12,
-                      //                   ),
-                      //                   backgroundColor: Colors.transparent,
-                      //                   shape: RoundedRectangleBorder(
-                      //                     borderRadius: BorderRadius.circular(
-                      //                       12,
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //                 child: Text(
-                      //                   "View",
-                      //                   style: TextStyle(
-                      //                     color: Colors.white,
-                      //                     fontSize: 16,
-                      //                     fontWeight: FontWeight.bold,
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // const SizedBox(height: 16),
-
-                      // My Leaves and My Corrections
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Column(
-                          children: [
-                            // _buildMyLeavesCard(),
-                            // SizedBox(height: 20),
-                            _buildMyCorrectionsCard(),
-                          ],
-                        ),
+                        child: Column(children: [_buildAllTasksCard()]),
                       ),
                     ],
                   ),
-
-                  //   if (selectedCenter == 1)
-                  //     Column(
-                  //       mainAxisAlignment: MainAxisAlignment.start,
-                  //       children: [
-                  //         Padding(
-                  //           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  //           child: TableCalendar(
-                  //             firstDay: DateTime.utc(2020, 1, 1),
-                  //             lastDay: DateTime.utc(2030, 12, 31),
-                  //             focusedDay: _focusedDay,
-                  //             calendarFormat: CalendarFormat.month,
-                  //             calendarStyle: CalendarStyle(
-                  //               todayDecoration: BoxDecoration(
-                  //                 color: Color(0xFF304C9F),
-                  //                 shape: BoxShape.circle,
-                  //               ),
-                  //               selectedDecoration: BoxDecoration(
-                  //                 color: Color(0xFF00C797),
-                  //                 shape: BoxShape.circle,
-                  //               ),
-                  //               markerDecoration: BoxDecoration(
-                  //                 color: Colors.red,
-                  //                 shape: BoxShape.circle,
-                  //               ),
-                  //               weekendTextStyle: TextStyle(color: Colors.red),
-                  //             ),
-                  //             headerStyle: HeaderStyle(
-                  //               titleTextStyle: TextStyle(
-                  //                 fontWeight: FontWeight.bold,
-                  //                 fontSize: 16,
-                  //               ),
-                  //               formatButtonVisible: false,
-                  //               titleCentered: true,
-                  //               leftChevronIcon: Icon(Icons.arrow_back_ios),
-                  //               rightChevronIcon: Icon(Icons.arrow_forward_ios),
-                  //             ),
-                  //             eventLoader: (day) => _getEventsForDay(day),
-                  //             selectedDayPredicate: (day) {
-                  //               return isSameDay(day, _selectedDay);
-                  //             },
-                  //             onDaySelected: (selectedDay, focusedDay) {
-                  //               setState(() {
-                  //                 _selectedDay = selectedDay;
-                  //                 _focusedDay = focusedDay;
-                  //               });
-                  //             },
-                  //             calendarBuilders: CalendarBuilders(
-                  //               selectedBuilder: (context, day, focusedDay) {
-                  //                 final events = _getEventsForDay(day);
-                  //                 if (events.isNotEmpty) {
-                  //                   String event = events.first;
-                  //                   Color color;
-                  //                   String abbr;
-                  //                   if (event == "Present") {
-                  //                     color = Colors.green;
-                  //                     abbr = "PR";
-                  //                   } else if (event == "Absent") {
-                  //                     color = Colors.red;
-                  //                     abbr = "AB";
-                  //                   } else if (event == "Week Off") {
-                  //                     color = Colors.indigo;
-                  //                     abbr = "WO";
-                  //                   } else if (event == "Public Holiday") {
-                  //                     color = Color(0xFF2B7B8A);
-                  //                     abbr = "PH";
-                  //                   } else if (event == "Paid Leave") {
-                  //                     color = Colors.indigo;
-                  //                     abbr = "PL";
-                  //                   } else if (event == "Leave w/o Pay") {
-                  //                     color = Colors.orange;
-                  //                     abbr = "LW";
-                  //                   } else if (event == "Half Day Absent") {
-                  //                     color = Color(0xFFFF0000);
-                  //                     abbr = "HD";
-                  //                   } else {
-                  //                     color = Color(0xFF1B81A4);
-                  //                     abbr = event.substring(0, 2).toUpperCase();
-                  //                   }
-                  //                   return CircleAvatar(
-                  //                     backgroundColor: color,
-                  //                     radius: 18,
-                  //                     child: Text(
-                  //                       abbr,
-                  //                       style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontWeight: FontWeight.bold,
-                  //                         fontSize: 12,
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 } else {
-                  //                   return CircleAvatar(
-                  //                     backgroundColor: Color(0xFF1B81A4),
-                  //                     radius: 18,
-                  //                     child: Text(
-                  //                       '${day.day}',
-                  //                       style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontWeight: FontWeight.bold,
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 }
-                  //               },
-                  //               todayBuilder: (context, day, focusedDay) {
-                  //                 if (!isSameDay(day, _selectedDay)) {
-                  //                   return CircleAvatar(
-                  //                     backgroundColor: Color(0xFF304C9F),
-                  //                     radius: 18,
-                  //                     child: Text(
-                  //                       '${day.day}',
-                  //                       style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontWeight: FontWeight.bold,
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 } else {
-                  //                   return null;
-                  //                 }
-                  //               },
-                  //               defaultBuilder: (context, day, focusedDay) {
-                  //                 final events = _getEventsForDay(day);
-                  //                 if (events.isNotEmpty) {
-                  //                   String event = events.first;
-                  //                   Color color;
-                  //                   if (event == "Present")
-                  //                     color = Colors.green;
-                  //                   else if (event == "Absent")
-                  //                     color = Colors.red;
-                  //                   else if (event == "Week Off")
-                  //                     color = Colors.indigo;
-                  //                   else if (event == "Public Holiday")
-                  //                     color = Color(0xFF2B7B8A);
-                  //                   else if (event == "Paid Leave")
-                  //                     color = Colors.indigo;
-                  //                   else if (event == "Leave w/o Pay")
-                  //                     color = Colors.orange;
-                  //                   else if (event == "Half Day Absent")
-                  //                     color = Color(0xFFFF0000);
-                  //                   else
-                  //                     color = Color(0xFF1B81A4);
-                  //                   return Center(
-                  //                     child: Text(
-                  //                       '${day.day}',
-                  //                       style: TextStyle(
-                  //                         color: color,
-                  //                         fontWeight: FontWeight.bold,
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 }
-                  //                 return Center(
-                  //                   child: Text(
-                  //                     '${day.day}',
-                  //                     style: TextStyle(color: Colors.black),
-                  //                   ),
-                  //                 );
-                  //               },
-                  //               dowBuilder: (context, day) {
-                  //                 final text = [
-                  //                   'S',
-                  //                   'M',
-                  //                   'T',
-                  //                   'W',
-                  //                   'T',
-                  //                   'F',
-                  //                   'S',
-                  //                 ][day.weekday % 7];
-                  //                 return Center(
-                  //                   child: Text(
-                  //                     text,
-                  //                     style: TextStyle(
-                  //                       fontWeight: FontWeight.bold,
-                  //                     ),
-                  //                   ),
-                  //                 );
-                  //               },
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         const SizedBox(height: 10),
-                  //         Padding(
-                  //           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             children: [
-                  //               Column(
-                  //                 crossAxisAlignment: CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   _legend("Today", Color(0xFF304C9F), "T"),
-                  //                   _legend("Present", Color(0xFF1D963A), "PR"),
-                  //                   _legend(
-                  //                     "Public Holiday",
-                  //                     Color(0xFF2B7B8A),
-                  //                     "PH",
-                  //                   ),
-                  //                   _legend("Week Off", Color(0xFF5C5959), "WO"),
-                  //                 ],
-                  //               ),
-                  //               Column(
-                  //                 crossAxisAlignment: CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   _legend("Paid Leave", Colors.indigo, "PL"),
-                  //                   _legend("Leave w/o Pay", Colors.orange, "LW"),
-                  //                   _legend(
-                  //                     "Half Day Absent",
-                  //                     Color(0xFFFF0000),
-                  //                     "HD",
-                  //                   ),
-                  //                   _legend("Absent", Colors.red, "AB"),
-                  //                 ],
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         const SizedBox(height: 16),
-                  //         Padding(
-                  //           padding: EdgeInsets.all(0),
-                  //           child: Wrap(
-                  //             spacing: 7,
-                  //             children: [
-                  //               _filterButton("Today"),
-                  //               _filterButton("Yesterday"),
-                  //               _filterButton("This Month"),
-                  //               _filterButton("Last Month"),
-                  //               _filterButton("Last 3 Month"),
-                  //               _filterButton("Last 6 Month"),
-                  //               _filterButton("Last Year"),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         const SizedBox(height: 16),
-                  //         Center(
-                  //           child: Container(
-                  //             width: 350,
-                  //             decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(10),
-                  //               boxShadow: [
-                  //                 BoxShadow(
-                  //                   color: Colors.black26,
-                  //                   blurRadius: 10,
-                  //                 ),
-                  //               ],
-                  //               gradient: LinearGradient(
-                  //                 colors: [Color(0xFF00C797), Color(0xFF1B81A4)],
-                  //               ),
-                  //             ),
-                  //             child: TextButton(
-                  //               onPressed: () {},
-                  //               style: ElevatedButton.styleFrom(
-                  //                 padding: const EdgeInsets.symmetric(
-                  //                   horizontal: 40,
-                  //                   vertical: 12,
-                  //                 ),
-                  //                 backgroundColor: Colors.transparent,
-                  //                 shape: RoundedRectangleBorder(
-                  //                   borderRadius: BorderRadius.circular(12),
-                  //                 ),
-                  //               ),
-                  //               child: const Text(
-                  //                 "View Details",
-                  //                 style: TextStyle(
-                  //                   color: Colors.white,
-                  //                   fontSize: 16,
-                  //                   fontWeight: FontWeight.bold,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         const SizedBox(height: 30),
-                  //       ],
-                  //     ),
                 ],
               ),
             ),
@@ -1039,7 +296,6 @@ class _TaskBoxHome extends State<TaskBoxHome> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 value,
@@ -1068,170 +324,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
     );
   }
 
-  // Add these helper widgets at the end of the class
-  Widget _buildMyLeavesCard() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(12),
-        // boxShadow: [
-        //   BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 2)),
-        // ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE6FAF6),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Image.asset(
-                  'assets/calendar.png',
-                  width: 28,
-                  height: 28,
-                ),
-              ),
-              SizedBox(width: 10),
-              Text(
-                'My Leaves',
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
-              ),
-            ],
-          ),
-          SizedBox(height: 12),
-          Divider(color: Colors.grey.shade300),
-          SizedBox(height: 8),
-          _buildLeaveItem(
-            'Unpaid Leave (UPL)',
-            'Pending',
-            Color(0xFFF5DD09),
-            Color(0xFF1B81A4),
-          ),
-          SizedBox(height: 10),
-          _buildLeaveItem(
-            'Paid Leave (UPL)',
-            'Pending',
-            Color(0xFFF5DD09),
-            Color(0xFF1B81A4),
-          ),
-          SizedBox(height: 10),
-          Divider(color: Colors.grey.shade300),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => MyLeaveScreen()),
-                // );
-              },
-              child: Text(
-                'View All',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFF1B81A4),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLeaveItem(
-    String title,
-    String status,
-    Color statusColor,
-    Color borderColor,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Color(0xFFF5FBFF),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: borderColor.withOpacity(0.08)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('25-07-2023', style: TextStyle(fontWeight: FontWeight.w500)),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final boxWidth = constraints.constrainWidth();
-                      final dashWidth = 4.0;
-                      final dashSpace = 4.0;
-                      final dashCount = (boxWidth / (dashWidth + dashSpace))
-                          .floor();
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(dashCount, (_) {
-                          return Container(
-                            width: dashWidth,
-                            height: 1,
-                            color: Colors.black,
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Text('26-07-2023', style: TextStyle(fontWeight: FontWeight.w500)),
-            ],
-          ),
-          SizedBox(height: 4),
-          Center(
-            child: Text(
-              '1 day',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMyCorrectionsCard() {
+  Widget _buildAllTasksCard() {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
@@ -1268,7 +361,15 @@ class _TaskBoxHome extends State<TaskBoxHome> {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    builder: (context) => TaskFilterBottomSheet(),
+                    builder: (context) => TaskFilterBottomSheet(
+                      token: token,
+                      baseUrl: baseUrl,
+                      clientCode: clientCode,
+                      onApplyFilters: (filters) {
+                        print("Selected Filters: $filters");
+                        getTaskList(filters: filters); // Fetch filtered data
+                      },
+                    ),
                   );
                 },
                 child: Container(
@@ -1380,24 +481,46 @@ class _TaskBoxHome extends State<TaskBoxHome> {
             ],
           ),
           SizedBox(height: 12),
-          _buildCorrectionItem('TD213', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
-          _buildCorrectionItem('T106', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
-          _buildCorrectionItem('T0213', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
-          _buildCorrectionItem('T0213', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
-          _buildCorrectionItem('T106', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
-          _buildCorrectionItem('T0213', 'Open', Color(0xFF1D963A)),
-          SizedBox(height: 10),
+          if (taskList.isEmpty)
+            Center(
+              child: Text(
+                'No tasks found',
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: taskList.length,
+              itemBuilder: (context, index) {
+                var task = taskList[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _buildTaskItem(
+                    task['task_code'] ?? '',
+                    task['status_label'] ?? '',
+                    Color(0xFF1D963A), // You can set based on status
+                    task['task_project_label'] ?? '',
+                    task['task_date'] ?? '',
+                    task['due_date'] ?? '',
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildCorrectionItem(String id, String status, Color statusColor) {
+  Widget _buildTaskItem(
+    String id,
+    String status,
+    Color statusColor,
+    String project,
+    String taskDate,
+    String dueDate,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1407,6 +530,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // top row with id and status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1442,6 +566,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
           SizedBox(height: 8),
           Divider(color: Colors.grey.shade300),
           SizedBox(height: 8),
+          // Project, task date, due date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1450,7 +575,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
                 children: [
                   Text('Project'),
                   Text(
-                    'Glueple',
+                    project,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -1463,7 +588,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
                 children: [
                   Text('Task Date'),
                   Text(
-                    '25-07-2023',
+                    taskDate,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -1475,10 +600,7 @@ class _TaskBoxHome extends State<TaskBoxHome> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text('Due Date'),
-                  Text(
-                    '26-07-2023',
-                    style: TextStyle(fontWeight: FontWeight.w800),
-                  ),
+                  Text(dueDate, style: TextStyle(fontWeight: FontWeight.w800)),
                 ],
               ),
             ],
@@ -1509,100 +631,143 @@ class _TaskBoxHome extends State<TaskBoxHome> {
     );
   }
 
-  List<String> _getEventsForDay(DateTime day) {
-    if (day.day == 3 || day.day == 4 || day.day == 5) {
-      return ["Present"];
-    } else if (day.day == 10) {
-      return ["Public Holiday"];
-    } else if (day.day == 14) {
-      return ["Half Day Absent"];
-    } else if (day.day == 17) {
-      return ["Absent"];
+  _getUserData() async {
+    userIdStr = await MyUtils.getSharedPreferences("user_id") ?? "";
+    fullNameStr = await MyUtils.getSharedPreferences("full_name") ?? "";
+    firstName = await MyUtils.getSharedPreferences("first_name") ?? "";
+    token = await MyUtils.getSharedPreferences("token") ?? "";
+    designationStr = await MyUtils.getSharedPreferences("designation") ?? "";
+    empId = await MyUtils.getSharedPreferences("emp_id") ?? "";
+    baseUrl = await MyUtils.getSharedPreferences("base_url") ?? "";
+    clientCode = await MyUtils.getSharedPreferences("client_code") ?? "";
+    String? access = await MyUtils.getSharedPreferences("at_access") ?? '1';
+    userProfile = await MyUtils.getSharedPreferences("profile_img") ?? "";
+    String? ratingDurationId =
+        await MyUtils.getSharedPreferences("rating_duration_id") ?? "";
+    isAttendanceAccess = access;
+    print("Rating Duration Id:$ratingDurationId******************************");
+    if (fullNameStr.isNotEmpty) {
+      firstName = fullNameStr.split(" ")[0];
     }
-    return [];
+    if (Platform.isAndroid) {
+      platform = "Android";
+    } else if (Platform.isIOS) {
+      platform = "iOS";
+    } else {
+      platform = "Other";
+    }
+
+    print("userId:-" + userIdStr.toString());
+    print("token:-" + token.toString());
+    print("employee_id:-" + empId.toString());
+    print("Base Url:-" + baseUrl.toString());
+    print("Platform:-" + platform);
+    print("Client Code:-" + clientCode);
+
+    var dateNow = DateTime.now();
+    todayDateStr = DateFormat("dd MMM, yyyy").format(dateNow);
+    print("Attendace Date $todayDateStr");
+    getTaskDashData();
+    getTaskList();
   }
 
-  Widget _legend(String label, Color color, String abbreviation) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircleAvatar(
-            radius: 14,
-            backgroundColor: color,
-            child: Text(
-              abbreviation,
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+  getTaskDashData() async {
+    setState(() {
+      attDashboardLoading = true;
+    });
+
+    ApiBaseHelper helper = ApiBaseHelper();
+    var response = await helper.getWithToken(
+      baseUrl,
+      'task-status',
+      token,
+      clientCode,
+      context,
     );
+
+    var responseJSON = json.decode(response.body);
+    print(responseJSON);
+
+    if (responseJSON['success'] == true) {
+      var data = responseJSON['data'];
+
+      setState(() {
+        totalTasks = data['total_count'] ?? 0;
+        openTasks = data['open'] ?? 0;
+        reopenedTasks = data['reopened'] ?? 0;
+        closeTasks = data['close'] ?? 0;
+        toDoTasks = data['to_do'] ?? 0;
+        inProgressTasks = data['in_progress'] ?? 0;
+        rejectedTasks = data['rejected'] ?? 0;
+        holdTasks = data['hold'] ?? 0;
+
+        attDashboardLoading = false;
+      });
+    } else if (responseJSON['code'] == 401 ||
+        responseJSON['message'] == 'Invalid token.') {
+      Toast.show(
+        "Your Login session is Expired!! Please login again.",
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+      setState(() {
+        attDashboardLoading = false;
+      });
+      LogoutUserFromApp.logOut(context);
+    } else {
+      Toast.show(
+        responseJSON['message'],
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.red,
+      );
+      setState(() {
+        attDashboardLoading = false;
+      });
+    }
   }
 
-  Widget _filterButton(String label) {
-    return TextButton(
-      onPressed: () {},
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.blue.shade50,
-        side: BorderSide(color: Colors.blue.shade800, width: 1.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: Colors.blue.shade800,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+  Future<void> getTaskList({Map<String, dynamic>? filters}) async {
+    setState(() {
+      attDashboardLoading = true;
+    });
 
-  Widget _buildLabel(String text) => Text(
-    text,
-    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-  );
+    ApiBaseHelper helper = ApiBaseHelper();
 
-  Widget _buildLabelRow(String left, String right) => Row(
-    children: [
-      _buildLabel(left),
-      const Spacer(),
-      Text(right, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-    ],
-  );
+    // Prepare API parameters (POST body)
+    final apiParams = {
+      "employee_ids": (filters?['employees'] ?? []).join(','),
+      "statuses": (filters?['statuses'] ?? []).join(','),
+      "projects": (filters?['projects'] ?? []).join(','),
+    };
 
-  Widget _dateField(
-    TextEditingController ctl,
-    BuildContext ctx,
-    ValueChanged<String> onChanged,
-  ) {
-    return GestureDetector(
-      onTap: () async {},
-      child: AbsorbPointer(
-        child: TextFormField(
-          controller: ctl,
-          decoration: const InputDecoration(
-            isDense: true,
-            suffixIcon: Icon(Icons.calendar_today, size: 18),
-            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-          ),
-        ),
-      ),
-    );
+    try {
+      var response = await helper.postAPIWithHeader(
+        baseUrl,
+        'get-task',
+        apiParams,
+        context,
+        token,
+      );
+
+      // `postAPIWithHeader` already decodes and handles errors,
+      // so we can use the result directly
+      if (response['success'] == true) {
+        setState(() {
+          taskList = response['data']['data'] ?? [];
+          attDashboardLoading = false;
+        });
+      } else {
+        setState(() {
+          attDashboardLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error fetching task list: $e");
+      setState(() {
+        attDashboardLoading = false;
+      });
+    }
   }
 }
