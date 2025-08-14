@@ -6,7 +6,8 @@ import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditWorkExp extends StatefulWidget {
-  const EditWorkExp({super.key});
+  final dynamic profiledata;
+  const EditWorkExp({super.key, this.profiledata});
 
   @override
   State<EditWorkExp> createState() => _EditWorkExp();
@@ -18,6 +19,60 @@ class _EditWorkExp extends State<EditWorkExp> {
   final TextEditingController fromCtl = TextEditingController();
   final TextEditingController toCtl = TextEditingController();
   final TextEditingController reasonCtl = TextEditingController();
+
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  List<dynamic> _getWorkExpList() {
+    final data = profiledata;
+    if (data == null) return const [];
+    final dynamic list = data['work_experience_details'];
+    if (list is List) return list;
+    return const [];
+  }
+
+  List<Widget> _buildWorkExpSections() {
+    final list = _getWorkExpList();
+    if (list.isEmpty) {
+      return [
+        Text(
+          "No work experience",
+          style: const TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        const SizedBox(height: 8),
+      ];
+    }
+    final List<Widget> widgets = [];
+    for (int i = 0; i < list.length; i++) {
+      final item = list[i] as Map<String, dynamic>? ?? {};
+      widgets.addAll([
+        Text(
+          "Details ${i + 1}",
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+        ),
+        const SizedBox(height: 4),
+        _buildRow(
+          "Organisation Name",
+          (item['organisation'] ?? '-').toString(),
+        ),
+        const Divider(),
+        _buildRow("Designation", (item['designation'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("From", (item['from'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("To", (item['to'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Reason of Leaving", (item['reason'] ?? '-').toString()),
+        const SizedBox(height: 8),
+      ]);
+    }
+    return widgets;
+  }
 
   Widget buildDropdownField(
     String label,
@@ -245,26 +300,7 @@ class _EditWorkExp extends State<EditWorkExp> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Details 1",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        _buildRow("Organisation Name", "-"),
-                        Divider(),
-                        _buildRow("Designation", "-"),
-                        Divider(),
-                        _buildRow("From", "-"),
-                        Divider(),
-                        _buildRow("To", "-"),
-                        Divider(),
-                        _buildRow("Reason of Leaving", "-"),
-                        SizedBox(height: 8),
-                      ],
+                      children: [..._buildWorkExpSections()],
                     ),
                   ),
                   Text(

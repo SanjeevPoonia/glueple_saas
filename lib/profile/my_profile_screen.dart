@@ -605,19 +605,19 @@ class _MyProfileScreen extends State<MyProfileScreen> {
       case 'personal_details':
         return PersonalDetailScreen(profiledata: profileData);
       case 'family_details':
-        return FamilyDetailScreen();
+        return FamilyDetailScreen(profiledata: profileData);
       case 'education_details':
-        return EducationDetailScreen();
+        return EducationDetailScreen(profiledata: profileData);
       case 'bank_details':
-        return BankDetailScreen();
+        return BankDetailScreen(profiledata: profileData);
       case 'social_details':
-        return SocialDetailScreen();
+        return SocialDetailScreen(profiledata: profileData);
       case 'reference_details':
-        return ReferenceDetailScreen();
+        return ReferenceDetailScreen(profiledata: profileData);
       case 'work_experience_details':
-        return EditWorkExp();
+        return EditWorkExp(profiledata: profileData);
       case 'upload_documents':
-        return DocumentUploadScreen();
+        return DocumentUploadScreen(profiledata: profileData);
       default:
         return const SizedBox.shrink();
     }

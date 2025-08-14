@@ -1,18 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/edit_reference_details.dart';
-import 'package:glueplenew/profile/profile_edit_details.dart';
-import 'package:glueplenew/profile/profile_photo_dialog.dart';
+// Removed unused imports
 import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class ReferenceDetailScreen extends StatefulWidget {
-  const ReferenceDetailScreen({super.key});
+  final dynamic profiledata;
+  const ReferenceDetailScreen({super.key, this.profiledata});
 
   @override
   State<ReferenceDetailScreen> createState() => _ReferenceDetailScreen();
 }
 
 class _ReferenceDetailScreen extends State<ReferenceDetailScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  List<dynamic> _getReferenceList() {
+    final data = profiledata;
+    if (data == null) return const [];
+    final dynamic list = data['reference_details'];
+    if (list is List) return list;
+    return const [];
+  }
+
+  List<Widget> _buildReferenceSections() {
+    final list = _getReferenceList();
+    if (list.isEmpty) {
+      return [
+        Text(
+          "No reference details",
+          style: const TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+      ];
+    }
+    final List<Widget> widgets = [];
+    for (int i = 0; i < list.length; i++) {
+      final item = list[i] as Map<String, dynamic>? ?? {};
+      widgets.addAll([
+        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Name",
+            (item['name'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Contact",
+            (item['contact'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Email",
+            (item['email'] ?? '-').toString()),
+        const Divider(),
+      ]);
+    }
+    return widgets;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,23 +251,13 @@ class _ReferenceDetailScreen extends State<ReferenceDetailScreen> {
                                   ),
                                 ],
                               ),
-                              _buildRow("Tag Name", "Bank Details"),
+                              _buildRow("Tag Name", "Reference Details"),
                               Divider(),
-                              _buildRow("Status", "1"),
+                              _buildRow("Status", _getFieldValue('status')),
                               Divider(),
-                              _buildRow("Emp User Id", "1463"),
+                              _buildRow("Emp User Id", _getFieldValue('emp_id')),
                               Divider(),
-                              _buildRow("Emp First Reference Name", "-"),
-                              Divider(),
-                              _buildRow("Emp First Reference Contact", "-"),
-                              Divider(),
-                              _buildRow("Emp First Reference Email", "-"),
-                              Divider(),
-                              _buildRow("Emp Second Reference Name", "-"),
-                              Divider(),
-                              _buildRow("Emp Second Reference Contact", "-"),
-                              Divider(),
-                              _buildRow("Emp Second Reference Email", "-"),
+                              ..._buildReferenceSections(),
                               Divider(),
                               _buildRow("Emp Detail Tag Id", "6"),
                             ],

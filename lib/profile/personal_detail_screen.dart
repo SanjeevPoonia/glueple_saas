@@ -203,60 +203,99 @@ class _PersonalDetailScreen extends State<PersonalDetailScreen> {
                                 ],
                               ),
 
-                              _buildRow("Emp Name", "John Smith"),
+                              _buildRow("Emp Name", _getEmployeeName()),
                               Divider(),
-                              _buildRow("Emp's DOB", "2000-08-14"),
+                              _buildRow("Emp's DOB", _getFieldValue('dob')),
                               Divider(),
-                              _buildRow("Emp's Gender", "Male"),
+                              _buildRow(
+                                "Emp's Gender",
+                                _getFieldValue('gender'),
+                              ),
                               Divider(),
-                              _buildRow("First Marital Status", "Single"),
+                              _buildRow(
+                                "Marital Status",
+                                _getFieldValue('marital_status'),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Present Address Street",
-                                "Lorem Ipsum is simply dummy text of the printing and",
+                                _getFieldValue('present_address'),
                               ),
                               Divider(),
-                              _buildRow("Present Address City", "Jaipur"),
+                              _buildRow(
+                                "Present Address City",
+                                _getFieldValue('present_city'),
+                              ),
                               Divider(),
-                              _buildRow("Present Address State", "Rajasthan"),
+                              _buildRow(
+                                "Present Address State",
+                                _getFieldValue('present_state'),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Present Address Postal Code",
-                                "302013",
+                                _getFieldValue('present_postal_code'),
                               ),
                               Divider(),
                               _buildRow(
                                 "Permanent Address Street",
-                                "Lorem Ipsum is simply dummy text of the printing and",
+                                _getFieldValue('permanent_address'),
                               ),
                               Divider(),
-                              _buildRow("Permanent Address City", "Jaipur"),
+                              _buildRow(
+                                "Permanent Address City",
+                                _getFieldValue('permanent_city'),
+                              ),
                               Divider(),
-                              _buildRow("Permanent Address State", "Rajasthan"),
+                              _buildRow(
+                                "Permanent Address State",
+                                _getFieldValue('permanent_state'),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Permanent Address Postal Code",
-                                "302013",
+                                _getFieldValue('permanent_postal_code'),
                               ),
                               Divider(),
-                              _buildRow("Emp Mobile", "9876543210"),
+                              _buildRow(
+                                "Emp Mobile",
+                                _getFirstNonEmpty([
+                                  'personal_mobile',
+                                  'mobile',
+                                ]),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Personal Email",
-                                "john.smith@gmail.com",
+                                _getFirstNonEmpty(['personal_email', 'email']),
                               ),
                               Divider(),
-                              _buildRow("Alternate Email", "N/A"),
+                              _buildRow(
+                                "Alternate Email",
+                                _getFieldValue('alternate_email'),
+                              ),
                               Divider(),
-                              _buildRow("Emp UAN No", "789545624589"),
+                              _buildRow("Emp UAN No", _getFieldValue('uan_no')),
                               Divider(),
-                              _buildRow("Emp ESIC No", "HUELD4584E"),
+                              _buildRow(
+                                "Emp ESIC No",
+                                _getFieldValue('esic_no'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Aadhar Card", "9874563210"),
+                              _buildRow(
+                                "Emp Aadhar Card",
+                                _getFieldValue('aadhar_no'),
+                              ),
                               Divider(),
-                              _buildRow("Emp PAN Card", "B+"),
+                              _buildRow(
+                                "Emp PAN Card",
+                                _getFieldValue('pan_no'),
+                              ),
                               Divider(),
-                              _buildRow("Emergency Mobile", "1"),
+                              _buildRow(
+                                "Emergency Mobile",
+                                _getFieldValue('emergency_mobile'),
+                              ),
                             ],
                           ),
                         ),
@@ -285,6 +324,35 @@ class _PersonalDetailScreen extends State<PersonalDetailScreen> {
         profiledata = widget.profiledata;
       });
     }
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  String _getFirstNonEmpty(List<String> keys) {
+    for (final key in keys) {
+      final value = _getFieldValue(key);
+      if (value != 'N/A') return value;
+    }
+    return 'N/A';
+  }
+
+  String _getEmployeeName() {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final String name = (data['name'] ?? '').toString().trim();
+    if (name.isNotEmpty) return name;
+    final String first = (data['first_name'] ?? '').toString().trim();
+    final String last = (data['last_name'] ?? '').toString().trim();
+    final String full = [first, last].where((s) => s.isNotEmpty).join(' ');
+    return full.isEmpty ? 'N/A' : full;
   }
 
   Widget _buildRow(String month, dynamic value) {

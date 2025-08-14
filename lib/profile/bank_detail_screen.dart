@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/edit_bank_details.dart';
-import 'package:glueplenew/profile/profile_edit_details.dart';
 import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class BankDetailScreen extends StatefulWidget {
-  const BankDetailScreen({super.key});
+  final dynamic profiledata;
+  const BankDetailScreen({super.key, this.profiledata});
 
   @override
   State<BankDetailScreen> createState() => _BankDetailScreen();
 }
 
 class _BankDetailScreen extends State<BankDetailScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,25 +217,37 @@ class _BankDetailScreen extends State<BankDetailScreen> {
                               ),
                               _buildRow("Tag Name", "Bank Details"),
                               Divider(),
-                              _buildRow("Status", "1"),
+                              _buildRow("Status", _getFieldValue('status')),
                               Divider(),
-                              _buildRow("Emp User Id", "1463"),
+                              _buildRow(
+                                "Emp User Id",
+                                _getFieldValue('emp_id'),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Emp Bank Account Holder Name",
-                                "Nikita Prajapat",
+                                _getFieldValue('bank_account_holder_name'),
                               ),
                               Divider(),
-                              _buildRow("Emp Bank Name", "Bank of Baroda"),
+                              _buildRow(
+                                "Emp Bank Name",
+                                _getFieldValue('bank_name'),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Emp Bank Account Number",
-                                "20132045689745",
+                                _getFieldValue('bank_account_no'),
                               ),
                               Divider(),
-                              _buildRow("Emp IFSC Code", "BARB074562"),
+                              _buildRow(
+                                "Emp IFSC Code",
+                                _getFieldValue('ifsc_code'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Nominee", "No"),
+                              _buildRow(
+                                "Emp Nominee",
+                                _getFieldValue('nominee_name'),
+                              ),
                               Divider(),
                               _buildRow("Payment Mode", "-"),
                               Divider(),

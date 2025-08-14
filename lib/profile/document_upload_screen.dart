@@ -4,13 +4,42 @@ import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class DocumentUploadScreen extends StatefulWidget {
-  const DocumentUploadScreen({super.key});
+  final dynamic profiledata;
+  const DocumentUploadScreen({super.key, this.profiledata});
 
   @override
   State<DocumentUploadScreen> createState() => _DocumentUploadScreen();
 }
 
 class _DocumentUploadScreen extends State<DocumentUploadScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  Map<String, dynamic> _getDocumentStatuses() {
+    final data = profiledata;
+    if (data == null) return {};
+    final dynamic verify = data['verify_document'];
+    if (verify is Map<String, dynamic>) return verify;
+    return {};
+  }
+
+  String _statusText(dynamic value) {
+    if (value == true ||
+        (value is String && value.toLowerCase() == 'complete')) {
+      return 'Complete';
+    }
+    if (value == false ||
+        (value is String && value.toLowerCase() == 'pending')) {
+      return 'Pending';
+    }
+    return value?.toString() ?? 'Pending';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,41 +229,102 @@ class _DocumentUploadScreen extends State<DocumentUploadScreen> {
                                 ],
                               ),
 
-                              _buildRow("Aadhar Card", "Complete"),
+                              _buildRow(
+                                "Aadhar Card",
+                                _statusText(
+                                  _getDocumentStatuses()['aadhar_card'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("Pan Card", "Pending"),
+                              _buildRow(
+                                "Pan Card",
+                                _statusText(_getDocumentStatuses()['pan_card']),
+                              ),
                               Divider(),
-                              _buildRow("Driving License", "Pending"),
+                              _buildRow(
+                                "Driving License",
+                                _statusText(
+                                  _getDocumentStatuses()['driving_license'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("Resume", "Complete"),
+                              _buildRow(
+                                "Resume",
+                                _statusText(_getDocumentStatuses()['resume']),
+                              ),
                               Divider(),
-                              _buildRow("Passport", "Complete"),
+                              _buildRow(
+                                "Passport",
+                                _statusText(_getDocumentStatuses()['passport']),
+                              ),
                               Divider(),
-                              _buildRow("Passport Size Photo", "Complete"),
+                              _buildRow(
+                                "Passport Size Photo",
+                                _statusText(
+                                  _getDocumentStatuses()['passport_photo'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("10th Marksheet", "Complete"),
+                              _buildRow(
+                                "10th Marksheet",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_10'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("12th Marksheet", "Pending"),
+                              _buildRow(
+                                "12th Marksheet",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_12'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("ITI Marksheet", "Pending"),
+                              _buildRow(
+                                "ITI Marksheet",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_iti'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("Diploma Marksheet", "Complete"),
+                              _buildRow(
+                                "Diploma Marksheet",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_diploma'],
+                                ),
+                              ),
                               Divider(),
-                              _buildRow("Graduation Marksheet", "Pending"),
+                              _buildRow(
+                                "Graduation Marksheet",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_graduation'],
+                                ),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Post Graduation Marksheet",
-                                "Complete",
+                                _statusText(
+                                  _getDocumentStatuses()['marksheet_post_graduation'],
+                                ),
                               ),
                               Divider(),
-                              _buildRow("Bank Passbook", "Complete"),
+                              _buildRow(
+                                "Bank Passbook",
+                                _statusText(
+                                  _getDocumentStatuses()['bank_passbook'],
+                                ),
+                              ),
                               Divider(),
                               _buildRow(
                                 "Previous Company Experience Letter",
-                                "Pending",
+                                _statusText(
+                                  _getDocumentStatuses()['experience_letter'],
+                                ),
                               ),
                               Divider(),
-                              _buildRow("Previous Company Payslip", "Pending"),
+                              _buildRow(
+                                "Previous Company Payslip",
+                                _statusText(_getDocumentStatuses()['payslip']),
+                              ),
                             ],
                           ),
                         ),

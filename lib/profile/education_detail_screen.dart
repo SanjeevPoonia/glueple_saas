@@ -4,13 +4,70 @@ import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class EducationDetailScreen extends StatefulWidget {
-  const EducationDetailScreen({super.key});
+  final dynamic profiledata;
+  const EducationDetailScreen({super.key, this.profiledata});
 
   @override
   State<EducationDetailScreen> createState() => _EducationDetailScreen();
 }
 
 class _EducationDetailScreen extends State<EducationDetailScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  // Keeping generic getter removed since unused in this screen
+
+  List<dynamic> _getEducationList() {
+    final data = profiledata;
+    if (data == null) return const [];
+    final dynamic list = data['education_details'];
+    if (list is List) return list;
+    return const [];
+  }
+
+  List<Widget> _buildEducationSections() {
+    final list = _getEducationList();
+    if (list.isEmpty) {
+      return [
+        Text(
+          "No education details",
+          style: const TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+      ];
+    }
+
+    final List<Widget> widgets = [];
+    for (int i = 0; i < list.length; i++) {
+      final item = list[i] as Map<String, dynamic>? ?? {};
+      widgets.addAll([
+        Text(
+          "Details ${i + 1}",
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+        ),
+        const SizedBox(height: 4),
+        _buildRow("Emp Educational Class", (item['class'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Emp Roll No.", (item['roll_no'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Smp School", (item['school'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Emp Board", (item['board'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Emp Percentage", (item['percentage'] ?? '-').toString()),
+        const Divider(),
+        _buildRow("Year", (item['year'] ?? '-').toString()),
+        const Divider(),
+        const SizedBox(height: 8),
+      ]);
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,47 +256,7 @@ class _EducationDetailScreen extends State<EducationDetailScreen> {
                               ),
                               SizedBox(height: 8),
 
-                              Text(
-                                "Details 1",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              _buildRow("Emp Educational Class", "-"),
-                              Divider(),
-                              _buildRow("Emp Roll No.", "-"),
-                              Divider(),
-                              _buildRow("Smp School", "-"),
-                              Divider(),
-                              _buildRow("Emp Board", "-"),
-                              Divider(),
-                              _buildRow("Emp Percentage", "-"),
-                              Divider(),
-                              _buildRow("Year", "2015"),
-                              Divider(),
-                              SizedBox(height: 8),
-                              Text(
-                                "Details 2",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              _buildRow("Emp Educational Class", "-"),
-                              Divider(),
-                              _buildRow("Emp Roll No.", "-"),
-                              Divider(),
-                              _buildRow("Smp School", "-"),
-                              Divider(),
-                              _buildRow("Emp Board", "-"),
-                              Divider(),
-                              _buildRow("Emp Percentage", "-"),
-                              Divider(),
-                              _buildRow("Year", "2017"),
-                              Divider(),
+                              ..._buildEducationSections(),
                             ],
                           ),
                         ),

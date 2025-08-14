@@ -1,17 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/edit_family_details.dart';
-import 'package:glueplenew/profile/profile_edit_details.dart';
 import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class FamilyDetailScreen extends StatefulWidget {
-  const FamilyDetailScreen({super.key});
+  final dynamic profiledata;
+  FamilyDetailScreen({required this.profiledata});
 
   @override
   State<FamilyDetailScreen> createState() => _FamilyDetailScreen();
 }
 
 class _FamilyDetailScreen extends State<FamilyDetailScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  String _getFirstNonEmpty(List<String> keys) {
+    for (final key in keys) {
+      final value = _getFieldValue(key);
+      if (value != 'N/A') return value;
+    }
+    return 'N/A';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,31 +224,70 @@ class _FamilyDetailScreen extends State<FamilyDetailScreen> {
                                 ],
                               ),
                               Divider(),
-                              _buildRow("Emp User Id", "973"),
+                              _buildRow(
+                                "Emp User Id",
+                                _getFirstNonEmpty(['emp_id', '_id']),
+                              ),
                               Divider(),
-                              _buildRow("Emp Father Name", "Lorem Ipsum"),
+                              _buildRow(
+                                "Emp Father Name",
+                                _getFieldValue('fathers_name'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Father Dob", "2000-08-14"),
+                              _buildRow(
+                                "Emp Father Dob",
+                                _getFieldValue('fathers_dob'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Mother Name", "Lorem Ipsum"),
+                              _buildRow(
+                                "Emp Mother Name",
+                                _getFieldValue('mothers_name'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Mother Dob", "2000-08-14"),
+                              _buildRow(
+                                "Emp Mother Dob",
+                                _getFieldValue('mothers_dob'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Spouse Name", "-"),
+                              _buildRow(
+                                "Emp Spouse Name",
+                                _getFieldValue('spouse_name'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Spouse Dob", "-"),
+                              _buildRow(
+                                "Emp Spouse Dob",
+                                _getFieldValue('spouse_dob'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Spouse Aadhar Card No", "-"),
+                              _buildRow(
+                                "Emp Spouse Aadhar Card No",
+                                _getFieldValue('spouse_aadhaar'),
+                              ),
                               Divider(),
-                              _buildRow("Emp First Child Name", "-"),
+                              _buildRow(
+                                "Emp First Child Name",
+                                _getFieldValue('first_child_name'),
+                              ),
                               Divider(),
-                              _buildRow("Emp First Child Dob", "-"),
+                              _buildRow(
+                                "Emp First Child Dob",
+                                _getFieldValue('first_child_dob'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Second Child Name", "-"),
+                              _buildRow(
+                                "Emp Second Child Name",
+                                _getFieldValue('second_child_name'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Second Child Dob", "-"),
+                              _buildRow(
+                                "Emp Second Child Dob",
+                                _getFieldValue('second_child_dob'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Details Tag Id", "2"),
+                              _buildRow(
+                                "Emp Details Tag Id",
+                                _getFieldValue('details_tag_id'),
+                              ),
                             ],
                           ),
                         ),

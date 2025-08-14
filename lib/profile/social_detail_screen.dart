@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/edit_social_details.dart';
-import 'package:glueplenew/profile/profile_edit_details.dart';
-import 'package:glueplenew/profile/profile_photo_dialog.dart';
+// Removed unused imports
 import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class SocialDetailScreen extends StatefulWidget {
-  const SocialDetailScreen({super.key});
+  final dynamic profiledata;
+  const SocialDetailScreen({super.key, this.profiledata});
 
   @override
   State<SocialDetailScreen> createState() => _SocialDetailScreen();
 }
 
 class _SocialDetailScreen extends State<SocialDetailScreen> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    profiledata = widget.profiledata;
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,19 +216,34 @@ class _SocialDetailScreen extends State<SocialDetailScreen> {
                                   ),
                                 ],
                               ),
-                              _buildRow("Tag Name", "Bank Details"),
+                              _buildRow("Tag Name", "Social Details"),
                               Divider(),
-                              _buildRow("Status", "1"),
+                              _buildRow("Status", _getFieldValue('status')),
                               Divider(),
-                              _buildRow("Emp User Id", "1463"),
+                              _buildRow(
+                                "Emp User Id",
+                                _getFieldValue('emp_id'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Linkdin Id", "-"),
+                              _buildRow(
+                                "Emp Linkdin Id",
+                                _getFieldValue('linkedin_id'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Facebook Id", "-"),
+                              _buildRow(
+                                "Emp Facebook Id",
+                                _getFieldValue('facebook_id'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Twitter Id", "-"),
+                              _buildRow(
+                                "Emp Twitter Id",
+                                _getFieldValue('twitter_id'),
+                              ),
                               Divider(),
-                              _buildRow("Emp Instagram Id", "abcdfgh78"),
+                              _buildRow(
+                                "Emp Instagram Id",
+                                _getFieldValue('instagram_id'),
+                              ),
                               Divider(),
                               _buildRow("Emp Details Tag Id", "5"),
                             ],
