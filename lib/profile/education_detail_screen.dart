@@ -5,7 +5,14 @@ import '../widget/appbar.dart';
 
 class EducationDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  const EducationDetailScreen({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+  const EducationDetailScreen({
+    super.key,
+    this.profiledata,
+    required this.baseUrl,
+    required this.token,
+  });
 
   @override
   State<EducationDetailScreen> createState() => _EducationDetailScreen();
@@ -159,7 +166,11 @@ class _EducationDetailScreen extends State<EducationDetailScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditEducationDetails(),
+                                  builder: (context) => EditEducationDetails(
+                                    profiledata: profiledata,
+                                    baseUrl: widget.baseUrl,
+                                    token: widget.token,
+                                  ),
                                 ),
                               );
                             },

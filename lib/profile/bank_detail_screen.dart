@@ -5,7 +5,15 @@ import '../widget/appbar.dart';
 
 class BankDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  const BankDetailScreen({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+
+  const BankDetailScreen({
+    super.key,
+    this.profiledata,
+    required this.baseUrl,
+    required this.token,
+  });
 
   @override
   State<BankDetailScreen> createState() => _BankDetailScreen();
@@ -121,7 +129,11 @@ class _BankDetailScreen extends State<BankDetailScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditBankDetails(),
+                                  builder: (context) => EditBankDetails(
+                                    profiledata: profiledata,
+                                    baseUrl: widget.baseUrl,
+                                    token: widget.token,
+                                  ),
                                 ),
                               );
                             },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/payslip/payslip_preview.dart';
+import 'package:glueplenew/profile/my_profile_screen.dart';
 import 'package:glueplenew/profile/profile_edit_details.dart';
 
 class EditSavedDialog extends StatefulWidget {
@@ -92,13 +93,13 @@ class _EditSavedDialog extends State<EditSavedDialog> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) {
-                                  return ProfileEditPage();
-                                },
+                                builder: (context) => MyProfileScreen(),
                               ),
+                              (route) => false,
                             );
                           },
                           style: ElevatedButton.styleFrom(

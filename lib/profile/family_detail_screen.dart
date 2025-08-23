@@ -5,7 +5,13 @@ import '../widget/appbar.dart';
 
 class FamilyDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  FamilyDetailScreen({required this.profiledata});
+  final String token;
+  final String baseUrl;
+  FamilyDetailScreen({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<FamilyDetailScreen> createState() => _FamilyDetailScreen();
@@ -129,7 +135,11 @@ class _FamilyDetailScreen extends State<FamilyDetailScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditFamilyDetails(),
+                                  builder: (context) => EditFamilyDetails(
+                                    profiledata: profiledata,
+                                    token: widget.token,
+                                    baseUrl: widget.baseUrl,
+                                  ),
                                 ),
                               );
                             },

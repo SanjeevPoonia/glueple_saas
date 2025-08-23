@@ -1,23 +1,113 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 
 class EditEducationDetails extends StatefulWidget {
-  const EditEducationDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  EditEducationDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditEducationDetails> createState() => _EditEducationDetails();
 }
 
 class _EditEducationDetails extends State<EditEducationDetails> {
+  var profiledata;
   final List<String> boardOptions = ['CBSE', 'RBSE', 'ICSE', 'Other'];
   String? selectedBoard;
 
   final TextEditingController rollNoCtl = TextEditingController();
   final TextEditingController percentageCtl = TextEditingController();
+
+  bool isLoading = false;
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    final fieldMappings = {
+      'board': selectedBoard,
+      'roll_no': rollNoCtl.text,
+      'percentage': percentageCtl.text,
+    };
+
+    var apiParams = {"query_type": "education_details"};
+
+    fieldMappings.forEach((dataKey, value) {
+      if (value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
 
   final List<String> yearOptions = [
     for (int y = DateTime.now().year; y >= 1980; y--) y.toString(),
@@ -704,6 +794,7 @@ class _EditEducationDetails extends State<EditEducationDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
+                              saveOnboardingData();
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,

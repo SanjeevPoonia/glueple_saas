@@ -7,7 +7,14 @@ import '../widget/appbar.dart';
 // ignore: must_be_immutable
 class PersonalDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  PersonalDetailScreen({required this.profiledata});
+  final String token;
+  final String baseUrl;
+
+  PersonalDetailScreen({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<PersonalDetailScreen> createState() => _PersonalDetailScreen();
@@ -108,7 +115,11 @@ class _PersonalDetailScreen extends State<PersonalDetailScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      EditBasicPersonalDetails(),
+                                      EditBasicPersonalDetails(
+                                        profiledata: profiledata,
+                                        token: widget.token,
+                                        baseUrl: widget.baseUrl,
+                                      ),
                                 ),
                               );
                             },

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/profile_edit_details.dart';
+import 'package:glueplenew/profile/upload_document_details.dart';
 import 'package:lottie/lottie.dart';
 import '../widget/appbar.dart';
 
 class DocumentUploadScreen extends StatefulWidget {
   final dynamic profiledata;
-  const DocumentUploadScreen({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+  const DocumentUploadScreen({
+    super.key,
+    this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<DocumentUploadScreen> createState() => _DocumentUploadScreen();
@@ -153,7 +161,12 @@ class _DocumentUploadScreen extends State<DocumentUploadScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ProfileEditPage(),
+                                        builder: (context) =>
+                                            EditDocumentUploadDetails(
+                                              profiledata: profiledata,
+                                              token: widget.token,
+                                              baseUrl: widget.baseUrl,
+                                            ),
                                       ),
                                     );
                                   },

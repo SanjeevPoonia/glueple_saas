@@ -1,22 +1,90 @@
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/profile/id_card_details_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 
 class EditIdCardDetails extends StatefulWidget {
-  const EditIdCardDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+  EditIdCardDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditIdCardDetails> createState() => _EditIdCardDetails();
 }
 
 class _EditIdCardDetails extends State<EditIdCardDetails> {
+  var profiledata;
   final TextEditingController empIdCtl = TextEditingController();
   final TextEditingController bloodGrpCtl = TextEditingController();
   final TextEditingController emergencyNoCtl = TextEditingController();
   final TextEditingController contactNoCtl = TextEditingController();
   String? profilePhoto;
+
+  bool isLoading = false;
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    final fieldMappings = {
+      "employee_id": empIdCtl.text,
+      "blood_group": bloodGrpCtl.text,
+      "emergency_no": emergencyNoCtl.text,
+      "contact_no": contactNoCtl.text,
+    };
+
+    var apiParams = {"query_type": "id_card_details"};
+
+    fieldMappings.forEach((dataKey, value) {
+      if (value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
   Future<void> filepicker(String type) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
@@ -279,6 +347,7 @@ class _EditIdCardDetails extends State<EditIdCardDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
+                              saveOnboardingData();
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,

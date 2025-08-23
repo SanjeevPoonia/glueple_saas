@@ -4,7 +4,15 @@ import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 
 class EditDocumentUploadDetails extends StatefulWidget {
-  const EditDocumentUploadDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+  const EditDocumentUploadDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+    super.key,
+  });
 
   @override
   State<EditDocumentUploadDetails> createState() =>
@@ -12,6 +20,7 @@ class EditDocumentUploadDetails extends StatefulWidget {
 }
 
 class _EditDocumentUploadDetails extends State<EditDocumentUploadDetails> {
+  var profiledata;
   String? panCardFileName;
   String? aadharFrontFileName;
   String? aadharBackFileName;

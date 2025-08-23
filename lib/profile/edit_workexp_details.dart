@@ -7,7 +7,14 @@ import 'package:intl/intl.dart';
 
 class EditWorkExp extends StatefulWidget {
   final dynamic profiledata;
-  const EditWorkExp({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+  const EditWorkExp({
+    super.key,
+    this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditWorkExp> createState() => _EditWorkExp();

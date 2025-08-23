@@ -6,7 +6,14 @@ import '../widget/appbar.dart';
 
 class ReferenceDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  const ReferenceDetailScreen({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+  const ReferenceDetailScreen({
+    super.key,
+    this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<ReferenceDetailScreen> createState() => _ReferenceDetailScreen();
@@ -53,19 +60,26 @@ class _ReferenceDetailScreen extends State<ReferenceDetailScreen> {
     for (int i = 0; i < list.length; i++) {
       final item = list[i] as Map<String, dynamic>? ?? {};
       widgets.addAll([
-        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Name",
-            (item['name'] ?? '-').toString()),
+        _buildRow(
+          "Emp ${i == 0 ? "First" : "Second"} Reference Name",
+          (item['name'] ?? '-').toString(),
+        ),
         const Divider(),
-        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Contact",
-            (item['contact'] ?? '-').toString()),
+        _buildRow(
+          "Emp ${i == 0 ? "First" : "Second"} Reference Contact",
+          (item['contact'] ?? '-').toString(),
+        ),
         const Divider(),
-        _buildRow("Emp ${i == 0 ? "First" : "Second"} Reference Email",
-            (item['email'] ?? '-').toString()),
+        _buildRow(
+          "Emp ${i == 0 ? "First" : "Second"} Reference Email",
+          (item['email'] ?? '-').toString(),
+        ),
         const Divider(),
       ]);
     }
     return widgets;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +171,11 @@ class _ReferenceDetailScreen extends State<ReferenceDetailScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditReferenceDetails(),
+                                  builder: (context) => EditReferenceDetails(
+                                    profiledata: profiledata,
+                                    token: widget.token,
+                                    baseUrl: widget.baseUrl,
+                                  ),
                                 ),
                               );
                             },
@@ -255,7 +273,10 @@ class _ReferenceDetailScreen extends State<ReferenceDetailScreen> {
                               Divider(),
                               _buildRow("Status", _getFieldValue('status')),
                               Divider(),
-                              _buildRow("Emp User Id", _getFieldValue('emp_id')),
+                              _buildRow(
+                                "Emp User Id",
+                                _getFieldValue('emp_id'),
+                              ),
                               Divider(),
                               ..._buildReferenceSections(),
                               Divider(),

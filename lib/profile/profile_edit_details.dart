@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glueplenew/profile/document_upload_screen.dart';
 import 'package:glueplenew/profile/edit_bank_details.dart';
+import 'package:glueplenew/profile/edit_basic_personal_details.dart';
 import 'package:glueplenew/profile/edit_basic_workexp.dart';
 import 'package:glueplenew/profile/edit_education_details.dart';
 import 'package:glueplenew/profile/edit_family_details.dart';
@@ -10,72 +11,117 @@ import 'package:glueplenew/profile/edit_reference_details.dart';
 import 'package:glueplenew/profile/edit_social_details.dart';
 import 'package:glueplenew/profile/edit_workexp_details.dart';
 import 'package:glueplenew/profile/id_card_details_dialog.dart';
+import 'package:glueplenew/profile/policy_detail_screen.dart';
 import 'package:glueplenew/profile/upload_document_details.dart';
 import '../widget/appbar.dart';
 
 class ProfileEditPage extends StatefulWidget {
-  const ProfileEditPage({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  ProfileEditPage({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<ProfileEditPage> createState() => _ProfileEditPage();
 }
 
 class _ProfileEditPage extends State<ProfileEditPage> {
+  var profiledata;
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
+
+  Widget _screenForStep(String shortName) {
+    switch (shortName) {
+      case 'Personal Details':
+        return EditBasicPersonalDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Family Details':
+        return EditFamilyDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Education Details':
+        return EditEducationDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Bank Details':
+        return EditBankDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Social Details':
+        return EditSocialDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Reference Details':
+        return EditReferenceDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Work Experience Details':
+        return EditWorkExp(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'Upload Documents':
+        return EditDocumentUploadDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      case 'ID Card Details':
+        return EditIdCardDetails(
+          profiledata: profiledata,
+          token: widget.token,
+          baseUrl: widget.baseUrl,
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
   final List<Map<String, dynamic>> sections = [
-    {
-      "title": "Personal Details",
-      "icon": "personal.png",
-      "progress": 1.0,
-      "screen": EditPersonalDetails(),
-    },
-    {
-      "title": "Family Details",
-      "icon": "family.png",
-      "progress": 1.0,
-      "screen": EditFamilyDetails(),
-    },
-    {
-      "title": "Education Details",
-      "icon": "education.png",
-      "progress": 1.0,
-      "screen": EditEducationDetails(),
-    },
-    {
-      "title": "Bank Details",
-      "icon": "bank.png",
-      "progress": 1.0,
-      "screen": EditBankDetails(),
-    },
-    {
-      "title": "Social Details",
-      "icon": "reference.png",
-      "progress": 0.7,
-      "screen": EditSocialDetails(),
-    },
-    {
-      "title": "Reference Details",
-      "icon": "reference.png",
-      "progress": 0.7,
-      "screen": EditReferenceDetails(),
-    },
+    {"title": "Personal Details", "icon": "personal.png", "progress": 1.0},
+    {"title": "Family Details", "icon": "family.png", "progress": 1.0},
+    {"title": "Education Details", "icon": "education.png", "progress": 1.0},
+    {"title": "Bank Details", "icon": "bank.png", "progress": 1.0},
+    {"title": "Social Details", "icon": "reference.png", "progress": 0.7},
+    {"title": "Reference Details", "icon": "reference.png", "progress": 0.7},
     {
       "title": "Work Experience Details",
       "icon": "reference.png",
       "progress": 0.7,
-      "screen": EditBasicWorkExp(),
     },
-    {
-      "title": "Upload Documents",
-      "icon": "document.png",
-      "progress": 1.0,
-      "screen": EditDocumentUploadDetails(),
-    },
-    {
-      "title": "ID Card Details",
-      "icon": "idcard.png",
-      "progress": 0.7,
-      "screen": EditIdCardDetails(),
-    },
+    {"title": "Upload Documents", "icon": "document.png", "progress": 1.0},
+    {"title": "ID Card Details", "icon": "idcard.png", "progress": 0.7},
   ];
 
   @override
@@ -182,7 +228,8 @@ class _ProfileEditPage extends State<ProfileEditPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => section['screen'],
+                                builder: (context) =>
+                                    _screenForStep(section['title']),
                               ),
                             );
                           },

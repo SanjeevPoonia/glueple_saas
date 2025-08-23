@@ -1,18 +1,30 @@
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditBankDetails extends StatefulWidget {
-  const EditBankDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  EditBankDetails({
+    required this.profiledata,
+    required this.baseUrl,
+    required this.token,
+  });
 
   @override
   State<EditBankDetails> createState() => _EditBankDetails();
 }
 
 class _EditBankDetails extends State<EditBankDetails> {
+  var profiledata;
   final TextEditingController bankNameCtl = TextEditingController();
   final TextEditingController ifscCtl = TextEditingController();
   final TextEditingController empAccountHolderCtl = TextEditingController();
@@ -54,12 +66,76 @@ class _EditBankDetails extends State<EditBankDetails> {
     }
   }
 
+  bool isLoading = false;
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    final fieldMappings = {
+      "bank_name": bankNameCtl.text,
+      "ifsc_code": ifscCtl.text,
+      "bank_account_holder_name": empAccountHolderCtl.text,
+      "bank_account_no": selectedBankAccountNumber,
+      "nominee_name": selectedNominee,
+      "pan_card": selectedPanCard,
+      "pan_card_upload": panCardFileName,
+      "aadhar_upload": aadharUploadCtl.text,
+      "bank_cheque_upload": bankChequeUploadCtl.text,
+    };
+
+    var apiParams = {"query_type": "bank_details"};
+
+    fieldMappings.forEach((dataKey, value) {
+      if (value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
   Widget buildDropdownField(
     String label,
     String? value,
     List<String> options,
     void Function(String?) onChanged,
   ) {
+    // Ensure the value exists in options, otherwise set to null
+    final validValue = options.contains(value) ? value : null;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -70,7 +146,7 @@ class _EditBankDetails extends State<EditBankDetails> {
         ),
       ),
       child: DropdownButtonFormField<String>(
-        value: value,
+        value: validValue,
         decoration: InputDecoration(
           labelText: label,
           border: InputBorder.none,
@@ -85,6 +161,50 @@ class _EditBankDetails extends State<EditBankDetails> {
         onChanged: onChanged,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+    bankNameCtl.text = _getFieldValue('bank_name') ?? "";
+    ifscCtl.text = _getFieldValue('ifsc_code') ?? "";
+    empAccountHolderCtl.text = _getFieldValue('bank_account_holder_name') ?? "";
+
+    // For dropdown values, check if they exist in the options list
+    final bankAccountNo = _getFieldValue('bank_account_no');
+    selectedBankAccountNumber = bankAccountNumbers.contains(bankAccountNo)
+        ? bankAccountNo
+        : null;
+
+    final nomineeName = _getFieldValue('nominee_name');
+    selectedNominee = nomineeNames.contains(nomineeName) ? nomineeName : null;
+
+    empAccountHolderCtl.text = _getFieldValue('bank_account_holder_name') ?? "";
+    selectedBankAccountNumber = _getFieldValue('bank_account_no') ?? "";
+    selectedNominee = _getFieldValue('nominee_name') ?? "";
+    selectedPanCard = _getFieldValue('pan_card') ?? "";
+    panCardUploadCtl.text = _getFieldValue('pan_card_upload') ?? "";
+    aadharUploadCtl.text = _getFieldValue('aadhar_upload') ?? "";
+    bankChequeUploadCtl.text = _getFieldValue('bank_cheque_upload') ?? "";
+  }
+
+  String? _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return null;
+    final dynamic value = data[key];
+    if (value == null) return null;
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return null;
+    return stringValue;
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
   }
 
   Future<void> _pickDate(TextEditingController controller) async {
@@ -102,7 +222,6 @@ class _EditBankDetails extends State<EditBankDetails> {
   Widget buildTextField(
     String label,
     TextEditingController controller, {
-    String? hint,
     int? maxLength,
   }) {
     return Container(
@@ -136,7 +255,6 @@ class _EditBankDetails extends State<EditBankDetails> {
             controller: controller,
             maxLength: maxLength,
             decoration: InputDecoration(
-              hintText: hint,
               border: InputBorder.none,
               isDense: true,
               counterText: "",
@@ -171,7 +289,6 @@ class _EditBankDetails extends State<EditBankDetails> {
                 decoration: InputDecoration(
                   labelText: label,
                   labelStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-                  hintText: "mm/dd/yy",
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -271,14 +388,10 @@ class _EditBankDetails extends State<EditBankDetails> {
                     "Bank Details",
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 21),
                   ),
-                  buildTextField(
-                    "Bank Name",
-                    bankNameCtl,
-                    hint: "Enter Bank Name",
-                  ),
+                  buildTextField("Bank Name", bankNameCtl),
                   const SizedBox(height: 12),
 
-                  buildTextField("IFSC Code", ifscCtl, hint: "Enter IFSC Code"),
+                  buildTextField("IFSC Code", ifscCtl),
                   const SizedBox(height: 12),
 
                   buildDropdownField(
@@ -300,7 +413,6 @@ class _EditBankDetails extends State<EditBankDetails> {
                   buildTextField(
                     "Emp Bank Account Holder Name",
                     empAccountHolderCtl,
-                    hint: "Enter Account Holder Name",
                   ),
                   const SizedBox(height: 12),
 
@@ -622,6 +734,7 @@ class _EditBankDetails extends State<EditBankDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
+                              saveOnboardingData();
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,

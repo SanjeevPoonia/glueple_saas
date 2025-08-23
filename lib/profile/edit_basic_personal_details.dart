@@ -5,13 +5,22 @@ import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditBasicPersonalDetails extends StatefulWidget {
-  const EditBasicPersonalDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  EditBasicPersonalDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditBasicPersonalDetails> createState() => _EditBasicPersonalDetails();
 }
 
 class _EditBasicPersonalDetails extends State<EditBasicPersonalDetails> {
+  var profiledata;
   final TextEditingController fullNameCtl = TextEditingController();
   final TextEditingController dobCtl = TextEditingController();
   final TextEditingController mobileCtl = TextEditingController();
@@ -28,6 +37,48 @@ class _EditBasicPersonalDetails extends State<EditBasicPersonalDetails> {
     'Divorced',
     'Widowed',
   ];
+
+  String _getEmployeeName() {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final String name = (data['name'] ?? '').toString().trim();
+    if (name.isNotEmpty) return name;
+    final String first = (data['first_name'] ?? '').toString().trim();
+    final String last = (data['last_name'] ?? '').toString().trim();
+    final String full = [first, last].where((s) => s.isNotEmpty).join(' ');
+    return full.isEmpty ? 'N/A' : full;
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+    fullNameCtl.text = _getEmployeeName();
+    dobCtl.text = _getFieldValue('dob');
+    mobileCtl.text = _getFieldValue('mobile');
+    personalEmailCtl.text = _getFieldValue('personal_email');
+    alternateEmailCtl.text = _getFieldValue('alternate_email');
+    emergencyMobileNoCtl.text = _getFieldValue('emergency_mobile_no');
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
+
   Widget buildDropdownField(
     String label,
     String? value,
@@ -306,10 +357,28 @@ class _EditBasicPersonalDetails extends State<EditBasicPersonalDetails> {
                     ),
                     child: TextButton(
                       onPressed: () {
+                        // Collect data from controllers and dropdowns
+                        List<dynamic> personaldata = [
+                          fullNameCtl.text,
+                          dobCtl.text,
+                          selectedGender,
+                          selectedMaritalStatus,
+                          mobileCtl.text,
+                          personalEmailCtl.text,
+                          alternateEmailCtl.text,
+                          emergencyMobileNoCtl.text,
+                        ];
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditPersonalDetails(),
+                            builder: (context) => EditPersonalDetails(
+                              profiledata: profiledata,
+                              personaldata: personaldata,
+                              token: widget.token,
+                              baseUrl: widget.baseUrl,
+                              onPhotoUploaded: (String) {},
+                            ),
                           ),
                         );
                       },

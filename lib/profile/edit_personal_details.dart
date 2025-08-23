@@ -1,18 +1,37 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditPersonalDetails extends StatefulWidget {
-  const EditPersonalDetails({super.key});
+  final String token;
+  final String baseUrl;
+  final Function(String) onPhotoUploaded; // callback to update parent
+  final Map<String, dynamic> profiledata;
+  final List<dynamic> personaldata;
 
+  const EditPersonalDetails({
+    super.key,
+    required this.token,
+    required this.baseUrl,
+    required this.onPhotoUploaded,
+    required this.profiledata,
+    required this.personaldata,
+  });
   @override
   State<EditPersonalDetails> createState() => _EditPersonalDetails();
 }
 
 class _EditPersonalDetails extends State<EditPersonalDetails> {
+  var personaldata;
   // Blood group and IDs
+  var profiledata;
+  bool isLoading = false;
+
   final List<String> bloodGroups = [
     'A+',
     'A-',
@@ -22,6 +41,7 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
     'O-',
     'AB+',
     'AB-',
+    'N/A',
   ];
   String? selectedBloodGroup;
   final TextEditingController uanCtl = TextEditingController();
@@ -30,16 +50,12 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
   // Permanent Address
   final TextEditingController permPlotCtl = TextEditingController();
   final TextEditingController permCityCtl = TextEditingController();
-  final TextEditingController permJaipurCtl = TextEditingController();
   final TextEditingController permStateCtl = TextEditingController();
-  final TextEditingController permRajasthanCtl = TextEditingController();
   final TextEditingController permPostalCtl = TextEditingController();
 
   final TextEditingController presPlotCtl = TextEditingController();
   final TextEditingController presCityCtl = TextEditingController();
-  final TextEditingController presJaipurCtl = TextEditingController();
   final TextEditingController presStateCtl = TextEditingController();
-  final TextEditingController presRajasthanCtl = TextEditingController();
   final TextEditingController presPostalCtl = TextEditingController();
 
   // Checkbox
@@ -48,10 +64,43 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
   void copyPermanentToPresent() {
     presPlotCtl.text = permPlotCtl.text;
     presCityCtl.text = permCityCtl.text;
-    presJaipurCtl.text = permJaipurCtl.text;
     presStateCtl.text = permStateCtl.text;
-    presRajasthanCtl.text = permRajasthanCtl.text;
     presPostalCtl.text = permPostalCtl.text;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+    selectedBloodGroup = _getFieldValue('blood_group');
+    uanCtl.text = _getFieldValue('uan_no');
+    esicCtl.text = _getFieldValue('esic_no');
+    permPlotCtl.text = _getFieldValue('permanent_address');
+    permCityCtl.text = _getFieldValue('permanent_city');
+    permStateCtl.text = _getFieldValue('permanent_state');
+    permPostalCtl.text = _getFieldValue('permanent_postal_code');
+    presPlotCtl.text = _getFieldValue('present_address');
+    presCityCtl.text = _getFieldValue('present_city');
+    presStateCtl.text = _getFieldValue('present_state');
+    presPostalCtl.text = _getFieldValue('present_postal_code');
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
   }
 
   Widget buildDropdownField(
@@ -70,7 +119,7 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
         ),
       ),
       child: DropdownButtonFormField<String>(
-        value: value,
+        value: options.contains(value) ? value : null,
         decoration: InputDecoration(
           labelText: label,
           border: InputBorder.none,
@@ -307,15 +356,13 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                     hint: "Enter Plot/Street/Colony",
                   ),
                   const SizedBox(height: 12),
-                  buildTextField("City", permCityCtl, hint: "Enter City"),
-                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
                         child: buildTextField(
-                          "Jaipur",
-                          permJaipurCtl,
-                          hint: "Jaipur",
+                          "City",
+                          permCityCtl,
+                          hint: "Enter City",
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -329,12 +376,7 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  buildTextField(
-                    "Rajasthan",
-                    permRajasthanCtl,
-                    hint: "Rajasthan",
-                  ),
-                  const SizedBox(height: 12),
+
                   buildTextField(
                     "Postal Code",
                     permPostalCtl,
@@ -369,15 +411,13 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                     hint: "Enter Plot/Street/Colony",
                   ),
                   const SizedBox(height: 12),
-                  buildTextField("City", presCityCtl, hint: "Enter City"),
-                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
                         child: buildTextField(
-                          "Jaipur",
-                          presJaipurCtl,
-                          hint: "Jaipur",
+                          "City",
+                          presCityCtl,
+                          hint: "Enter City",
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -391,12 +431,7 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  buildTextField(
-                    "Rajasthan",
-                    presRajasthanCtl,
-                    hint: "Rajasthan",
-                  ),
-                  const SizedBox(height: 12),
+
                   buildTextField(
                     "Postal Code",
                     presPostalCtl,
@@ -453,6 +488,7 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
+                              saveOnboardingData();
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -470,13 +506,15 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Text(
-                              "Save",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
+                            child: isLoading
+                                ? CircularProgressIndicator()
+                                : Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
@@ -489,5 +527,75 @@ class _EditPersonalDetails extends State<EditPersonalDetails> {
         ],
       ),
     );
+  }
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    // Create a map of field mappings from personaldata to API params
+    final fieldMappings = {
+      'uan_no': uanCtl.text,
+      'esic_no': esicCtl.text,
+      'permanent_address': permPlotCtl.text,
+      'permanent_city': permCityCtl.text,
+      'permanent_state': permStateCtl.text,
+      'permanent_postal_code': permPostalCtl.text,
+      'present_address': presPlotCtl.text,
+      'present_city': presCityCtl.text,
+      'present_state': presStateCtl.text,
+      'present_postal_code': presPostalCtl.text,
+      'blood_group': selectedBloodGroup,
+    };
+
+    // Initialize apiParams with query_type
+    var apiParams = {"query_type": "personal_details"};
+
+    // Map fields from personaldata to apiParams using the fieldMappings
+    fieldMappings.forEach((dataKey, value) {
+      // Since fieldMappings already contains the controller values,
+      // we can directly use them
+      if (value != null && value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        if (response['data'] != null &&
+            response['data']['profile_picture'] != null) {
+          widget.onPhotoUploaded(response['data']['profile_picture']);
+        }
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
   }
 }

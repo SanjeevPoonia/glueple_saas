@@ -1,14 +1,78 @@
+import 'dart:convert';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:glueplenew/taskbox/taskbox_home.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:glueplenew/network/api_helper.dart';
 
 class ProfilePhotoDialog extends StatefulWidget {
-  const ProfilePhotoDialog({super.key});
+  final String token;
+  final String baseUrl;
+  final Function(String) onPhotoUploaded; // callback to update parent
+
+  const ProfilePhotoDialog({
+    super.key,
+    required this.token,
+    required this.baseUrl,
+    required this.onPhotoUploaded,
+  });
 
   @override
   State<ProfilePhotoDialog> createState() => _ProfilePhotoDialog();
 }
 
 class _ProfilePhotoDialog extends State<ProfilePhotoDialog> {
+  XFile? imageFile;
+  bool isLoading = false;
+
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source, imageQuality: 80);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = pickedFile;
+      });
+      await uploadProfilePicture();
+    }
+  }
+
+  Future<void> uploadProfilePicture() async {
+    if (imageFile == null) return;
+
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    var apiParams = {
+      "profile_picture": base64Encode(await imageFile!.readAsBytes()),
+    };
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'upload-profile',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        String newImage = response['data']['profile_picture'] ?? "";
+        widget.onPhotoUploaded(newImage);
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Upload failed: ${response['errorMessage']}");
+      }
+    } catch (e) {
+      debugPrint("Error uploading profile picture: $e");
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,11 +107,10 @@ class _ProfilePhotoDialog extends State<ProfilePhotoDialog> {
                     Spacer(),
                   ],
                 ),
-
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       "Profile Photo",
                       style: TextStyle(
                         fontSize: 20,
@@ -56,32 +119,36 @@ class _ProfilePhotoDialog extends State<ProfilePhotoDialog> {
                     ),
                     Spacer(),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
+                      onTap: () => Navigator.of(context).pop(),
                       child: Icon(Icons.close),
                     ),
                     const SizedBox(width: 20),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Divider(),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
                 TextButton(
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () => _pickImage(ImageSource.gallery),
+                  child: const Text(
                     "Upload New Photo",
                     style: TextStyle(color: Colors.black, fontSize: 19),
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () {
+                    widget.onPhotoUploaded(""); // remove
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
                     "Remove Photo",
                     style: TextStyle(color: Colors.black, fontSize: 19),
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                if (isLoading) const Center(child: CircularProgressIndicator()),
                 SizedBox(height: 20),
                 Container(
                   width: double.maxFinite,
@@ -95,7 +162,9 @@ class _ProfilePhotoDialog extends State<ProfilePhotoDialog> {
                     ),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -112,7 +181,7 @@ class _ProfilePhotoDialog extends State<ProfilePhotoDialog> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
               ],
             ),
           ),

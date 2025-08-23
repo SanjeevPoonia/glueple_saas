@@ -1,19 +1,114 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 
 class EditSocialDetails extends StatefulWidget {
-  const EditSocialDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+  EditSocialDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditSocialDetails> createState() => _EditSocialDetails();
 }
 
 class _EditSocialDetails extends State<EditSocialDetails> {
+  var profiledata;
   final TextEditingController linkedinIdCtl = TextEditingController();
   final TextEditingController facebookIdCtl = TextEditingController();
   final TextEditingController twitterIdCtl = TextEditingController();
   final TextEditingController instagramIdCtl = TextEditingController();
+
+  bool isLoading = false;
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    final fieldMappings = {
+      "linkedin_id": linkedinIdCtl.text,
+      "facebook_id": facebookIdCtl.text,
+      "twitter_id": twitterIdCtl.text,
+      "instagram_id": instagramIdCtl.text,
+    };
+
+    var apiParams = {"query_type": "social_details"};
+
+    fieldMappings.forEach((dataKey, value) {
+      if (value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+    linkedinIdCtl.text = _getFieldValue('linkedin_id');
+    facebookIdCtl.text = _getFieldValue('facebook_id');
+    twitterIdCtl.text = _getFieldValue('twitter_id');
+    instagramIdCtl.text = _getFieldValue('instagram_id');
+  }
+
+  String _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return 'N/A';
+    final dynamic value = data[key];
+    if (value == null) return 'N/A';
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return 'N/A';
+    return stringValue;
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
 
   Widget buildTextField(
     String label,
@@ -152,13 +247,13 @@ class _EditSocialDetails extends State<EditSocialDetails> {
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 21),
                   ),
                   const SizedBox(height: 12),
-                  buildTextField("Linkedin Id", linkedinIdCtl, hint: "-"),
+                  buildTextField("Linkedin Id", linkedinIdCtl),
                   const SizedBox(height: 12),
-                  buildTextField("Instagram Id", instagramIdCtl, hint: "-"),
+                  buildTextField("Instagram Id", instagramIdCtl),
                   const SizedBox(height: 12),
-                  buildTextField("Facebook Id", facebookIdCtl, hint: "-"),
+                  buildTextField("Facebook Id", facebookIdCtl),
                   const SizedBox(height: 12),
-                  buildTextField("Twitter Id", twitterIdCtl, hint: "-"),
+                  buildTextField("Twitter Id", twitterIdCtl),
 
                   const SizedBox(height: 21),
 
@@ -177,6 +272,7 @@ class _EditSocialDetails extends State<EditSocialDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
+                              saveOnboardingData();
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,

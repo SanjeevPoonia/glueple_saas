@@ -7,13 +7,22 @@ import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditBasicWorkExp extends StatefulWidget {
-  const EditBasicWorkExp({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  EditBasicWorkExp({
+    required this.profiledata,
+    required this.baseUrl,
+    required this.token,
+  });
 
   @override
   State<EditBasicWorkExp> createState() => _EditBasicWorkExp();
 }
 
 class _EditBasicWorkExp extends State<EditBasicWorkExp> {
+  var profiledata;
   final TextEditingController orgNameCtl = TextEditingController();
   final TextEditingController desgCtl = TextEditingController();
   final TextEditingController fromCtl = TextEditingController();

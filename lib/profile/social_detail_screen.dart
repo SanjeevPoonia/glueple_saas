@@ -6,7 +6,14 @@ import '../widget/appbar.dart';
 
 class SocialDetailScreen extends StatefulWidget {
   final dynamic profiledata;
-  const SocialDetailScreen({super.key, this.profiledata});
+  final String token;
+  final String baseUrl;
+  const SocialDetailScreen({
+    super.key,
+    this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<SocialDetailScreen> createState() => _SocialDetailScreen();
@@ -122,7 +129,11 @@ class _SocialDetailScreen extends State<SocialDetailScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditSocialDetails(),
+                                  builder: (context) => EditSocialDetails(
+                                    profiledata: profiledata,
+                                    token: widget.token,
+                                    baseUrl: widget.baseUrl,
+                                  ),
                                 ),
                               );
                             },

@@ -68,6 +68,8 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   XFile? imageFile;
   File? file;
   bool sectionsLoading = true;
+  // "profile_picture": "1755849709087.png",
+  // upload-profile
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +266,15 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                                         isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
                                         builder: (context) =>
-                                            ProfilePhotoDialog(),
+                                            ProfilePhotoDialog(
+                                              token: token,
+                                              baseUrl: baseUrl,
+                                              onPhotoUploaded: (newPhoto) {
+                                                setState(() {
+                                                  profileImage = newPhoto;
+                                                });
+                                              },
+                                            ),
                                       );
                                     },
                                     child: Icon(
@@ -300,7 +310,11 @@ class _MyProfileScreen extends State<MyProfileScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProfileEditPage(),
+                                  builder: (context) => ProfileEditPage(
+                                    profiledata: profileData,
+                                    token: token,
+                                    baseUrl: baseUrl,
+                                  ),
                                 ),
                               );
                             },
@@ -603,21 +617,53 @@ class _MyProfileScreen extends State<MyProfileScreen> {
   Widget _screenForStep(String shortName) {
     switch (shortName) {
       case 'personal_details':
-        return PersonalDetailScreen(profiledata: profileData);
+        return PersonalDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'family_details':
-        return FamilyDetailScreen(profiledata: profileData);
+        return FamilyDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'education_details':
-        return EducationDetailScreen(profiledata: profileData);
+        return EducationDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'bank_details':
-        return BankDetailScreen(profiledata: profileData);
+        return BankDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'social_details':
-        return SocialDetailScreen(profiledata: profileData);
+        return SocialDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'reference_details':
-        return ReferenceDetailScreen(profiledata: profileData);
+        return ReferenceDetailScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'work_experience_details':
-        return EditWorkExp(profiledata: profileData);
+        return EditWorkExp(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       case 'upload_documents':
-        return DocumentUploadScreen(profiledata: profileData);
+        return DocumentUploadScreen(
+          profiledata: profileData,
+          token: token,
+          baseUrl: baseUrl,
+        );
       default:
         return const SizedBox.shrink();
     }

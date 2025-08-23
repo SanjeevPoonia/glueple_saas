@@ -1,19 +1,29 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:glueplenew/dialogs/successful_dialog.dart';
-import 'package:glueplenew/pending_scr/delete_entry_q.dart';
+import 'package:glueplenew/network/api_helper.dart';
 import 'package:glueplenew/profile/details_saved_dialog.dart';
 import 'package:glueplenew/widget/appbar.dart';
 import 'package:intl/intl.dart';
 
 class EditFamilyDetails extends StatefulWidget {
-  const EditFamilyDetails({super.key});
+  final dynamic profiledata;
+  final String token;
+  final String baseUrl;
+
+  EditFamilyDetails({
+    required this.profiledata,
+    required this.token,
+    required this.baseUrl,
+  });
 
   @override
   State<EditFamilyDetails> createState() => _EditFamilyDetails();
 }
 
 class _EditFamilyDetails extends State<EditFamilyDetails> {
+  var profiledata;
+  bool isLoading = false;
   final TextEditingController fatherNameCtl = TextEditingController();
   final TextEditingController fatherDobCtl = TextEditingController();
   final TextEditingController motherNameCtl = TextEditingController();
@@ -24,6 +34,48 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
   final TextEditingController firstChildDobCtl = TextEditingController();
   final TextEditingController secondChildNameCtl = TextEditingController();
   final TextEditingController secondChildDobCtl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getprofileData();
+    fatherNameCtl.text = _getFieldValue('fathers_name') ?? "";
+    fatherDobCtl.text = _getFieldValue('fathers_dob') ?? "";
+    motherNameCtl.text = _getFieldValue('mothers_name') ?? "";
+    motherDobCtl.text = _getFieldValue('mothers_dob') ?? "";
+    spouseNameCtl.text = _getFieldValue('spouse_name') ?? "";
+    spouseDobCtl.text = _getFieldValue('spouse_dob') ?? "";
+    firstChildNameCtl.text = _getFieldValue('first_child_name') ?? "";
+    firstChildDobCtl.text = _getFieldValue('first_child_dob') ?? "";
+    secondChildNameCtl.text = _getFieldValue('second_child_name') ?? "";
+    secondChildDobCtl.text = _getFieldValue('second_child_dob') ?? "";
+  }
+
+  String? _getFieldValue(String key) {
+    final data = profiledata;
+    if (data == null) return null;
+
+    dynamic value = data[key];
+
+    if (value == null || value.toString().trim().isEmpty) {
+      if (data['additional_family_details'] != null) {
+        value = data['additional_family_details'][key];
+      }
+    }
+
+    if (value == null) return null;
+    final String stringValue = value.toString();
+    if (stringValue.trim().isEmpty) return null;
+    return stringValue;
+  }
+
+  void getprofileData() {
+    if (widget.profiledata != null) {
+      setState(() {
+        profiledata = widget.profiledata;
+      });
+    }
+  }
 
   Future<void> _pickDate(TextEditingController controller) async {
     DateTime? picked = await showDatePicker(
@@ -40,7 +92,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
   Widget buildTextField(
     String label,
     TextEditingController controller, {
-    String? hint,
+    // String? hint,
     int? maxLength,
   }) {
     return Container(
@@ -74,7 +126,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
             controller: controller,
             maxLength: maxLength,
             decoration: InputDecoration(
-              hintText: hint,
+              // hintText: hint,
               border: InputBorder.none,
               isDense: true,
               counterText: "",
@@ -109,7 +161,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                 decoration: InputDecoration(
                   labelText: label,
                   labelStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-                  hintText: "mm/dd/yy",
+                  // hintText: "mm/dd/yy",
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -213,7 +265,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                   buildTextField(
                     "Father's Name",
                     fatherNameCtl,
-                    hint: "Enter Father's Name",
+                    // hint: "Enter Father's Name",
                   ),
                   const SizedBox(height: 12),
                   buildDateField("Father's Date of Birth", fatherDobCtl),
@@ -221,7 +273,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                   buildTextField(
                     "Mother's Name",
                     motherNameCtl,
-                    hint: "Enter Mother's Name",
+                    // hint: "Enter Mother's Name",
                   ),
                   const SizedBox(height: 12),
                   buildDateField("Mother's Date of Birth", motherDobCtl),
@@ -229,7 +281,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                   buildTextField(
                     "Spouse Name (If Applicable)",
                     spouseNameCtl,
-                    hint: "Enter Spouse Name",
+                    // hint: "Enter Spouse Name",
                   ),
                   const SizedBox(height: 12),
                   buildDateField(
@@ -240,7 +292,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                   buildTextField(
                     "First Child's Name (If Applicable)",
                     firstChildNameCtl,
-                    hint: "Enter First Child's Name",
+                    // hint: "Enter First Child's Name",
                   ),
                   const SizedBox(height: 12),
                   buildDateField(
@@ -251,7 +303,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                   buildTextField(
                     "Second Child's Name (If Applicable)",
                     secondChildNameCtl,
-                    hint: "Enter Second Child's Name",
+                    // hint: "Enter Second Child's Name",
                   ),
                   const SizedBox(height: 12),
                   buildDateField(
@@ -273,6 +325,7 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                     ),
                     child: TextButton(
                       onPressed: () {
+                        saveOnboardingData();
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -290,10 +343,15 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text(
-                        "Next",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : Text(
+                              "Save",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -303,5 +361,65 @@ class _EditFamilyDetails extends State<EditFamilyDetails> {
         ],
       ),
     );
+  }
+
+  void saveOnboardingData() async {
+    setState(() => isLoading = true);
+
+    ApiBaseHelper helper = ApiBaseHelper();
+
+    final fieldMappings = {
+      'fathers_name': fatherNameCtl.text,
+      'mothers_name': motherNameCtl.text,
+      'fathers_dob': fatherDobCtl.text,
+      'mothers_dob': motherDobCtl.text,
+      'spouse_name': spouseNameCtl.text,
+      'spouse_dob': spouseDobCtl.text,
+      'first_child_name': firstChildNameCtl.text,
+      'first_child_dob': firstChildDobCtl.text,
+      'second_child_name': secondChildNameCtl.text,
+      'second_child_dob': secondChildDobCtl.text,
+    };
+
+    var apiParams = {"query_type": "family_details"};
+
+    fieldMappings.forEach((dataKey, value) {
+      if (value.toString().isNotEmpty) {
+        apiParams[dataKey] = value.toString();
+      }
+    });
+
+    try {
+      var rawResponse = await helper.postAPIWithHeader(
+        widget.baseUrl,
+        'save-onboarding-details',
+        apiParams,
+        context,
+        widget.token,
+      );
+
+      var response = jsonDecode(rawResponse.body);
+
+      if (response['success'] == true) {
+        Navigator.of(context).pop();
+      } else {
+        debugPrint("Save failed: ${response['errorMessage']}");
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to save: ${response['errorMessage']}"),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error saving personal details: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An error occurred while saving")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
   }
 }
